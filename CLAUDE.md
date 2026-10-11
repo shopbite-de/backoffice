@@ -11,6 +11,7 @@ bun run lint      # ESLint (@nuxt/eslint) + Prettier; lint:fix formats
 bun run typecheck # must stay at zero errors
 bun run test      # Vitest: server logic against real La Fattoria data (test/fixtures)
 bun run build
+docker build -t backoffice .   # production image (Dockerfile, README "Betrieb"), CI publishes ghcr.io/shopbite-de/backoffice
 bun run roundtrip # every dish loaded + saved unchanged must leave Shopware identical (needs a running stack)
 bunx shadcn-vue@latest add <component>   # see "shadcn" below
 ```
