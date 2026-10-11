@@ -57,9 +57,7 @@ export async function restaurantChannels(event: H3Event): Promise<SalesChannel[]
       navigationCategoryId: row.navigationCategoryId,
       currencyId: row.currencyId,
       languageId: row.languageId,
-      menuCategoryId:
-        configured.find((c) => c.id === row.id)?.menuCategoryId ??
-        row.navigationCategoryId,
+      menuCategoryId: configured.find((c) => c.id === row.id)?.menuCategoryId ?? row.navigationCategoryId,
     }));
 }
 
@@ -67,8 +65,7 @@ export async function restaurantChannels(event: H3Event): Promise<SalesChannel[]
 export async function currentSalesChannel(event: H3Event): Promise<SalesChannel> {
   const session = await useShopwareSession(event);
   const channels = await restaurantChannels(event);
-  const channel =
-    channels.find((c) => c.id === session.data.channelId) ?? channels[0];
+  const channel = channels.find((c) => c.id === session.data.channelId) ?? channels[0];
   if (!channel) {
     throw createError({ statusCode: 500, statusMessage: "Kein Verkaufskanal gefunden" });
   }

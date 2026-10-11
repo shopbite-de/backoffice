@@ -13,9 +13,7 @@ const { data } = await useAsyncData("hours", () => api<OpeningInterval[]>("/api/
 const week = ref<{ open: string; close: string }[][]>([]);
 watchEffect(() => {
   week.value = WEEKDAYS.map((_, i) =>
-    (data.value ?? [])
-      .filter((h) => h.dayOfWeek === i + 1)
-      .map((h) => ({ open: h.openingTime, close: h.closingTime })),
+    (data.value ?? []).filter((h) => h.dayOfWeek === i + 1).map((h) => ({ open: h.openingTime, close: h.closingTime })),
   );
 });
 
@@ -48,7 +46,9 @@ async function save() {
   <form class="space-y-6" @submit.prevent="save">
     <h1 class="text-2xl font-semibold">Öffnungszeiten</h1>
     <ErrorAlert :message="error" />
-    <Alert v-if="saved" role="status"><AlertDescription>{{ saved }}</AlertDescription></Alert>
+    <Alert v-if="saved" role="status"
+      ><AlertDescription>{{ saved }}</AlertDescription></Alert
+    >
     <Card class="py-0">
       <ul class="divide-y">
         <li v-for="(day, d) in week" :key="d" class="flex flex-wrap items-start gap-4 px-4 py-4">

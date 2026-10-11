@@ -46,8 +46,8 @@ const filtered = computed(() => {
     }))
     .filter((s) => s.dishes.length);
 });
-const missing = computed(() =>
-  (menu.value ?? []).flatMap((s) => s.dishes).filter((d) => d.onMenu && !d.allergensChecked).length,
+const missing = computed(
+  () => (menu.value ?? []).flatMap((s) => s.dishes).filter((d) => d.onMenu && !d.allergensChecked).length,
 );
 </script>
 
@@ -72,8 +72,17 @@ const missing = computed(() =>
       <div class="grid min-w-60 flex-1 gap-2">
         <Label for="suche">Gericht suchen</Label>
         <div class="relative">
-          <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input id="suche" v-model="query" type="search" class="pl-9 pointer-coarse:pl-10" placeholder="Name oder Nummer" />
+          <Search
+            class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            id="suche"
+            v-model="query"
+            type="search"
+            class="pl-9 pointer-coarse:pl-10"
+            placeholder="Name oder Nummer"
+          />
         </div>
       </div>
       <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
@@ -97,9 +106,18 @@ const missing = computed(() =>
           >
             <span class="w-12 shrink-0 text-sm tabular-nums text-muted-foreground">{{ dish.number }}</span>
             <span class="min-w-0 flex-1 font-medium">
-              <NuxtLink :to="`/speisekarte/${dish.id}`" class="underline decoration-border underline-offset-4 hover:decoration-foreground">{{ dish.name }}</NuxtLink>
+              <NuxtLink
+                :to="`/speisekarte/${dish.id}`"
+                class="underline decoration-border underline-offset-4 hover:decoration-foreground"
+                >{{ dish.name }}</NuxtLink
+              >
               <span v-if="!dish.onMenu" class="ml-1 text-sm font-normal">· nicht auf der Karte</span>
-              <Badge v-if="!dish.allergensChecked" variant="outline" class="ml-2 border-warning-border bg-warning text-warning-foreground">Allergene fehlen</Badge>
+              <Badge
+                v-if="!dish.allergensChecked"
+                variant="outline"
+                class="ml-2 border-warning-border bg-warning text-warning-foreground"
+                >Allergene fehlen</Badge
+              >
             </span>
             <div class="flex items-center gap-2">
               <Label :for="`preis-${dish.id}`" class="sr-only">Preis {{ dish.name }} in Euro</Label>

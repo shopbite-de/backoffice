@@ -1,0 +1,4205 @@
+{
+ "channel": {
+  "id": "bfc388d793ea531389938731b8ca21da",
+  "name": "ShopBite",
+  "navigationCategoryId": "x",
+  "currencyId": "b7d2554b0ce847cd82f3ac9bd1c0dfca",
+  "languageId": "2fbb5fe2e29a4d70aa5854ce7ce3e20b",
+  "menuCategoryId": "211cf9b2d1725130a517bbadf753a43c"
+ },
+ "products": {
+  "103": {
+   "translated": {
+    "metaDescription": null,
+    "name": "Schnitzel Wiener Art",
+    "keywords": null,
+    "description": "Paniertes Schnitzel nach Wiener Art.",
+    "descriptionTeaser": "Paniertes Schnitzel nach Wiener Art.",
+    "metaTitle": null,
+    "packUnit": null,
+    "packUnitPlural": null,
+    "customFields": {
+     "shopbite_allergens_checked": true
+    },
+    "slotConfig": null,
+    "customSearchKeywords": null,
+    "ogTitle": null,
+    "ogDescription": null
+   },
+   "parentId": null,
+   "taxId": "01a12a33231e70ab913ff3f564664aec",
+   "manufacturerId": null,
+   "unitId": null,
+   "active": true,
+   "price": [
+    {
+     "currencyId": "b7d2554b0ce847cd82f3ac9bd1c0dfca",
+     "net": 11.6822,
+     "gross": 12.5,
+     "linked": true,
+     "listPrice": null,
+     "percentage": null,
+     "regulationPrice": null
+    }
+   ],
+   "manufacturerNumber": null,
+   "guaranteeMonths": null,
+   "guaranteeConfirmed": false,
+   "ean": null,
+   "productNumber": "103",
+   "stock": -2,
+   "type": "physical",
+   "deliveryTimeId": null,
+   "deliveryTime": null,
+   "restockTime": null,
+   "isCloseout": false,
+   "purchaseSteps": 1,
+   "maxPurchase": null,
+   "minPurchase": 1,
+   "purchaseUnit": null,
+   "referenceUnit": null,
+   "shippingFree": false,
+   "purchasePrices": null,
+   "markAsTopseller": false,
+   "weight": null,
+   "width": null,
+   "height": null,
+   "length": null,
+   "releaseDate": null,
+   "optionIds": null,
+   "name": "Schnitzel Wiener Art",
+   "keywords": null,
+   "description": "Paniertes Schnitzel nach Wiener Art.",
+   "descriptionTeaser": "Paniertes Schnitzel nach Wiener Art.",
+   "metaDescription": null,
+   "metaTitle": null,
+   "ogTitle": null,
+   "ogDescription": null,
+   "packUnit": null,
+   "packUnitPlural": null,
+   "variantRestrictions": null,
+   "variantListingConfig": {
+    "displayParent": true,
+    "mainVariantId": null,
+    "configuratorGroupConfig": null
+   },
+   "variation": [],
+   "tax": {
+    "translated": [],
+    "taxRate": 7,
+    "name": "Reduced rate",
+    "position": 2,
+    "products": null,
+    "rules": null,
+    "shippingMethods": null,
+    "customFields": null,
+    "id": "01a12a33231e70ab913ff3f564664aec"
+   },
+   "manufacturer": null,
+   "unit": null,
+   "prices": [],
+   "cover": null,
+   "parent": null,
+   "children": [
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-P",
+     "stock": -124,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "0199d9ade45c703aa27c81b3fb4bee34"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Pommes"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Pommes",
+        "position": 1,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Pommes",
+       "position": 1,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "0199d9ade45c703aa27c81b3fb4bee34"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "0199e40435a270728453742da86e743e"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-B",
+     "stock": -36,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "0199d9ae0b487f8c9b48501e6ecbe200"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Bratkartoffeln"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Bratkartoffeln",
+        "position": 2,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Bratkartoffeln",
+       "position": 2,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "0199d9ae0b487f8c9b48501e6ecbe200"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "0199e40435a3721bb8569f9619cd00a7"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-K",
+     "stock": -6,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "0199d9aefffc78728ccb96ac0f10a9bf"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Kroketten"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Kroketten",
+        "position": 3,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Kroketten",
+       "position": 3,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "0199d9aefffc78728ccb96ac0f10a9bf"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "0199e40435a470db98ebc0b66d3df8fb"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-G",
+     "stock": 999,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "0199d9af25fe7fa5a86c0994e90e59c6"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Gemüse"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Gemüse",
+        "position": 4,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Gemüse",
+       "position": 4,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "0199d9af25fe7fa5a86c0994e90e59c6"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "0199e40435a470db98ebc0b66ddab0ab"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-R",
+     "stock": -5,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "019c1426acd57680a023c66c731524a6"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Reis"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Reis",
+        "position": 5,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Reis",
+       "position": 5,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "019c1426acd57680a023c66c731524a6"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "019c1ec41fd1718e96baa1ee75d85217"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-N",
+     "stock": -3,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "019c1eb115717a9d9300db74e1631a1a"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Nudeln"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Nudeln",
+        "position": 7,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Nudeln",
+       "position": 7,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "019c1eb115717a9d9300db74e1631a1a"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "019c1ec41fd273c880e13ecf1557921f"
+    },
+    {
+     "translated": {
+      "metaDescription": null,
+      "name": null,
+      "keywords": null,
+      "description": null,
+      "descriptionTeaser": null,
+      "metaTitle": null,
+      "packUnit": null,
+      "packUnitPlural": null,
+      "customFields": [],
+      "slotConfig": null,
+      "customSearchKeywords": null,
+      "ogTitle": null,
+      "ogDescription": null
+     },
+     "parentId": "018dc311ba97721d834753d2e19eaed2",
+     "taxId": "01a12a33231e70ab913ff3f564664aec",
+     "manufacturerId": null,
+     "unitId": null,
+     "active": true,
+     "price": null,
+     "manufacturerNumber": null,
+     "guaranteeMonths": null,
+     "guaranteeConfirmed": false,
+     "ean": null,
+     "productNumber": "103-S",
+     "stock": -10,
+     "type": "physical",
+     "deliveryTimeId": null,
+     "deliveryTime": null,
+     "restockTime": null,
+     "isCloseout": null,
+     "purchaseSteps": 1,
+     "maxPurchase": null,
+     "minPurchase": 1,
+     "purchaseUnit": null,
+     "referenceUnit": null,
+     "shippingFree": false,
+     "purchasePrices": null,
+     "markAsTopseller": false,
+     "weight": null,
+     "width": null,
+     "height": null,
+     "length": null,
+     "releaseDate": null,
+     "optionIds": [
+      "019c1426bc94735b802b8ee4e331c4f5"
+     ],
+     "name": null,
+     "keywords": null,
+     "description": null,
+     "descriptionTeaser": null,
+     "metaDescription": null,
+     "metaTitle": null,
+     "ogTitle": null,
+     "ogDescription": null,
+     "packUnit": null,
+     "packUnitPlural": null,
+     "variantRestrictions": null,
+     "variantListingConfig": null,
+     "variation": [
+      {
+       "group": "Beilagen",
+       "option": "Salzkartoffeln"
+      }
+     ],
+     "tax": {
+      "translated": [],
+      "taxRate": 7,
+      "name": "Reduced rate",
+      "position": 2,
+      "products": null,
+      "rules": null,
+      "shippingMethods": null,
+      "customFields": null,
+      "id": "01a12a33231e70ab913ff3f564664aec"
+     },
+     "manufacturer": null,
+     "unit": null,
+     "prices": [],
+     "cover": null,
+     "parent": null,
+     "children": null,
+     "media": null,
+     "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+     "cmsPage": null,
+     "slotConfig": null,
+     "searchKeywords": null,
+     "categories": null,
+     "customFieldSets": null,
+     "tags": null,
+     "properties": null,
+     "options": [
+      {
+       "translated": {
+        "name": "Salzkartoffeln",
+        "position": 6,
+        "customFields": []
+       },
+       "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+       "name": "Salzkartoffeln",
+       "position": 6,
+       "colorHexCode": null,
+       "mediaId": null,
+       "group": {
+        "translated": {
+         "name": "Beilagen",
+         "description": null,
+         "position": 1,
+         "customFields": []
+        },
+        "name": "Beilagen",
+        "displayType": "text",
+        "sortingType": "position",
+        "description": null,
+        "position": 1,
+        "filterable": false,
+        "visibleOnProductDetailPage": false,
+        "options": null,
+        "customFields": null,
+        "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+       },
+       "productConfiguratorSettings": null,
+       "productProperties": null,
+       "productOptions": null,
+       "media": null,
+       "combinable": false,
+       "customFields": null,
+       "id": "019c1426bc94735b802b8ee4e331c4f5"
+      }
+     ],
+     "configuratorSettings": null,
+     "categoriesRo": null,
+     "coverId": null,
+     "visibilities": null,
+     "categoryIds": [
+      "018dbe35d335749cabb98de40a1b95da"
+     ],
+     "productReviews": null,
+     "mainCategories": null,
+     "seoUrls": null,
+     "orderLineItems": null,
+     "crossSellings": null,
+     "crossSellingAssignedProducts": null,
+     "featureSetId": null,
+     "featureSet": null,
+     "customFieldSetSelectionActive": null,
+     "customSearchKeywords": null,
+     "wishlists": null,
+     "canonicalProductId": null,
+     "canonicalProduct": null,
+     "streams": null,
+     "downloads": null,
+     "openGraphMediaId": null,
+     "openGraphMedia": null,
+     "customFields": null,
+     "id": "019c1ec41fd273c880e13ecf158666f8"
+    }
+   ],
+   "media": null,
+   "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+   "cmsPage": null,
+   "slotConfig": null,
+   "searchKeywords": null,
+   "categories": null,
+   "customFieldSets": null,
+   "tags": [],
+   "properties": [
+    {
+     "translated": {
+      "name": "Eier",
+      "position": 8,
+      "customFields": {
+       "shopbite_code": "C"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Eier",
+     "position": 8,
+     "colorHexCode": null,
+     "mediaId": null,
+     "group": {
+      "translated": {
+       "name": "Allergene",
+       "description": null,
+       "position": 1,
+       "customFields": []
+      },
+      "name": "Allergene",
+      "displayType": "text",
+      "sortingType": "position",
+      "description": null,
+      "position": 1,
+      "filterable": false,
+      "visibleOnProductDetailPage": true,
+      "options": null,
+      "customFields": null,
+      "id": "a5337954b3a9435c861f012d882bf070"
+     },
+     "productConfiguratorSettings": null,
+     "productProperties": null,
+     "productOptions": null,
+     "media": null,
+     "combinable": false,
+     "customFields": {
+      "shopbite_code": "C"
+     },
+     "id": "599613fedf204ffb8ef19976b1d4dea1"
+    },
+    {
+     "translated": {
+      "name": "Milch (inkl. Laktose)",
+      "position": 12,
+      "customFields": {
+       "shopbite_code": "G"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Milch (inkl. Laktose)",
+     "position": 12,
+     "colorHexCode": null,
+     "mediaId": null,
+     "group": {
+      "translated": {
+       "name": "Allergene",
+       "description": null,
+       "position": 1,
+       "customFields": []
+      },
+      "name": "Allergene",
+      "displayType": "text",
+      "sortingType": "position",
+      "description": null,
+      "position": 1,
+      "filterable": false,
+      "visibleOnProductDetailPage": true,
+      "options": null,
+      "customFields": null,
+      "id": "a5337954b3a9435c861f012d882bf070"
+     },
+     "productConfiguratorSettings": null,
+     "productProperties": null,
+     "productOptions": null,
+     "media": null,
+     "combinable": false,
+     "customFields": {
+      "shopbite_code": "G"
+     },
+     "id": "6c21999ffd5149baa51c3e45717e5378"
+    },
+    {
+     "translated": {
+      "name": "Weizen",
+      "position": 1,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Weizen",
+     "position": 1,
+     "colorHexCode": null,
+     "mediaId": null,
+     "group": {
+      "translated": {
+       "name": "Allergene",
+       "description": null,
+       "position": 1,
+       "customFields": []
+      },
+      "name": "Allergene",
+      "displayType": "text",
+      "sortingType": "position",
+      "description": null,
+      "position": 1,
+      "filterable": false,
+      "visibleOnProductDetailPage": true,
+      "options": null,
+      "customFields": null,
+      "id": "a5337954b3a9435c861f012d882bf070"
+     },
+     "productConfiguratorSettings": null,
+     "productProperties": null,
+     "productOptions": null,
+     "media": null,
+     "combinable": false,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "d305bb3cb28c4153a890f70b4ab58cf1"
+    }
+   ],
+   "options": null,
+   "configuratorSettings": [
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "0199d9ade45c703aa27c81b3fb4bee34",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Pommes",
+       "position": 1,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Pommes",
+      "position": 1,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "0199d9ade45c703aa27c81b3fb4bee34"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "2d248529119eca813a0755d5bae78463"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "0199d9ae0b487f8c9b48501e6ecbe200",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Bratkartoffeln",
+       "position": 2,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Bratkartoffeln",
+      "position": 2,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "0199d9ae0b487f8c9b48501e6ecbe200"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "77880f95235d9345c50ec013a5bf8cf9"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "0199d9aefffc78728ccb96ac0f10a9bf",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Kroketten",
+       "position": 3,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Kroketten",
+      "position": 3,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "0199d9aefffc78728ccb96ac0f10a9bf"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "75e1479e6e88871a54343fca60d815dc"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "0199d9af25fe7fa5a86c0994e90e59c6",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Gemüse",
+       "position": 4,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Gemüse",
+      "position": 4,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "0199d9af25fe7fa5a86c0994e90e59c6"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "d888232baca270a4e67ba9c5934818e3"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "019c1426acd57680a023c66c731524a6",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Reis",
+       "position": 5,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Reis",
+      "position": 5,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "019c1426acd57680a023c66c731524a6"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "5dc9427ce2545e6bd151d9ce47e54678"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "019c1426bc94735b802b8ee4e331c4f5",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Salzkartoffeln",
+       "position": 6,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Salzkartoffeln",
+      "position": 6,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "019c1426bc94735b802b8ee4e331c4f5"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "0da3016ae237f35718fa2450b69262f2"
+    },
+    {
+     "translated": [],
+     "productId": "018dc311ba97721d834753d2e19eaed2",
+     "optionId": "019c1eb115717a9d9300db74e1631a1a",
+     "mediaId": null,
+     "position": 0,
+     "price": null,
+     "option": {
+      "translated": {
+       "name": "Nudeln",
+       "position": 7,
+       "customFields": []
+      },
+      "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+      "name": "Nudeln",
+      "position": 7,
+      "colorHexCode": null,
+      "mediaId": null,
+      "group": {
+       "translated": {
+        "name": "Beilagen",
+        "description": null,
+        "position": 1,
+        "customFields": []
+       },
+       "name": "Beilagen",
+       "displayType": "text",
+       "sortingType": "position",
+       "description": null,
+       "position": 1,
+       "filterable": false,
+       "visibleOnProductDetailPage": false,
+       "options": null,
+       "customFields": null,
+       "id": "0199d9ad7b847aaaba63dc2c8f8071b3"
+      },
+      "productConfiguratorSettings": null,
+      "productProperties": null,
+      "productOptions": null,
+      "media": null,
+      "combinable": false,
+      "customFields": null,
+      "id": "019c1eb115717a9d9300db74e1631a1a"
+     },
+     "media": null,
+     "selected": false,
+     "product": null,
+     "customFields": null,
+     "id": "9120ef5c384b926e96e09d9972e38faf"
+    }
+   ],
+   "categoriesRo": null,
+   "coverId": null,
+   "visibilities": null,
+   "categoryIds": [
+    "018dbe35d335749cabb98de40a1b95da"
+   ],
+   "productReviews": null,
+   "mainCategories": null,
+   "seoUrls": null,
+   "orderLineItems": null,
+   "crossSellings": [],
+   "crossSellingAssignedProducts": null,
+   "featureSetId": null,
+   "featureSet": null,
+   "customFieldSetSelectionActive": null,
+   "customSearchKeywords": null,
+   "wishlists": null,
+   "canonicalProductId": null,
+   "canonicalProduct": null,
+   "streams": null,
+   "downloads": null,
+   "openGraphMediaId": null,
+   "openGraphMedia": null,
+   "customFields": {
+    "shopbite_allergens_checked": true
+   },
+   "id": "018dc311ba97721d834753d2e19eaed2"
+  },
+  "21": {
+   "translated": {
+    "metaDescription": null,
+    "name": "Pizza Margherita",
+    "keywords": null,
+    "description": null,
+    "descriptionTeaser": null,
+    "metaTitle": null,
+    "packUnit": null,
+    "packUnitPlural": null,
+    "customFields": {
+     "shopbite_receipt_print_type": "number"
+    },
+    "slotConfig": null,
+    "customSearchKeywords": null,
+    "ogTitle": null,
+    "ogDescription": null
+   },
+   "parentId": null,
+   "taxId": "01a12a33231e70ab913ff3f564664aec",
+   "manufacturerId": null,
+   "unitId": null,
+   "active": true,
+   "price": [
+    {
+     "currencyId": "b7d2554b0ce847cd82f3ac9bd1c0dfca",
+     "net": 6.5421,
+     "gross": 7,
+     "linked": true,
+     "listPrice": null,
+     "percentage": null,
+     "regulationPrice": null
+    }
+   ],
+   "manufacturerNumber": null,
+   "guaranteeMonths": null,
+   "guaranteeConfirmed": false,
+   "ean": null,
+   "productNumber": "21",
+   "stock": -486,
+   "type": "physical",
+   "deliveryTimeId": null,
+   "deliveryTime": null,
+   "restockTime": null,
+   "isCloseout": false,
+   "purchaseSteps": 1,
+   "maxPurchase": null,
+   "minPurchase": 1,
+   "purchaseUnit": null,
+   "referenceUnit": null,
+   "shippingFree": false,
+   "purchasePrices": null,
+   "markAsTopseller": false,
+   "weight": null,
+   "width": null,
+   "height": null,
+   "length": null,
+   "releaseDate": null,
+   "optionIds": null,
+   "name": "Pizza Margherita",
+   "keywords": null,
+   "description": null,
+   "descriptionTeaser": null,
+   "metaDescription": null,
+   "metaTitle": null,
+   "ogTitle": null,
+   "ogDescription": null,
+   "packUnit": null,
+   "packUnitPlural": null,
+   "variantRestrictions": null,
+   "variantListingConfig": null,
+   "variation": [],
+   "tax": {
+    "translated": [],
+    "taxRate": 7,
+    "name": "Reduced rate",
+    "position": 2,
+    "products": null,
+    "rules": null,
+    "shippingMethods": null,
+    "customFields": null,
+    "id": "01a12a33231e70ab913ff3f564664aec"
+   },
+   "manufacturer": null,
+   "unit": null,
+   "prices": [],
+   "cover": null,
+   "parent": null,
+   "children": [],
+   "media": null,
+   "cmsPageId": "7a6d253a67204037966f42b0119704d5",
+   "cmsPage": null,
+   "slotConfig": null,
+   "searchKeywords": null,
+   "categories": null,
+   "customFieldSets": null,
+   "tags": [],
+   "properties": [
+    {
+     "translated": {
+      "name": "Ja",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019a926ef4117401a142c5529a7276e8",
+     "name": "Ja",
+     "position": 1,
+     "colorHexCode": null,
+     "mediaId": null,
+     "group": {
+      "translated": {
+       "name": "Vegetarisch",
+       "description": null,
+       "position": 1,
+       "customFields": []
+      },
+      "name": "Vegetarisch",
+      "displayType": "text",
+      "sortingType": "alphanumeric",
+      "description": null,
+      "position": 1,
+      "filterable": true,
+      "visibleOnProductDetailPage": true,
+      "options": null,
+      "customFields": null,
+      "id": "019a926ef4117401a142c5529a7276e8"
+     },
+     "productConfiguratorSettings": null,
+     "productProperties": null,
+     "productOptions": null,
+     "media": null,
+     "combinable": false,
+     "customFields": null,
+     "id": "019a926f272373dc84f3c2eba873d655"
+    }
+   ],
+   "options": null,
+   "configuratorSettings": [],
+   "categoriesRo": null,
+   "coverId": null,
+   "visibilities": null,
+   "categoryIds": [
+    "018dadb399837af3aa669c8fff4f4d6c"
+   ],
+   "productReviews": null,
+   "mainCategories": null,
+   "seoUrls": null,
+   "orderLineItems": null,
+   "crossSellings": [
+    {
+     "translated": {
+      "name": "Extras"
+     },
+     "name": "Extras",
+     "position": 0,
+     "sortBy": "name",
+     "sortDirection": "ASC",
+     "limit": 24,
+     "active": true,
+     "productId": "018dade63db27858aa50fc935387f644",
+     "product": null,
+     "productStreamId": null,
+     "productStream": null,
+     "type": "productList",
+     "assignedProducts": [
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01970d094ee179f0a2d96fbe1d9c1496",
+       "product": null,
+       "crossSelling": null,
+       "position": 10,
+       "id": "1040789e85a0ba2696b7485adb75af46"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0197134d17ee728b87c742209ea377ec",
+       "product": null,
+       "crossSelling": null,
+       "position": 21,
+       "id": "2b9b1df788a7fc788225b59834fa2c22"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0197135cf13d7335bf316a38b26d43f1",
+       "product": null,
+       "crossSelling": null,
+       "position": 25,
+       "id": "c4f3b998f6d0c65b483ad6ba92fd7388"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0197135d3aa471fdb66c4f271ef631c0",
+       "product": null,
+       "crossSelling": null,
+       "position": 20,
+       "id": "7c24580c26e5646a8cdb506cdbfdacea"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198767e0d017148867a086485f7d594",
+       "product": null,
+       "crossSelling": null,
+       "position": 12,
+       "id": "c4074f03c7e321705c3d1b69b7063b7d"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019880e89e4d719590a7fb39d4eb596b",
+       "product": null,
+       "crossSelling": null,
+       "position": 19,
+       "id": "ad7c58dee4c695b7a2bd7e1e3e1b6a71"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019880edf51072469165b17e73b61110",
+       "product": null,
+       "crossSelling": null,
+       "position": 26,
+       "id": "ea0f49b088b5111d5e8174addd025ae5"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019880ee516e7300b5192f22baeb63b5",
+       "product": null,
+       "crossSelling": null,
+       "position": 32,
+       "id": "688211b57c0ee694535a148cdad90fd3"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019880ef039272c896265e5a37455f8e",
+       "product": null,
+       "crossSelling": null,
+       "position": 31,
+       "id": "90ed2c2a2bda7371c0357ed9dcf49c68"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019880f001cf731e9ab5b68107235339",
+       "product": null,
+       "crossSelling": null,
+       "position": 17,
+       "id": "068b568903b0e673736b698a5dbd5e73"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881015af273f983fb083151b347f8",
+       "product": null,
+       "crossSelling": null,
+       "position": 18,
+       "id": "814980efa16cf62be928cb83ebeec249"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988101d976732582c90a287fa792d5",
+       "product": null,
+       "crossSelling": null,
+       "position": 1,
+       "id": "cd8af6f5b7c9fc3cb96e256e5758b194"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198810212157000a582bb5e24558d2e",
+       "product": null,
+       "crossSelling": null,
+       "position": 4,
+       "id": "87eef6b16081dac34ee62427bc67f687"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881028c3773438bc369b23b861cd9",
+       "product": null,
+       "crossSelling": null,
+       "position": 16,
+       "id": "83bef6594c4265890f2b8ea1d37f4fed"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988102e65473369ef3ce8b33c04612",
+       "product": null,
+       "crossSelling": null,
+       "position": 29,
+       "id": "c2d814ffccd4899d9b2b2242c069e2ed"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198810383737179aab75a0363ef41b3",
+       "product": null,
+       "crossSelling": null,
+       "position": 0,
+       "id": "4002df3686c9a32c718f74a37447fd03"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988103c9a973f2926bb46279c3d10d",
+       "product": null,
+       "crossSelling": null,
+       "position": 23,
+       "id": "d5d373f0e580f7d8b230dc290bbe9d74"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881041ebb70919c1e0a1d52a6a0c7",
+       "product": null,
+       "crossSelling": null,
+       "position": 11,
+       "id": "05e780ca2a2a34ec15641f1cc91cf2a9"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881049731716e80231c31058aabd4",
+       "product": null,
+       "crossSelling": null,
+       "position": 9,
+       "id": "c4475804af3f8cf9860a6d95e0f903a2"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988104e86472d59efd87c572a5c6cf",
+       "product": null,
+       "crossSelling": null,
+       "position": 15,
+       "id": "0cb145f68d900b0ac5e0455ca1617f8f"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881052adc71f888126e7fc85de501",
+       "product": null,
+       "crossSelling": null,
+       "position": 5,
+       "id": "5e7f821b6dce5cb413fc28e34ee1e4a6"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198810597e672f398c917afa72ae5e9",
+       "product": null,
+       "crossSelling": null,
+       "position": 6,
+       "id": "f825145229f57790da0b2ff9ed316fbe"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988107260c72c8acfd1b8842cfa648",
+       "product": null,
+       "crossSelling": null,
+       "position": 3,
+       "id": "afbffd10faf7d0c5b74b8d6903f48a66"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019881075ab37058a03848ff8ca95759",
+       "product": null,
+       "crossSelling": null,
+       "position": 27,
+       "id": "f01ca15e0dee6fd7ea1a38ec1fb24d74"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988107c14270b59ff801076f09ca26",
+       "product": null,
+       "crossSelling": null,
+       "position": 2,
+       "id": "7de3dd13356d3f724f6331aefd7287ec"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988108097771a5b199c9d6a8f84e1a",
+       "product": null,
+       "crossSelling": null,
+       "position": 14,
+       "id": "0171a89b837893b1f45b805029975959"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01988108410f72ffb9a313735bad8dcf",
+       "product": null,
+       "crossSelling": null,
+       "position": 13,
+       "id": "467b4f8605c0aabbd0bf22b05d5e1fa3"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198810887f2733a9439152fdaf180f4",
+       "product": null,
+       "crossSelling": null,
+       "position": 30,
+       "id": "262c1d05be7af763e9813d1d3937b6bd"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "0198810aa19571429cd797612247de45",
+       "product": null,
+       "crossSelling": null,
+       "position": 7,
+       "id": "2107bc01511a5236e40c24ba20ea8d6b"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "01992ebb5b0b703d863bc65bca4a7bc1",
+       "product": null,
+       "crossSelling": null,
+       "position": 8,
+       "id": "4da244773314b8ac6f0927a0d7de4775"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019c23c768257029a5a4dd8f0fbf7348",
+       "product": null,
+       "crossSelling": null,
+       "position": 28,
+       "id": "ee05b95f46358f1c049d64fed6f84955"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019c23c8d46273ccb382ac1d74b2f501",
+       "product": null,
+       "crossSelling": null,
+       "position": 22,
+       "id": "8a1459c5ba584273fc56095aef56171d"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019c8bf776977014a4185d3e71e8daef",
+       "product": null,
+       "crossSelling": null,
+       "position": 24,
+       "id": "4adde3f34e98c3eda681e66aa47b9257"
+      },
+      {
+       "translated": [],
+       "crossSellingId": "01970d1705527f62a3b8c1ef9139af10",
+       "productId": "019cb9acc30c73018022391825b7919f",
+       "product": null,
+       "crossSelling": null,
+       "position": 33,
+       "id": "857b16a6b070d2da01ee75ae99156652"
+      }
+     ],
+     "id": "01970d1705527f62a3b8c1ef9139af10"
+    }
+   ],
+   "crossSellingAssignedProducts": null,
+   "featureSetId": null,
+   "featureSet": null,
+   "customFieldSetSelectionActive": null,
+   "customSearchKeywords": null,
+   "wishlists": null,
+   "canonicalProductId": null,
+   "canonicalProduct": null,
+   "streams": null,
+   "downloads": null,
+   "openGraphMediaId": null,
+   "openGraphMedia": null,
+   "customFields": {
+    "shopbite_receipt_print_type": "number"
+   },
+   "id": "018dade63db27858aa50fc935387f644"
+  }
+ },
+ "categories": [
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Vorspeisen"
+    ],
+    "name": "Vorspeisen",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "018dadb2e7727525856306b03694e5b8",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Salate"
+    ],
+    "name": "Salate",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "018dadb30d2c76fb96bbd99f6c13baa4",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Pizza"
+    ],
+    "name": "Pizza",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Alle Pizzen werden mit Tomatensoße und Käse belegt. (Pizzabrote ausgenommen)",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "018dadb399837af3aa669c8fff4f4d6c",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Spaghetti"
+    ],
+    "name": "Spaghetti",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018db8c6c5d77870af3fa74859409da4",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Rigatoni"
+    ],
+    "name": "Rigatoni",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018db8c72a067dd6b9bf545b6e2b1443",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Tortellini"
+    ],
+    "name": "Tortellini",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018db8c78767789fad08cf935dbe10cb",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Tagliatelle"
+    ],
+    "name": "Tagliatelle",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018db8ceaa557868b7cc2bece911f746",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Penne"
+    ],
+    "name": "Penne",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018dbe3556367eaf9fbe02d8cd126924",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Ravioli"
+    ],
+    "name": "Ravioli",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018dbe35699b70a4b481e2de8106791c",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Tortelloni"
+    ],
+    "name": "Tortelloni",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018dbe3580ce700283c257e30949b51a",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Gnocchi"
+    ],
+    "name": "Gnocchi",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018dbe35a2d07e6493084b7e6b3ffa1d",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln",
+     "Pasta al forno"
+    ],
+    "name": "Pasta al forno",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Überbackene Nudeln",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf0a6a971eaada59ed5c84138de",
+   "id": "018dbe35b83c7c8b952b465d5acbe04d",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fleischgerichte",
+     "Vom Schwein"
+    ],
+    "name": "Vom Schwein",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Alle Schweinefleischgerichte sind inklusive Beilagensalat",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf512e97b3bb7b848aec03a2a28",
+   "id": "018dbe35d335749cabb98de40a1b95da",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fleischgerichte",
+     "Vom Kalb"
+    ],
+    "name": "Vom Kalb",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Alle Kalbfleischgerichte sind inklusive Beilagensalat",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf512e97b3bb7b848aec03a2a28",
+   "id": "018dbe361e2475968711e69089aec86f",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fleischgerichte",
+     "Vom Rind"
+    ],
+    "name": "Vom Rind",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Alle Rindfleischgerichte sind inklusive Beilagensalat",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf512e97b3bb7b848aec03a2a28",
+   "id": "018dbe363c1d7ca4b0b4c83b8c8a16a9",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fleischgerichte",
+     "Hähnchen"
+    ],
+    "name": "Hähnchen",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": "Alle Hähnchengerichte sind inklusive Beilagensalat",
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "0197baf512e97b3bb7b848aec03a2a28",
+   "id": "018dbe364c69712096510afb67684a5c",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fisch"
+    ],
+    "name": "Fisch",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "018dbe36cd38767fa4c94d62bb04a343",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nudeln"
+    ],
+    "name": "Nudeln",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "0197baf0a6a971eaada59ed5c84138de",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Fleischgerichte"
+    ],
+    "name": "Fleischgerichte",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "0197baf512e97b3bb7b848aec03a2a28",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Extras"
+    ],
+    "name": "Extras",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "01992ec27f32738d83cb3a0e098d1a1a",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Nachtisch"
+    ],
+    "name": "Nachtisch",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "01992ed89a2579738a310517a26b7344",
+   "apiAlias": "category"
+  },
+  {
+   "translated": {
+    "breadcrumb": [
+     "ShopBite",
+     "Speisekarte",
+     "Getränke"
+    ],
+    "name": "Getränke",
+    "customFields": {},
+    "slotConfig": null,
+    "linkType": null,
+    "internalLink": null,
+    "externalLink": null,
+    "linkNewTab": null,
+    "description": null,
+    "metaTitle": null,
+    "metaDescription": null,
+    "keywords": null
+   },
+   "parentId": "211cf9b2d1725130a517bbadf753a43c",
+   "id": "019c0b95cd3d7b64a044ba6cd93540d9",
+   "apiAlias": "category"
+  }
+ ],
+ "propertyGroups": [
+  {
+   "translated": {
+    "name": "Typ",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Vegetarisch",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "0198389c3a0c7dfcbb96951c644bd6d6",
+     "name": "Vegetarisch",
+     "position": 1,
+     "customFields": null,
+     "id": "0198389f46fc79e0a3988d60060968ef",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "0198389c3a0c7dfcbb96951c644bd6d6",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Soße",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Joghurtsoße",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019841a36a60759abcfe9f39bed7acce",
+     "name": "Joghurtsoße",
+     "position": 1,
+     "customFields": null,
+     "id": "019841a3880c7004a4e7ee381f860af3",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Essig & Öl",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019841a36a60759abcfe9f39bed7acce",
+     "name": "Essig & Öl",
+     "position": 1,
+     "customFields": null,
+     "id": "019841a3ea047d43bc91dda643575f84",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Champignonsoße",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019841a36a60759abcfe9f39bed7acce",
+     "name": "Champignonsoße",
+     "position": 1,
+     "customFields": null,
+     "id": "01992fe3afca77a2ae72c3d3c5de02a7",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Gorgonzolasoße",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019841a36a60759abcfe9f39bed7acce",
+     "name": "Gorgonzolasoße",
+     "position": 1,
+     "customFields": null,
+     "id": "01992fe4307d7f7cb139e63ee7c239d1",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Ohne Soße",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019841a36a60759abcfe9f39bed7acce",
+     "name": "Ohne Soße",
+     "position": 1,
+     "customFields": null,
+     "id": "019c22d33598709d9eb4d67e34f8d650",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "019841a36a60759abcfe9f39bed7acce",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Beilagen",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Pommes",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Pommes",
+     "position": 1,
+     "customFields": null,
+     "id": "0199d9ade45c703aa27c81b3fb4bee34",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Bratkartoffeln",
+      "position": 2,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Bratkartoffeln",
+     "position": 2,
+     "customFields": null,
+     "id": "0199d9ae0b487f8c9b48501e6ecbe200",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Kroketten",
+      "position": 3,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Kroketten",
+     "position": 3,
+     "customFields": null,
+     "id": "0199d9aefffc78728ccb96ac0f10a9bf",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Gemüse",
+      "position": 4,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Gemüse",
+     "position": 4,
+     "customFields": null,
+     "id": "0199d9af25fe7fa5a86c0994e90e59c6",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Reis",
+      "position": 5,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Reis",
+     "position": 5,
+     "customFields": null,
+     "id": "019c1426acd57680a023c66c731524a6",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Salzkartoffeln",
+      "position": 6,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Salzkartoffeln",
+     "position": 6,
+     "customFields": null,
+     "id": "019c1426bc94735b802b8ee4e331c4f5",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Nudeln",
+      "position": 7,
+      "customFields": []
+     },
+     "groupId": "0199d9ad7b847aaaba63dc2c8f8071b3",
+     "name": "Nudeln",
+     "position": 7,
+     "customFields": null,
+     "id": "019c1eb115717a9d9300db74e1631a1a",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "0199d9ad7b847aaaba63dc2c8f8071b3",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Vegetarisch",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Ja",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019a926ef4117401a142c5529a7276e8",
+     "name": "Ja",
+     "position": 1,
+     "customFields": null,
+     "id": "019a926f272373dc84f3c2eba873d655",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "019a926ef4117401a142c5529a7276e8",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Fleischvariante",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Natur",
+      "position": 2,
+      "customFields": []
+     },
+     "groupId": "019c22d0d608756f8cb40c47d3350fb7",
+     "name": "Natur",
+     "position": 2,
+     "customFields": null,
+     "id": "019c22d11a7b7f5190115c6faa562b6d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Paniert",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "019c22d0d608756f8cb40c47d3350fb7",
+     "name": "Paniert",
+     "position": 1,
+     "customFields": null,
+     "id": "019c22d14d3f74a1ba5eba1a74d15d59",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "019c22d0d608756f8cb40c47d3350fb7",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Hauptzutaten",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Käse",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Käse",
+     "position": 1,
+     "customFields": null,
+     "id": "01971862e73f7d7cb21b49c673a09efc",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Tomatensoße",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Tomatensoße",
+     "position": 1,
+     "customFields": null,
+     "id": "0197186349e87430bd4c2e888c47ddf3",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Mozzarella",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Mozzarella",
+     "position": 1,
+     "customFields": null,
+     "id": "0198388b4d5374498c4ce824c56f4176",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Tomaten",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Tomaten",
+     "position": 1,
+     "customFields": null,
+     "id": "0198388bd5f374029e124dca4d465977",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Oliven",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Oliven",
+     "position": 1,
+     "customFields": null,
+     "id": "0198388c018a7d7aa7d93f2b35bd149d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Basilikum",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Basilikum",
+     "position": 1,
+     "customFields": null,
+     "id": "0198388c185578f98460ba4c32563501",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Olivenöl",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Olivenöl",
+     "position": 1,
+     "customFields": null,
+     "id": "019838b72df27755a275e821aee51cf7",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Balsamico",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Balsamico",
+     "position": 1,
+     "customFields": null,
+     "id": "019838b75ff37c8697960a1f07aa9d7a",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Zwiebeln",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Zwiebeln",
+     "position": 1,
+     "customFields": null,
+     "id": "019838bb644271d891c61bd75a6661cd",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Eisbergsalat",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Eisbergsalat",
+     "position": 1,
+     "customFields": null,
+     "id": "019838bd523076cbaf4b70e7de38b204",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Gurken",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Gurken",
+     "position": 1,
+     "customFields": null,
+     "id": "019838cb1dec71d2a0b5a3931b5f0d32",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Tunfisch",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Tunfisch",
+     "position": 1,
+     "customFields": null,
+     "id": "019838cd541d7770b601142e22a92705",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Schinken",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Schinken",
+     "position": 1,
+     "customFields": null,
+     "id": "019838d0c4817cdabe982dc9bd3b3477",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Ei",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Ei",
+     "position": 1,
+     "customFields": null,
+     "id": "019838d0e70d72e5ad5919775dc1d4ba",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Meeresfrüchte",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Meeresfrüchte",
+     "position": 1,
+     "customFields": null,
+     "id": "019838e64169793781a90489fff9bcdf",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Mais",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Mais",
+     "position": 1,
+     "customFields": null,
+     "id": "019838e7299e7f008def449bf7a60354",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Schafskäse",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Schafskäse",
+     "position": 1,
+     "customFields": null,
+     "id": "019838e738f27072bd30aac0bd1b82b5",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Hähnchenbrustfilet",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Hähnchenbrustfilet",
+     "position": 1,
+     "customFields": null,
+     "id": "019838eb846674959652438c63633977",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Paprika",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Paprika",
+     "position": 1,
+     "customFields": null,
+     "id": "019838fb7acd788dbed55ea0934fd3c4",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Salami",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Salami",
+     "position": 1,
+     "customFields": null,
+     "id": "01983906a5077d7d8f832bbdfb70ba41",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Pilze",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Pilze",
+     "position": 1,
+     "customFields": null,
+     "id": "0198390985997440880c44eb4b882a4d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Peperoniwurst",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Peperoniwurst",
+     "position": 1,
+     "customFields": null,
+     "id": "0198390a492b76f3bcfd000be653f410",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Schrimps",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Schrimps",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c8b643378058ca8fc2a304aeadf",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Zucchini",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Zucchini",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c8b7fc477ae98a774356014ade8",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Peperoni (mild)",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Peperoni (mild)",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c8c5efa7a0fa357f304aa6f1695",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Artischocken",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Artischocken",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c8dc73a75378ca9f9a028174f22",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Champignons",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Champignons",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c902aa8762692d14dd5ac70a927",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Knoblauch",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Knoblauch",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c9109e0704aab938caa099dc58b",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Annanas",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Annanas",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c921f517f8c90dbaee6f5216218",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Sardellen",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Sardellen",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c92af2778bb97c3b28644390986",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Kapern",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Kapern",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c92ba78741796f096ea1fc801dd",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Peperoni (scharf)",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Peperoni (scharf)",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c949cff7fbca3537e074d7e1f3d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Erbsen",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Erbsen",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c96e1057918bd51305431e4b74a",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Brokkoli",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Brokkoli",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c97b513767485d29a9784f19130",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Steinpilze",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Steinpilze",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c98b7597da489ca71e96adfe112",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Auberginen",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Auberginen",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c98c8797fc5b798d411e8c44aaa",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Spinat",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Spinat",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c9c01357053b06a8886e18cbd6d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Gorgonzola",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Gorgonzola",
+     "position": 1,
+     "customFields": null,
+     "id": "01983c9fa0e176eca024a100fa603d7f",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Parmesan",
+      "position": 1,
+      "customFields": []
+     },
+     "groupId": "448f3d72803f4ac8afc0c1108739ddf4",
+     "name": "Parmesan",
+     "position": 1,
+     "customFields": null,
+     "id": "01983d9b28e0732f81891c1c690b24ae",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "448f3d72803f4ac8afc0c1108739ddf4",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Zusatzstoffe",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "mit Süßungsmittel",
+      "position": 9,
+      "customFields": {
+       "shopbite_code": "9"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Süßungsmittel",
+     "position": 9,
+     "customFields": {
+      "shopbite_code": "9"
+     },
+     "id": "06d46255ec5112587b213c0f5705554b",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "gewachst",
+      "position": 7,
+      "customFields": {
+       "shopbite_code": "7"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "gewachst",
+     "position": 7,
+     "customFields": {
+      "shopbite_code": "7"
+     },
+     "id": "1399746939a824911ae5b7785f5a02bb",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "mit Antioxidationsmittel",
+      "position": 3,
+      "customFields": {
+       "shopbite_code": "3"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Antioxidationsmittel",
+     "position": 3,
+     "customFields": {
+      "shopbite_code": "3"
+     },
+     "id": "369b900dd11db54a97d94f5c3376f86b",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "mit Konservierungsstoff",
+      "position": 2,
+      "customFields": {
+       "shopbite_code": "2"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Konservierungsstoff",
+     "position": 2,
+     "customFields": {
+      "shopbite_code": "2"
+     },
+     "id": "4613ae1552dfc53721b240fb34cc4c45",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "enthält eine Phenylalaninquelle",
+      "position": 10,
+      "customFields": {
+       "shopbite_code": "10"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "enthält eine Phenylalaninquelle",
+     "position": 10,
+     "customFields": {
+      "shopbite_code": "10"
+     },
+     "id": "6e047545538cb57d79b6e81631df931f",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "geschwefelt",
+      "position": 5,
+      "customFields": {
+       "shopbite_code": "5"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "geschwefelt",
+     "position": 5,
+     "customFields": {
+      "shopbite_code": "5"
+     },
+     "id": "73f3fc77ec8eb3e6c64378e8f548d442",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "chininhaltig",
+      "position": 12,
+      "customFields": {
+       "shopbite_code": "12"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "chininhaltig",
+     "position": 12,
+     "customFields": {
+      "shopbite_code": "12"
+     },
+     "id": "7c56121730cbf0e2087c16b6a682765a",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "mit Geschmacksverstärker",
+      "position": 4,
+      "customFields": {
+       "shopbite_code": "4"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Geschmacksverstärker",
+     "position": 4,
+     "customFields": {
+      "shopbite_code": "4"
+     },
+     "id": "9e92909c7e8eddc0c2b18dc9d48d9165",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "mit Farbstoff",
+      "position": 1,
+      "customFields": {
+       "shopbite_code": "1"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Farbstoff",
+     "position": 1,
+     "customFields": {
+      "shopbite_code": "1"
+     },
+     "id": "b098b454d544a0914b6fad138b0b21d4",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "geschwärzt",
+      "position": 6,
+      "customFields": {
+       "shopbite_code": "6"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "geschwärzt",
+     "position": 6,
+     "customFields": {
+      "shopbite_code": "6"
+     },
+     "id": "c616c5197707fa8feceaf123a02ca3ac",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "koffeinhaltig",
+      "position": 11,
+      "customFields": {
+       "shopbite_code": "11"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "koffeinhaltig",
+     "position": 11,
+     "customFields": {
+      "shopbite_code": "11"
+     },
+     "id": "f67eb68656d4add8975f4d5b19222530",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "mit Phosphat",
+      "position": 8,
+      "customFields": {
+       "shopbite_code": "8"
+      }
+     },
+     "groupId": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+     "name": "mit Phosphat",
+     "position": 8,
+     "customFields": {
+      "shopbite_code": "8"
+     },
+     "id": "f7aa1df51aeed5a78ac22f6a65832f2b",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "a1e5c0a3e8b44b7c9f0d2a6b4c8e1f02",
+   "apiAlias": "property_group"
+  },
+  {
+   "translated": {
+    "name": "Allergene",
+    "description": null,
+    "position": 1,
+    "customFields": {}
+   },
+   "options": [
+    {
+     "translated": {
+      "name": "Gerste",
+      "position": 3,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Gerste",
+     "position": 3,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "0a2aad580e7382173dccdca54040ab5e",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Cashewnüsse",
+      "position": 16,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Cashewnüsse",
+     "position": 16,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "10b6930aca4a384e8d3355ac732b2e12",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Sellerie",
+      "position": 21,
+      "customFields": {
+       "shopbite_code": "L"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Sellerie",
+     "position": 21,
+     "customFields": {
+      "shopbite_code": "L"
+     },
+     "id": "16fd3bc89c7ba47b279a6b8e7e3fe977",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Lupinen",
+      "position": 25,
+      "customFields": {
+       "shopbite_code": "P"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Lupinen",
+     "position": 25,
+     "customFields": {
+      "shopbite_code": "P"
+     },
+     "id": "27b746c28171ae7e75ff45a4278c472c",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Roggen",
+      "position": 2,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Roggen",
+     "position": 2,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "29fcbef0b356c0dbf9127329a84beabb",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Fisch",
+      "position": 9,
+      "customFields": {
+       "shopbite_code": "D"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Fisch",
+     "position": 9,
+     "customFields": {
+      "shopbite_code": "D"
+     },
+     "id": "2b30c49bd81c1c0c64e7b750b72d9417",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Mandeln",
+      "position": 13,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Mandeln",
+     "position": 13,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "3333eb109591f868638f367322329702",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Weichtiere",
+      "position": 26,
+      "customFields": {
+       "shopbite_code": "R"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Weichtiere",
+     "position": 26,
+     "customFields": {
+      "shopbite_code": "R"
+     },
+     "id": "4bd1a6ab0b9cf3a9ff5385639955851d",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Pekannüsse",
+      "position": 17,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Pekannüsse",
+     "position": 17,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "523eee691d353aa751c19d50fb2eef57",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Eier",
+      "position": 8,
+      "customFields": {
+       "shopbite_code": "C"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Eier",
+     "position": 8,
+     "customFields": {
+      "shopbite_code": "C"
+     },
+     "id": "599613fedf204ffb8ef19976b1d4dea1",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Haselnüsse",
+      "position": 14,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Haselnüsse",
+     "position": 14,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "5b6524fb2668904d9d421f9f751f55bb",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Milch (inkl. Laktose)",
+      "position": 12,
+      "customFields": {
+       "shopbite_code": "G"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Milch (inkl. Laktose)",
+     "position": 12,
+     "customFields": {
+      "shopbite_code": "G"
+     },
+     "id": "6c21999ffd5149baa51c3e45717e5378",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Erdnüsse",
+      "position": 10,
+      "customFields": {
+       "shopbite_code": "E"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Erdnüsse",
+     "position": 10,
+     "customFields": {
+      "shopbite_code": "E"
+     },
+     "id": "713b35e08280681f0dd8c597af1069bf",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Dinkel",
+      "position": 5,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Dinkel",
+     "position": 5,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "841fd6ae158c9bffdbb9c77195d148c7",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Kamut",
+      "position": 6,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Kamut",
+     "position": 6,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "861b5beeb6fafcf40e3685d0b542d7bb",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Sesam",
+      "position": 23,
+      "customFields": {
+       "shopbite_code": "N"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Sesam",
+     "position": 23,
+     "customFields": {
+      "shopbite_code": "N"
+     },
+     "id": "8a57b338db0d4d99aa3d2107408385a5",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Pistazien",
+      "position": 19,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Pistazien",
+     "position": 19,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "93d5778a2298109c799f218987a03462",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Macadamianüsse",
+      "position": 20,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Macadamianüsse",
+     "position": 20,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "9530b8c6274f5d88ca1008eab17cf39a",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Senf",
+      "position": 22,
+      "customFields": {
+       "shopbite_code": "M"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Senf",
+     "position": 22,
+     "customFields": {
+      "shopbite_code": "M"
+     },
+     "id": "b3898d7afd4c88eff1149637db3d0afa",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Soja",
+      "position": 11,
+      "customFields": {
+       "shopbite_code": "F"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Soja",
+     "position": 11,
+     "customFields": {
+      "shopbite_code": "F"
+     },
+     "id": "b408f79d82a68d541e62734e11cba047",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Krebstiere",
+      "position": 7,
+      "customFields": {
+       "shopbite_code": "B"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Krebstiere",
+     "position": 7,
+     "customFields": {
+      "shopbite_code": "B"
+     },
+     "id": "c354216fd36c2e660048c3488198c3bb",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Weizen",
+      "position": 1,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Weizen",
+     "position": 1,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "d305bb3cb28c4153a890f70b4ab58cf1",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Schwefeldioxid und Sulfite",
+      "position": 24,
+      "customFields": {
+       "shopbite_code": "O"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Schwefeldioxid und Sulfite",
+     "position": 24,
+     "customFields": {
+      "shopbite_code": "O"
+     },
+     "id": "d37b6aff2f64946305b19c55358db401",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Hafer",
+      "position": 4,
+      "customFields": {
+       "shopbite_code": "A"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Hafer",
+     "position": 4,
+     "customFields": {
+      "shopbite_code": "A"
+     },
+     "id": "da04e4e8b09024617112b4068d6cd625",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Paranüsse",
+      "position": 18,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Paranüsse",
+     "position": 18,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "e1515a8026ba6517f506b1ae926e7d6f",
+     "apiAlias": "property_group_option"
+    },
+    {
+     "translated": {
+      "name": "Walnüsse",
+      "position": 15,
+      "customFields": {
+       "shopbite_code": "H"
+      }
+     },
+     "groupId": "a5337954b3a9435c861f012d882bf070",
+     "name": "Walnüsse",
+     "position": 15,
+     "customFields": {
+      "shopbite_code": "H"
+     },
+     "id": "e6daf1270eae5a136152c81ab0fb4f5d",
+     "apiAlias": "property_group_option"
+    }
+   ],
+   "id": "a5337954b3a9435c861f012d882bf070",
+   "apiAlias": "property_group"
+  }
+ ]
+}

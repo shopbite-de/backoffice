@@ -40,8 +40,5 @@ export type AuthState =
     };
 
 export function useAuthState() {
-  return useState<AuthState | null>(
-    "backoffice-session",
-    () => null,
-  );
+  return useState<AuthState | null>("backoffice-session", () => null);
 }

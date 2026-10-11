@@ -13,7 +13,10 @@ const { data: sections } = await useAsyncData("sections", () => api<MenuSectionD
 const drafts = ref<Record<string, { name: string; title: string; description: string; path: string }>>({});
 watchEffect(() => {
   drafts.value = Object.fromEntries(
-    (sections.value ?? []).map((s) => [s.id, { name: s.name, title: s.seo.title, description: s.seo.description, path: s.seo.path }]),
+    (sections.value ?? []).map((s) => [
+      s.id,
+      { name: s.name, title: s.seo.title, description: s.seo.description, path: s.seo.path },
+    ]),
   );
 });
 
@@ -30,7 +33,11 @@ async function patch(section: MenuSectionDetail, body: Record<string, unknown>, 
 
 function save(section: MenuSectionDetail) {
   const d = drafts.value[section.id]!;
-  patch(section, { name: d.name, seo: { title: d.title, description: d.description, path: d.path } }, `${d.name} gespeichert.`);
+  patch(
+    section,
+    { name: d.name, seo: { title: d.title, description: d.description, path: d.path } },
+    `${d.name} gespeichert.`,
+  );
 }
 
 const newName = ref("");
@@ -56,7 +63,9 @@ async function create() {
       <p class="text-muted-foreground">Reihenfolge und Namen, wie Gäste sie im Shop sehen.</p>
     </div>
     <ErrorAlert :message="error" />
-    <Alert v-if="saved" role="status"><AlertDescription>{{ saved }}</AlertDescription></Alert>
+    <Alert v-if="saved" role="status"
+      ><AlertDescription>{{ saved }}</AlertDescription></Alert
+    >
 
     <ol class="space-y-3">
       <li v-for="(section, i) in sections" :key="section.id">
@@ -64,10 +73,20 @@ async function create() {
           <CardContent class="space-y-3">
             <div class="flex flex-wrap items-center gap-3">
               <div class="flex gap-1">
-                <Button variant="outline" size="icon" :disabled="i === 0" @click="patch(section, { move: 'up' }, `${section.name} nach oben verschoben.`)">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  :disabled="i === 0"
+                  @click="patch(section, { move: 'up' }, `${section.name} nach oben verschoben.`)"
+                >
                   <ArrowUp aria-hidden="true" /><span class="sr-only">{{ section.name }} nach oben</span>
                 </Button>
-                <Button variant="outline" size="icon" :disabled="i === (sections?.length ?? 0) - 1" @click="patch(section, { move: 'down' }, `${section.name} nach unten verschoben.`)">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  :disabled="i === (sections?.length ?? 0) - 1"
+                  @click="patch(section, { move: 'down' }, `${section.name} nach unten verschoben.`)"
+                >
                   <ArrowDown aria-hidden="true" /><span class="sr-only">{{ section.name }} nach unten</span>
                 </Button>
               </div>
@@ -79,11 +98,15 @@ async function create() {
               <Switch
                 :model-value="section.visible"
                 :aria-label="`${section.name} im Shop zeigen`"
-                @update:model-value="patch(section, { visible: $event }, `${section.name} ${$event ? 'eingeblendet' : 'ausgeblendet'}.`)"
+                @update:model-value="
+                  patch(section, { visible: $event }, `${section.name} ${$event ? 'eingeblendet' : 'ausgeblendet'}.`)
+                "
               />
             </div>
             <details>
-              <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-muted-foreground">Name und SEO bearbeiten</summary>
+              <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-muted-foreground">
+                Name und SEO bearbeiten
+              </summary>
               <form v-if="drafts[section.id]" class="mt-2 grid gap-4" @submit.prevent="save(section)">
                 <div class="grid gap-2">
                   <Label :for="`n-${section.id}`">Name</Label>
@@ -91,8 +114,14 @@ async function create() {
                 </div>
                 <div class="grid gap-2">
                   <Label :for="`p-${section.id}`">Adresse im Shop</Label>
-                  <p :id="`p-${section.id}-hint`" class="text-sm text-muted-foreground">Wie Speisekarte/Pizza/. Die alte Adresse leitet automatisch weiter.</p>
-                  <Input :id="`p-${section.id}`" v-model="drafts[section.id]!.path" :aria-describedby="`p-${section.id}-hint`" />
+                  <p :id="`p-${section.id}-hint`" class="text-sm text-muted-foreground">
+                    Wie Speisekarte/Pizza/. Die alte Adresse leitet automatisch weiter.
+                  </p>
+                  <Input
+                    :id="`p-${section.id}`"
+                    v-model="drafts[section.id]!.path"
+                    :aria-describedby="`p-${section.id}-hint`"
+                  />
                 </div>
                 <div class="grid gap-2">
                   <Label :for="`t-${section.id}`">Titel in Suchmaschinen</Label>
@@ -100,9 +129,18 @@ async function create() {
                 </div>
                 <div class="grid gap-2">
                   <Label :for="`d-${section.id}`">Beschreibung in Suchmaschinen</Label>
-                  <Textarea :id="`d-${section.id}`" v-model="drafts[section.id]!.description" maxlength="255" rows="2" />
+                  <Textarea
+                    :id="`d-${section.id}`"
+                    v-model="drafts[section.id]!.description"
+                    maxlength="255"
+                    rows="2"
+                  />
                 </div>
-                <div><Button type="submit">Speichern<span class="sr-only"> {{ section.name }}</span></Button></div>
+                <div>
+                  <Button type="submit"
+                    >Speichern<span class="sr-only"> {{ section.name }}</span></Button
+                  >
+                </div>
               </form>
             </details>
           </CardContent>

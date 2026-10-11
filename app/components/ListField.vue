@@ -7,7 +7,14 @@ watch(model, (value) => {
   if (value.join(", ") !== text.value.replace(/\s*,\s*/g, ", ").trim()) text.value = value.join(", ");
 });
 function commit() {
-  model.value = [...new Set(text.value.split(",").map((s) => s.trim()).filter(Boolean))];
+  model.value = [
+    ...new Set(
+      text.value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ),
+  ];
 }
 </script>
 

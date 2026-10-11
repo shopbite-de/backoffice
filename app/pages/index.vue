@@ -76,7 +76,9 @@ const revenue = computed(() =>
   <div class="space-y-6">
     <div class="flex flex-wrap items-baseline justify-between gap-2">
       <h1 class="text-2xl font-semibold">Heute</h1>
-      <p class="text-muted-foreground">{{ orders?.length === 1 ? "1 Bestellung" : `${orders?.length ?? 0} Bestellungen` }} · {{ euro(revenue) }}</p>
+      <p class="text-muted-foreground">
+        {{ orders?.length === 1 ? "1 Bestellung" : `${orders?.length ?? 0} Bestellungen` }} · {{ euro(revenue) }}
+      </p>
     </div>
 
     <ErrorAlert :message="error" />
@@ -99,7 +101,9 @@ const revenue = computed(() =>
             :model-value="orderingOpen"
             aria-labelledby="annahme"
             :disabled="savingSettings"
-            @update:model-value="saveSettings({ orderingOpen: $event }, $event ? 'Bestellannahme ist offen.' : 'Bestellannahme pausiert.')"
+            @update:model-value="
+              saveSettings({ orderingOpen: $event }, $event ? 'Bestellannahme ist offen.' : 'Bestellannahme pausiert.')
+            "
           />
           <div class="flex items-center gap-2">
             <Label for="lieferzeit" class="whitespace-nowrap">Lieferzeit</Label>
@@ -142,7 +146,9 @@ const revenue = computed(() =>
               <ul class="space-y-1">
                 <li v-for="(line, i) in order.lines" :key="i">
                   {{ line.quantity }}× {{ line.label }}
-                  <span v-if="line.extras.length" class="text-sm text-muted-foreground">(+ {{ line.extras.join(", ") }})</span>
+                  <span v-if="line.extras.length" class="text-sm text-muted-foreground"
+                    >(+ {{ line.extras.join(", ") }})</span
+                  >
                 </li>
               </ul>
               <p v-if="order.comment" class="rounded-lg bg-muted px-3 py-2 text-sm">{{ order.comment }}</p>

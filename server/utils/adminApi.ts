@@ -20,11 +20,7 @@ async function requestToken(body: Record<string, string>): Promise<TokenResponse
   });
 }
 
-async function storeTokens(
-  event: H3Event,
-  token: TokenResponse,
-  extra: Partial<BackofficeSession> = {},
-) {
+async function storeTokens(event: H3Event, token: TokenResponse, extra: Partial<BackofficeSession> = {}) {
   // role and branches are read again on every refresh (every 10 minutes),
   // so a changed role in Shopware takes effect without a new login
   const profile = await fetchProfile(baseUrl(), token.access_token);
@@ -40,11 +36,7 @@ async function storeTokens(
 }
 
 /** Logs in with the person's Shopware user; the password is never stored. */
-export async function loginWithPassword(
-  event: H3Event,
-  username: string,
-  password: string,
-) {
+export async function loginWithPassword(event: H3Event, username: string, password: string) {
   const token = await requestToken({
     grant_type: "password",
     username,
@@ -109,8 +101,7 @@ export async function adminApi<T>(
 
 function toH3Error(error: unknown) {
   if (error instanceof FetchError) {
-    const detail = (error.data as { errors?: { detail?: string }[] } | undefined)
-      ?.errors?.[0]?.detail;
+    const detail = (error.data as { errors?: { detail?: string }[] } | undefined)?.errors?.[0]?.detail;
     // the missing privilege is only for the server log, not for the restaurant
     if (error.statusCode === 403) console.warn("[shopware 403]", detail);
     return createError({
@@ -130,11 +121,7 @@ export interface SearchResult<T> {
 }
 
 /** POST /api/search/<entity> with a criteria body. */
-export function adminSearch<T>(
-  event: H3Event,
-  entity: string,
-  criteria: Record<string, unknown>,
-) {
+export function adminSearch<T>(event: H3Event, entity: string, criteria: Record<string, unknown>) {
   return adminApi<SearchResult<T>>(event, `/search/${entity}`, {
     method: "POST",
     body: criteria,
