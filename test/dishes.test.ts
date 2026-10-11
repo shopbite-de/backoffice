@@ -8,6 +8,7 @@ import fixture from "./fixtures/lafattoria.json";
  * Nitro auto-imports are stubbed: adminSearch answers from the fixture,
  * adminApi records the sync operations.
  */
+const PIZZA_EXTRAS = "019a0000000070008000000000000e01";
 type Operation = { key: string; action: string; entity: string; payload: Record<string, unknown>[] };
 let synced: Operation[] = [];
 
@@ -23,6 +24,13 @@ vi.stubGlobal(
     if (entity === "category") return { data: fixture.categories };
     if (entity === "property-group") return { data: fixture.propertyGroups };
     if (entity === "tag") return { data: [] };
+    if (entity === "product-stream") {
+      return {
+        data: (criteria.ids ?? [])
+          .filter((id) => id === PIZZA_EXTRAS)
+          .map((id) => ({ id, translated: { name: "Pizza Extras" } })),
+      };
+    }
     throw new Error(`unexpected search ${entity}`);
   },
 );
@@ -119,5 +127,64 @@ describe("saveDish round trip", () => {
     expect(groups).toBeUndefined();
     const dish = synced.find((op) => op.key === "dish")!.payload[0] as { properties: { id: string }[] };
     expect(dish.properties).toHaveLength(3);
+  });
+});
+
+describe("extras groups", () => {
+  const product = fixture.products["21"] as { crossSellings: Record<string, unknown>[] };
+  const link = {
+    id: "019a0000000070008000000000000e02",
+    name: "Extras",
+    type: "productStream",
+    productStreamId: PIZZA_EXTRAS,
+    position: 1,
+    assignedProducts: [],
+    translated: { name: "Extras" },
+  };
+
+  it("reads the linked group and leaves it alone on an untouched save", async () => {
+    product.crossSellings.push(link);
+    try {
+      const input = await inputOf(margherita);
+      expect(input.extraGroupIds).toEqual([PIZZA_EXTRAS]);
+      await saveDish(event, margherita, input);
+      expect(synced.find((op) => op.key === "drop-extra-groups")).toBeUndefined();
+      expect(synced.find((op) => op.key === "extra-groups")).toBeUndefined();
+      // the fixed list is written, the group link is not touched
+      const dish = synced.find((op) => op.key === "dish")!.payload[0] as { crossSellings: { id: string }[] };
+      expect(dish.crossSellings.map((c) => c.id)).not.toContain(link.id);
+    } finally {
+      product.crossSellings.pop();
+    }
+  });
+
+  it("removes a deselected group", async () => {
+    product.crossSellings.push(link);
+    try {
+      await saveDish(event, margherita, { ...(await inputOf(margherita)), extraGroupIds: [] });
+      expect(synced.find((op) => op.key === "drop-extra-groups")!.payload).toEqual([{ id: link.id }]);
+    } finally {
+      product.crossSellings.pop();
+    }
+  });
+
+  it("links a new group after the other lists", async () => {
+    const input = await inputOf(margherita);
+    await saveDish(event, margherita, { ...input, extraGroupIds: [PIZZA_EXTRAS] });
+    const [created] = synced.find((op) => op.key === "extra-groups")!.payload;
+    expect(created).toMatchObject({
+      productId: margherita,
+      name: "Pizza Extras",
+      type: "productStream",
+      productStreamId: PIZZA_EXTRAS,
+      position: input.extras.length,
+    });
+  });
+
+  it("refuses an unknown group", async () => {
+    const input = await inputOf(margherita);
+    await expect(saveDish(event, margherita, { ...input, extraGroupIds: ["0".repeat(32)] })).rejects.toThrow(
+      "Unbekannte Extras-Gruppe",
+    );
   });
 });
