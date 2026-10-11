@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Fingerprint } from "@lucide/vue";
+import { browserSupportsWebAuthn, startAuthentication } from "@simplewebauthn/browser";
+
 useHead({ title: "Anmelden" });
 const session = useAuthState();
 const username = ref("");
@@ -18,6 +21,31 @@ async function submit() {
     await navigateTo("/");
   } catch (e) {
     error.value = errorMessage(e);
+  } finally {
+    pending.value = false;
+  }
+}
+
+// fingerprint / face login (passkey), only where the browser can do it
+const canUsePasskey = ref(false);
+onMounted(() => (canUsePasskey.value = browserSupportsWebAuthn()));
+
+async function loginWithPasskey() {
+  error.value = null;
+  pending.value = true;
+  try {
+    const optionsJSON = await $fetch<Parameters<typeof startAuthentication>[0]["optionsJSON"]>(
+      "/api/auth/passkey/options",
+      {
+        method: "POST",
+      },
+    );
+    const credential = await startAuthentication({ optionsJSON });
+    await $fetch("/api/auth/passkey/login", { method: "POST", body: { credential } });
+    session.value = await $fetch<AuthState>("/api/auth/session");
+    await navigateTo("/");
+  } catch (e) {
+    error.value = passkeyErrorMessage(e);
   } finally {
     pending.value = false;
   }
@@ -65,6 +93,14 @@ async function submit() {
             <Input id="password" v-model="password" type="password" autocomplete="current-password" required />
           </div>
           <Button type="submit" class="w-full" :disabled="pending">Anmelden</Button>
+          <template v-if="canUsePasskey">
+            <div class="flex items-center gap-3 text-sm text-muted-foreground">
+              <Separator class="flex-1" /><span>oder</span><Separator class="flex-1" />
+            </div>
+            <Button type="button" variant="outline" class="w-full" :disabled="pending" @click="loginWithPasskey">
+              <Fingerprint aria-hidden="true" />Mit Fingerabdruck oder Face ID
+            </Button>
+          </template>
         </form>
       </CardContent>
     </Card>

@@ -35,6 +35,17 @@ async function storeTokens(event: H3Event, token: TokenResponse, extra: Partial<
   });
 }
 
+/**
+ * Logs in with a passkey: the signed WebAuthn assertion goes to the ShopBite plugin's
+ * grant (grant_type=shopbite_passkey), which answers like a password login.
+ */
+export async function loginWithPasskey(event: H3Event, credential: unknown) {
+  const token = await requestToken({ grant_type: "shopbite_passkey", credential: JSON.stringify(credential) });
+  const session = await useShopwareSession(event);
+  await session.clear();
+  await storeTokens(event, token);
+}
+
 /** Logs in with the person's Shopware user; the password is never stored. */
 export async function loginWithPassword(event: H3Event, username: string, password: string) {
   const token = await requestToken({

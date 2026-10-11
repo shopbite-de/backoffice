@@ -16,6 +16,7 @@ const CAPABILITY_PRIVILEGE: Record<Capability, string> = {
 export const BRANCH_FIELD = "shopbite_sales_channel_ids";
 
 export interface StaffProfile {
+  username: string;
   name: string;
   role: StaffRole;
   capabilities: Capability[];
@@ -25,6 +26,7 @@ export interface StaffProfile {
 
 export interface MeResponse {
   data: {
+    username: string;
     firstName: string | null;
     lastName: string | null;
     admin: boolean;
@@ -56,6 +58,7 @@ export function profileFromMe(me: MeResponse["data"]): StaffProfile {
         ? null
         : [];
   return {
+    username: me.username,
     name: [me.firstName, me.lastName].filter(Boolean).join(" "),
     role,
     capabilities,
