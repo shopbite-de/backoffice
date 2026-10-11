@@ -83,11 +83,11 @@ const revenue = computed(() =>
     <p role="status" class="sr-only">{{ saved }}</p>
 
     <section aria-labelledby="annahme">
-      <Card :class="orderingOpen ? '' : 'bg-amber-50 ring-amber-300'">
+      <Card :class="orderingOpen ? '' : 'bg-warning ring-warning-border'">
         <CardContent class="flex flex-wrap items-center gap-x-6 gap-y-4">
           <div class="min-w-0 flex-1 basis-64">
             <h2 id="annahme" class="font-semibold">Online-Bestellungen annehmen</h2>
-            <p class="text-sm" :class="orderingOpen ? 'text-muted-foreground' : 'text-amber-900'">
+            <p class="text-sm" :class="orderingOpen ? 'text-muted-foreground' : 'text-warning-foreground'">
               {{
                 orderingOpen
                   ? "Gäste können im Shop bestellen."

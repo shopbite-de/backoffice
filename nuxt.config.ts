@@ -15,7 +15,9 @@ export default defineNuxtConfig({
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "robots", content: "noindex, nofollow" },
+        { name: "theme-color", content: "#ffffff" },
       ],
+      link: [{ rel: "icon", href: "/favicon.ico" }],
     },
   },
   runtimeConfig: {

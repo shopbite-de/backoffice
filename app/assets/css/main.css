@@ -3,8 +3,8 @@
 
 @import "tailwindcss";
 @import "tw-animate-css";
-/* self-hosted, no request to Google Fonts */
-@import "@fontsource-variable/inter";
+/* ShopBite CI font, self-hosted (no request to Google Fonts) */
+@import "@fontsource-variable/public-sans";
 
 @custom-variant dark (&:is(.dark *));
 /* the nova components style data-checked, reka-ui sets data-state="checked" */
@@ -12,33 +12,43 @@
 @custom-variant data-unchecked (&[data-state="unchecked"]);
 
 /*
- * shadcn-vue tokens (style nova, base stone). Primary is the ShopBite green
- * of the Trattoria preset; all colours meet WCAG AA on their backgrounds.
+ * ShopBite CI (docs/ci.md, source: homepage). Brand orange #ff5b00 is only
+ * 3.1:1 on white, so text and filled controls use #cc4800 (4.67:1 with white
+ * text) and text on the orange tint #a33a00 (5.96:1). Ink is the logo grey.
  */
 :root {
+  --brand: #ff5b00;
   --radius: 0.625rem;
-  --background: oklch(0.985 0.004 70);
-  --foreground: oklch(0.21 0.012 50);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.012 50);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.012 50);
-  --primary: oklch(0.45 0.09 148);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.955 0.006 70);
-  --secondary-foreground: oklch(0.25 0.012 50);
-  --muted: oklch(0.955 0.006 70);
-  --muted-foreground: oklch(0.47 0.015 55);
-  --accent: oklch(0.94 0.03 148);
-  --accent-foreground: oklch(0.3 0.07 148);
-  --destructive: oklch(0.53 0.2 27);
-  --border: oklch(0.9 0.008 60);
-  --input: oklch(0.86 0.01 60);
-  --ring: oklch(0.45 0.09 148);
+  --background: #fafafa;
+  --foreground: #3d3d3d;
+  --card: #ffffff;
+  --card-foreground: #3d3d3d;
+  --popover: #ffffff;
+  --popover-foreground: #3d3d3d;
+  --primary: #cc4800;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f4;
+  --secondary-foreground: #3d3d3d;
+  --muted: #f4f4f4;
+  --muted-foreground: #5c5c5c;
+  --accent: #fff0e6;
+  --accent-foreground: #a33a00;
+  --destructive: #b91c1c;
+  --border: #e5e5e5;
+  --input: #8a8a8a;
+  --ring: #cc4800;
+  /* warnings are yellow, kept apart from the brand orange */
+  --warning: #fef9c3;
+  --warning-foreground: #713f12;
+  --warning-border: #ca8a04;
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-sans: "Public Sans Variable", system-ui, sans-serif;
+  --color-brand: var(--brand);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-border: var(--warning-border);
   --font-heading: var(--font-sans);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -80,4 +90,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* shadcn draws focus as a 50% ring (below 3:1 on white). Unlayered, so it
+   wins over outline-none in the components: full primary outline (WCAG 2.4.7). */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }

@@ -32,7 +32,8 @@ async function switchChannel(id: unknown) {
 </script>
 
 <template>
-  <div class="min-h-dvh md:grid md:grid-cols-[16rem_1fr]">
+  <!-- two columns only with the sidebar; the login page is centred -->
+  <div class="min-h-dvh" :class="{ 'md:grid md:grid-cols-[16rem_1fr]': auth }">
     <a
       href="#inhalt"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-card focus:px-4 focus:py-2"
@@ -41,9 +42,10 @@ async function switchChannel(id: unknown) {
     <header v-if="auth" class="border-b bg-card md:sticky md:top-0 md:h-dvh md:border-b-0 md:border-r">
       <div class="flex h-full flex-col">
         <div class="space-y-3 px-4 py-3 md:px-5 md:py-6">
+          <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="hidden h-7 w-auto md:mb-5 md:block" />
           <div class="flex items-center justify-between gap-2 md:block">
             <div>
-              <p class="font-semibold">{{ auth.restaurant }}</p>
+              <p class="text-lg font-semibold">{{ auth.restaurant }}</p>
               <p class="text-sm text-muted-foreground">{{ auth.name }} · {{ roleLabel }}</p>
             </div>
             <Button variant="ghost" size="icon" class="md:hidden" @click="logout">

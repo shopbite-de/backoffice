@@ -60,10 +60,10 @@ const missing = computed(() =>
       </Button>
     </div>
 
-    <Alert v-if="missing">
+    <Alert v-if="missing" class="border-warning-border bg-warning text-warning-foreground">
       <TriangleAlert aria-hidden="true" />
       <AlertTitle>Allergene und Zusatzstoffe fehlen bei {{ missing }} Gerichten</AlertTitle>
-      <AlertDescription>
+      <AlertDescription class="text-warning-foreground">
         Online-Bestellungen brauchen diese Angaben. Öffnen Sie das Gericht und haken Sie „Angaben geprüft“ ab.
       </AlertDescription>
     </Alert>
@@ -99,7 +99,7 @@ const missing = computed(() =>
             <span class="min-w-0 flex-1 font-medium">
               <NuxtLink :to="`/speisekarte/${dish.id}`" class="underline decoration-border underline-offset-4 hover:decoration-foreground">{{ dish.name }}</NuxtLink>
               <span v-if="!dish.onMenu" class="ml-1 text-sm font-normal">· nicht auf der Karte</span>
-              <Badge v-if="!dish.allergensChecked" variant="outline" class="ml-2 border-amber-400 text-amber-900">Allergene fehlen</Badge>
+              <Badge v-if="!dish.allergensChecked" variant="outline" class="ml-2 border-warning-border bg-warning text-warning-foreground">Allergene fehlen</Badge>
             </span>
             <div class="flex items-center gap-2">
               <Label :for="`preis-${dish.id}`" class="sr-only">Preis {{ dish.name }} in Euro</Label>

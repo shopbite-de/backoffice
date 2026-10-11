@@ -45,7 +45,7 @@ Installation Pizzeria La Fattoria (ein Dokploy-Stack)
 - **Konfiguration per Env:** `NUXT_SHOPWARE_URL` (intern), `NUXT_RESTAURANT_NAME`, `NUXT_SALES_CHANNELS` (Filialen in Reihenfolge, je mit Menü-Kategorie), `NUXT_SESSION_PASSWORD`.
 - **Filialen:** "Heute" zeigt die Bestellungen aller Filialen, die die Person sehen darf (mit Etikett); Speisekarte, Öffnungszeiten und Einstellungen gelten für die Filiale, die im Kopf gewählt ist.
 - **Schreiben:** ein Gericht oder Abschnitt wird in **einem** Sync-Request gespeichert (eine Transaktion).
-- **UI:** shadcn-vue (Stil nova, reka-ui), Komponenten liegen als eigener Code in `app/components/ui` und sind auf 44 px Touch-Ziele vergrößert; Inter lokal eingebunden, ShopBite-Grün als Primärfarbe.
+- **UI:** shadcn-vue (Stil nova, reka-ui) im ShopBite-CI (`docs/ci.md`: Orange `#cc4800` als Primärfarbe, Public Sans lokal, Logo), Komponenten als eigener Code in `app/components/ui`, auf 44 px Touch-Ziele vergrößert.
 
 ## Bereiche und Stand
 

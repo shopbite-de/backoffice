@@ -26,10 +26,11 @@ async function submit() {
 
 <template>
   <div class="mx-auto mt-[10vh] max-w-sm">
+    <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 h-10 w-auto" />
     <Card>
       <CardHeader>
         <CardTitle><h1 class="text-2xl font-semibold">Anmelden</h1></CardTitle>
-        <CardDescription>Mit Ihrem persönlichen Zugang.</CardDescription>
+        <CardDescription>Backoffice für Ihr Restaurant, mit Ihrem persönlichen Zugang.</CardDescription>
       </CardHeader>
       <CardContent>
         <form class="grid gap-5" @submit.prevent="submit">
