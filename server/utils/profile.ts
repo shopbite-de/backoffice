@@ -7,7 +7,7 @@ import type { Capability, StaffRole } from "#shared/types/backoffice";
  */
 const CAPABILITY_PRIVILEGE: Record<Capability, string> = {
   orders: "order:read",
-  settings: "system_config:update",
+  settings: "shopbite_settings:update",
   menu: "product:update",
   hours: "shopbite_business_hour:create",
 };
