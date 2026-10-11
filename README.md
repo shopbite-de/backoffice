@@ -56,6 +56,10 @@ docker exec -w /var/www/html sb-lafattoria-shopware-1 php bin/console system:con
 
 Getestet mit einem virtuellen Authenticator in Chromium (Einrichten, Anmelden, Entfernen, Wiederverwendung der Signatur, gesperrter Benutzer).
 
+## Als App installieren (PWA)
+
+Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigenes Symbol, ohne Browserleiste): Chrome/Edge/Android über „App installieren“ in der Seitenleiste bzw. unter „Mein Zugang“, iPhone/iPad über Teilen › „Zum Home-Bildschirm“. Der Service Worker hält nur die App-Hülle vor, keine Daten. Ohne Netz zeigt die App „Keine Verbindung“ und macht weiter, sobald das Netz zurück ist. Auf „Heute“ hält der Schalter „Bildschirm anlassen“ das Küchentablet wach (pro Gerät gemerkt). Geprüft am Produktions-Build mit Chromium: installierbar ohne Fehler (`Page.getInstallabilityErrors`), keine API-Antwort im Cache, Offline-Seite und Rückkehr.
+
 ## Konfiguration
 
 | Env | Bedeutung |

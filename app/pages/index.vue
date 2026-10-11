@@ -36,6 +36,9 @@ async function saveSettings(change: Partial<ShopSettings>, message: string) {
   }
 }
 
+// kitchen tablet: keep the screen on while "Heute" is open (per device)
+const { supported: canKeepAwake, enabled: keepAwake } = useScreenAwake();
+
 const orderingOpen = computed(() => settings.value?.orderingOpen ?? true);
 // the stored value stays selectable even if it is not one of the usual steps
 const deliveryOptions = computed(() =>
@@ -79,6 +82,10 @@ const revenue = computed(() =>
       <p class="text-muted-foreground">
         {{ orders?.length === 1 ? "1 Bestellung" : `${orders?.length ?? 0} Bestellungen` }} · {{ euro(revenue) }}
       </p>
+    </div>
+    <div v-if="canKeepAwake" class="flex items-center gap-2">
+      <Switch id="wach" v-model="keepAwake" />
+      <Label for="wach" class="font-normal">Bildschirm anlassen, solange „Heute“ offen ist</Label>
     </div>
 
     <ErrorAlert :message="error" />
