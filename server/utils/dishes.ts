@@ -137,15 +137,16 @@ async function loadProduct(event: H3Event, id: string) {
 /** All sections of the channel's menu (any depth), for assignment. */
 async function menuCategories(event: H3Event) {
   const channel = await currentSalesChannel(event);
-  const { data } = await adminSearch<{ id: string; parentId: string; translated: { name: string } }>(
-    event,
-    "category",
-    {
-      filter: [{ type: "contains", field: "path", value: `|${channel.menuCategoryId}|` }],
-      includes: { category: ["id", "parentId", "translated"] },
-      limit: 500,
-    },
-  );
+  const { data } = await adminSearch<{
+    id: string;
+    parentId: string;
+    afterCategoryId: string | null;
+    translated: { name: string };
+  }>(event, "category", {
+    filter: [{ type: "contains", field: "path", value: `|${channel.menuCategoryId}|` }],
+    includes: { category: ["id", "parentId", "afterCategoryId", "translated"] },
+    limit: 500,
+  });
   return { channel, categories: data };
 }
 
@@ -267,9 +268,14 @@ export async function dishFormOptions(event: H3Event): Promise<DishFormOptions> 
   const options = (group: string) =>
     (groups.find((g) => nameOf(g) === group)?.options ?? []).map(nameOf).sort((a, b) => a.localeCompare(b, "de"));
   return {
-    sections: categories
-      .filter((c) => c.parentId === channel.menuCategoryId)
-      .map((c) => ({ id: c.id, name: nameOf(c) })),
+    sections: sortSiblings(categories.filter((c) => c.parentId === channel.menuCategoryId)).map((c) => ({
+      id: c.id,
+      name: nameOf(c),
+      children: sortSiblings(categories.filter((child) => child.parentId === c.id)).map((child) => ({
+        id: child.id,
+        name: nameOf(child),
+      })),
+    })),
     ingredients: options(INGREDIENTS),
     propertyGroups: groups
       .map((g) => ({ name: nameOf(g), options: options(nameOf(g)) }))

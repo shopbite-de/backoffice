@@ -156,18 +156,30 @@ const diet = computed({
       </div>
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Abschnitte</legend>
-        <div class="flex flex-wrap gap-x-6">
-          <div
-            v-for="s in options.sections"
-            :key="s.id"
-            class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2"
-          >
-            <Checkbox
-              :id="`abschnitt-${s.id}`"
-              :model-value="form.sectionIds.includes(s.id)"
-              @update:model-value="toggle(form.sectionIds, s.id, $event === true)"
-            />
-            <Label :for="`abschnitt-${s.id}`" class="font-normal">{{ s.name }}</Label>
+        <div class="grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div v-for="s in options.sections" :key="s.id">
+            <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+              <Checkbox
+                :id="`abschnitt-${s.id}`"
+                :model-value="form.sectionIds.includes(s.id)"
+                @update:model-value="toggle(form.sectionIds, s.id, $event === true)"
+              />
+              <Label :for="`abschnitt-${s.id}`" class="font-normal">{{ s.name }}</Label>
+            </div>
+            <div
+              v-for="child in s.children"
+              :key="child.id"
+              class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2 pl-6"
+            >
+              <Checkbox
+                :id="`abschnitt-${child.id}`"
+                :model-value="form.sectionIds.includes(child.id)"
+                @update:model-value="toggle(form.sectionIds, child.id, $event === true)"
+              />
+              <Label :for="`abschnitt-${child.id}`" class="font-normal"
+                ><span class="sr-only">{{ s.name }}, </span>{{ child.name }}</Label
+              >
+            </div>
           </div>
         </div>
       </fieldset>

@@ -37,7 +37,10 @@ export interface MenuDish {
 export interface MenuSection {
   id: string;
   name: string;
+  /** dishes directly in the section */
   dishes: MenuDish[];
+  /** sub-sections in menu order, each with its dishes */
+  subsections: { id: string; name: string; dishes: MenuDish[] }[];
 }
 
 export interface OpeningInterval {
@@ -81,7 +84,8 @@ export interface DishDetail {
 export type DishInput = Omit<DishDetail, "id" | "number" | "taxRate">;
 
 export interface DishFormOptions {
-  sections: { id: string; name: string }[];
+  /** sections with their sub-sections, in menu order */
+  sections: { id: string; name: string; children: { id: string; name: string }[] }[];
   ingredients: string[];
   propertyGroups: { name: string; options: string[] }[];
   extraCandidates: { id: string; number: string; name: string }[];
@@ -92,8 +96,12 @@ export interface DishFormOptions {
 export interface MenuSectionDetail {
   id: string;
   name: string;
+  /** null = a section of the menu, otherwise its sub-section (two levels, like the storefront) */
+  parentId: string | null;
   visible: boolean;
+  /** dishes of the section including its sub-sections */
   dishCount: number;
+  children: MenuSectionDetail[];
   seo: { title: string; description: string; path: string; pathIsCustom: boolean };
 }
 

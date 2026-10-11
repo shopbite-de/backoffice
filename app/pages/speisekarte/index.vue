@@ -35,20 +35,22 @@ const query = ref("");
 const onlyMissing = ref(false);
 const filtered = computed(() => {
   const q = query.value.trim().toLowerCase();
+  const keep = (d: MenuDish) =>
+    (!q || d.name.toLowerCase().includes(q) || d.number.includes(q)) && (!onlyMissing.value || !d.allergensChecked);
   return (menu.value ?? [])
     .map((s) => ({
       ...s,
-      dishes: s.dishes.filter(
-        (d) =>
-          (!q || d.name.toLowerCase().includes(q) || d.number.includes(q)) &&
-          (!onlyMissing.value || !d.allergensChecked),
-      ),
+      dishes: s.dishes.filter(keep),
+      subsections: s.subsections
+        .map((sub) => ({ ...sub, dishes: sub.dishes.filter(keep) }))
+        .filter((sub) => sub.dishes.length),
     }))
-    .filter((s) => s.dishes.length);
+    .filter((s) => s.dishes.length || s.subsections.length);
 });
-const missing = computed(
-  () => (menu.value ?? []).flatMap((s) => s.dishes).filter((d) => d.onMenu && !d.allergensChecked).length,
+const allDishes = computed(() =>
+  (menu.value ?? []).flatMap((s) => [...s.dishes, ...s.subsections.flatMap((sub) => sub.dishes)]),
 );
+const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.allergensChecked).length);
 </script>
 
 <template>
@@ -96,48 +98,31 @@ const missing = computed(
 
     <section v-for="section in filtered" :key="section.id" :aria-labelledby="`s-${section.id}`" class="space-y-2">
       <h2 :id="`s-${section.id}`" class="font-semibold">{{ section.name }}</h2>
-      <Card class="py-0">
+      <Card v-if="section.dishes.length" class="py-0">
         <ul class="divide-y">
-          <li
+          <MenuDishRow
             v-for="dish in section.dishes"
             :key="dish.id"
-            class="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3"
-            :class="{ 'text-muted-foreground': !dish.onMenu }"
-          >
-            <span class="w-12 shrink-0 text-sm tabular-nums text-muted-foreground">{{ dish.number }}</span>
-            <span class="min-w-0 flex-1 font-medium">
-              <NuxtLink
-                :to="`/speisekarte/${dish.id}`"
-                class="underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >{{ dish.name }}</NuxtLink
-              >
-              <span v-if="!dish.onMenu" class="ml-1 text-sm font-normal">· nicht auf der Karte</span>
-              <Badge
-                v-if="!dish.allergensChecked"
-                variant="outline"
-                class="ml-2 border-warning-border bg-warning text-warning-foreground"
-                >Allergene fehlen</Badge
-              >
-            </span>
-            <div class="flex items-center gap-2">
-              <Label :for="`preis-${dish.id}`" class="sr-only">Preis {{ dish.name }} in Euro</Label>
-              <Input
-                :id="`preis-${dish.id}`"
-                :model-value="dish.price?.toFixed(2).replace('.', ',')"
-                inputmode="decimal"
-                class="w-24 text-right tabular-nums"
-                @change="savePrice(dish, $event)"
-              />
-              <span aria-hidden="true">€</span>
-            </div>
-            <Switch
-              :model-value="dish.onMenu"
-              :aria-label="`${dish.name} auf der Karte`"
-              @update:model-value="update(dish, { onMenu: $event })"
-            />
-          </li>
+            :dish="dish"
+            @price="savePrice(dish, $event)"
+            @on-menu="update(dish, { onMenu: $event })"
+          />
         </ul>
       </Card>
+      <div v-for="sub in section.subsections" :key="sub.id" class="space-y-2 pl-3">
+        <h3 class="text-sm font-semibold text-muted-foreground">{{ section.name }} › {{ sub.name }}</h3>
+        <Card class="py-0">
+          <ul class="divide-y">
+            <MenuDishRow
+              v-for="dish in sub.dishes"
+              :key="dish.id"
+              :dish="dish"
+              @price="savePrice(dish, $event)"
+              @on-menu="update(dish, { onMenu: $event })"
+            />
+          </ul>
+        </Card>
+      </div>
     </section>
   </div>
 </template>
