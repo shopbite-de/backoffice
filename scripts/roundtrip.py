@@ -30,7 +30,7 @@ def snap(pid):
     keys=("productNumber","name","description","price","active","customFields","metaTitle","metaDescription","keywords","width","height","length","weight","customSearchKeywords","parentId")
     return [{**{k:p.get(k) for k in keys},"opts":sorted(o["id"] for o in p.get("options") or []),"props":sorted(o["id"] for o in p.get("properties") or []),"cats":sorted(c["id"] for c in p.get("categories") or []),"tags":sorted(t["id"] for t in p.get("tags") or []),
              "xs":sorted((x["name"],x["type"],tuple(sorted(a["productId"] for a in x.get("assignedProducts") or []))) for x in p.get("crossSellings") or []),"cfg":sorted(c["optionId"] for c in p.get("configuratorSettings") or [])} for p in d]
-menu=call(B+"/api/menu"); dishes=[d for s in menu for d in s["dishes"]]
+menu=call(B+"/api/menu"); dishes=[d for s in menu for d in s["dishes"] + [x for sub in s.get("subsections", []) for x in sub["dishes"]]]
 bad=0
 for d in dishes:
     a=snap(d["id"]); dd=call(B+f"/api/dishes/{d['id']}")

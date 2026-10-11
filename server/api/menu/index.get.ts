@@ -46,23 +46,26 @@ export default defineEventHandler(async (event): Promise<MenuSection[]> => {
   });
 
   const sections = sortSiblings(categories.data.filter((c) => c.parentId === rootId));
-  const sectionOf = new Map<string, string>();
-  for (const section of sections) sectionOf.set(section.id, section.id);
-  // deeper levels: walk up until a section is found
+  // every category maps to its section and, below it, its sub-section; deeper levels fold into the sub-section
+  const placeOf = new Map<string, { section: string; sub: string | null }>();
   const byId = new Map(categories.data.map((c) => [c.id, c]));
   for (const category of categories.data) {
+    const chain: Category[] = [];
     let cursor: Category | undefined = category;
-    while (cursor && !sectionOf.has(cursor.id)) {
+    while (cursor && cursor.id !== rootId) {
+      chain.unshift(cursor);
       cursor = cursor.parentId ? byId.get(cursor.parentId) : undefined;
     }
-    if (cursor) sectionOf.set(category.id, sectionOf.get(cursor.id)!);
+    if (chain[0] && chain[0].parentId === rootId) {
+      placeOf.set(category.id, { section: chain[0].id, sub: chain[1]?.id ?? null });
+    }
   }
 
   const products = await adminSearch<Product>(event, "product", {
     limit: 500,
     filter: [
       { type: "equals", field: "parentId", value: null },
-      { type: "equalsAny", field: "categories.id", value: [...sectionOf.keys()] },
+      { type: "equalsAny", field: "categories.id", value: [...placeOf.keys()] },
     ],
     sort: [{ field: "productNumber", order: "ASC", naturalSorting: true }],
     includes: {
@@ -74,21 +77,28 @@ export default defineEventHandler(async (event): Promise<MenuSection[]> => {
     id: s.id,
     name: s.translated.name,
     dishes: [],
+    subsections: sortSiblings(categories.data.filter((c) => c.parentId === s.id)).map((sub) => ({
+      id: sub.id,
+      name: sub.translated.name,
+      dishes: [],
+    })),
   }));
   const menuById = new Map(menu.map((s) => [s.id, s]));
   for (const product of products.data) {
-    const sectionId = (product.categoryIds ?? []).map((id) => sectionOf.get(id)).find(Boolean);
-    const section = sectionId ? menuById.get(sectionId) : undefined;
-    if (!section) continue;
+    const place = (product.categoryIds ?? []).map((id) => placeOf.get(id)).find(Boolean);
+    const section = place ? menuById.get(place.section) : undefined;
+    if (!section || !place) continue;
     const price = product.price?.find((p) => p.currencyId === channel.currencyId) ?? product.price?.[0];
-    section.dishes.push({
+    const dish = {
       id: product.id,
       number: product.productNumber,
       name: product.translated.name,
       onMenu: product.active,
       price: price?.gross ?? null,
       allergensChecked: product.customFields?.shopbite_allergens_checked === true,
-    });
+    };
+    const target = place.sub ? section.subsections.find((sub) => sub.id === place.sub) : undefined;
+    (target ?? section).dishes.push(dish);
   }
   return menu;
 });
