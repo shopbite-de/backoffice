@@ -27,6 +27,22 @@ Die Filiale steht im Custom Field `shopbite_sales_channel_ids` des Shopware-Benu
 
 Testbestellung: `SW_ACCESS_KEY=… scripts/place-test-order.sh SB-3` (Access Key aus `/config/storefront.env` des Stacks).
 
+## Mit echten Daten testen (Pizzeria La Fattoria)
+
+Eine zweite lokale Shopware auf Port 8100 mit der echten Karte von La Fattoria (nur der öffentliche Katalog aus der Store API, keine Kunden, keine Bestellungen):
+
+```bash
+cd ../shopbite
+docker compose -p sb-lafattoria -f compose.yaml -f ../backoffice/scripts/compose.lafattoria.yaml up -d
+cd ../backoffice
+python3 -I scripts/import-from-shop.py                         # Abschnitte, Gerichte, Varianten, Extras, Eigenschaften
+python3 -I scripts/add-poc-channel.py http://localhost:8100    # zweite Filiale
+python3 -I scripts/create-poc-users.py http://localhost:8100   # chef, theke, abholung
+# .env: NUXT_SHOPWARE_URL=http://localhost:8100, NUXT_RESTAURANT_NAME=Pizzeria La Fattoria
+```
+
+Erneut ausführen aktualisiert die Daten. Andere Shops: `--source`, `--key` (Access Key aus dem HTML der Storefront), `--source-menu`. Extras, die im Shop als Product Stream gepflegt sind, kommen als feste Liste an (backoffice#11). Entfernen: `docker compose -p sb-lafattoria down -v`.
+
 ## Konfiguration
 
 | Env | Bedeutung |
@@ -64,6 +80,8 @@ Geprüft mit eingeschränkten Benutzern (Rechte in `docs/notes/management-privil
 | Personal: nur Heute; Speisekarte, Öffnungszeiten und Gericht-Änderung 403; Bestellannahme und Lieferzeit der eigenen Filiale speicherbar | ✔ |
 | Filialbindung: Personal sieht nur Bestellungen der eigenen Filiale, fremde Bestellung stornieren 404, Wechsel in fremde Filiale 404, ohne Zuordnung kein Login | ✔ |
 | Passwortänderung in Shopware beendet die Backoffice-Sitzung beim nächsten Refresh | ✔ |
+| Echte Karte von La Fattoria (22 Abschnitte inkl. Unterabschnitte, 174 Gerichte, 216 Varianten, 38 Extras-Listen): alle 140 Gerichte der Karte laden und unverändert speichern, Shopware danach identisch | ✔ |
+| Varianten ohne Konfigurator-Einstellungen (in der Administration bearbeitet): Editor zeigt sie, Speichern behält alle Kinder und ergänzt die Einstellungen | ✔ |
 | Allergene (Weizen, Milch, Sellerie) und Zusatzstoff speichern: Store API zeigt sie mit Kürzel und Reihenfolge, "Angaben geprüft" erscheint in der Speisekarte; Zurücksetzen ergibt das Original | ✔ |
 | Direktzugriff mit dem Gastro-Token auf `user`, `customer`, `integration`, `plugin`, `promotion` | 403 ✔ |
 
@@ -77,4 +95,6 @@ Erkenntnisse für den Plan:
 6. Upsert fügt Zuordnungen (Kategorien, Eigenschaften, Tags) nur hinzu; entfernte müssen explizit in den Mapping-Tabellen gelöscht werden.
 7. Personal braucht für Bestellannahme und Lieferzeit auch `system_config:delete` (Shopware löscht beim Speichern leere Werte) → um so wichtiger ist die eigene Plugin-Route.
 8. Shopware kennt keine Bindung von Benutzern an Sales Channels; das Backoffice erzwingt sie, Shopware Administration und Admin API müssen deshalb von außen gesperrt sein.
-9. Das lokale Storefront-Image war vom 30.09. und kannte die 301-Weiterleitung alter SEO-Pfade (06.10.) noch nicht; `docker compose pull storefront` behebt das.
+9. Echte Daten finden, was Demodaten verbergen: Varianten ohne Konfigurator-Einstellungen wurden beim Speichern gelöscht, unveränderte Gerichte bekamen Standardwerte geschrieben, Variantenpreise den Steuersatz des Gerichts. Speichern schreibt jetzt nur, was sich ändert.
+10. La Fattoria pflegt Extras als Product Stream (eine Liste für 38 Gerichte), der Editor kennt nur feste Listen (backoffice#11).
+11. Das lokale Storefront-Image war vom 30.09. und kannte die 301-Weiterleitung alter SEO-Pfade (06.10.) noch nicht; `docker compose pull storefront` behebt das.

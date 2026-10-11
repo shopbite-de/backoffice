@@ -79,11 +79,39 @@ interface ProductRow {
     translated: { name: string };
     assignedProducts: { id: string; productId: string; position: number }[];
   }[];
-  children: { id: string; productNumber: string; price: Price[] | null; optionIds: string[] | null }[];
+  children: {
+    id: string;
+    productNumber: string;
+    price: Price[] | null;
+    optionIds: string[] | null;
+    options?: OptionRow[];
+    tax?: { taxRate: number } | null;
+  }[];
 }
 
 const nameOf = (row: { translated: { name: string } }) => row.translated.name;
 const round2 = (n: number) => Math.round(n * 100) / 100;
+/** Shopware keeps net prices with four decimals. */
+const round4 = (n: number) => Math.round(n * 10000) / 10000;
+/** Same text apart from surrounding whitespace counts as unchanged. */
+const sameText = (a: string | null | undefined, b: string | null | undefined) => (a ?? "").trim() === (b ?? "").trim();
+
+/** Defaults of the custom fields the backoffice edits; an unset field equals its default. */
+const CUSTOM_FIELD_DEFAULTS: Record<string, unknown> = {
+  shopbite_cart_upsell: false,
+  shopbite_receipt_print_type: "number",
+  shopbite_delivery_time_factor: 1,
+  shopbite_allergens_checked: false,
+};
+
+/** Only the custom fields that really change, merged into the stored ones; null = nothing to write. */
+function changedCustomFields(stored: Record<string, unknown> | null, wanted: Record<string, unknown>) {
+  const current = stored ?? {};
+  const changes = Object.fromEntries(
+    Object.entries(wanted).filter(([key, value]) => (key in current ? current[key] : CUSTOM_FIELD_DEFAULTS[key]) !== value),
+  );
+  return Object.keys(changes).length ? { ...current, ...changes } : null;
+}
 
 async function loadProduct(event: H3Event, id: string) {
   const { data } = await adminSearch<ProductRow>(event, "product", {
@@ -94,7 +122,7 @@ async function loadProduct(event: H3Event, id: string) {
       tags: {},
       configuratorSettings: { associations: { option: { associations: { group: {} } } } },
       crossSellings: { associations: { assignedProducts: {} } },
-      children: {},
+      children: { associations: { options: { associations: { group: {} } }, tax: {} } },
     },
   });
   const product = data[0];
@@ -157,7 +185,20 @@ export async function loadDish(event: H3Event, id: string): Promise<DishDetail> 
     }
     variants.set(group, [...(variants.get(group) ?? []), { name: nameOf(setting.option), surcharge: round2(surcharge) }]);
   }
-  for (const options of variants.values()) options.sort((a, b) => a.surcharge - b.surcharge);
+  // variant options without a configurator setting (data edited elsewhere) still count, otherwise
+  // saving would treat their variants as removed and delete them
+  const covered = new Set(product.configuratorSettings.map((s) => s.optionId));
+  for (const option of product.children.flatMap((c) => c.options ?? [])) {
+    if (covered.has(option.id)) continue;
+    covered.add(option.id);
+    const group = option.group ? nameOf(option.group) : "?";
+    const prices = product.children
+      .filter((c) => c.optionIds?.includes(option.id))
+      .map((c) => grossOf(c.price, channel.currencyId) ?? base);
+    const surcharge = prices.length ? Math.max(0, Math.min(...prices) - base) : 0;
+    variants.set(group, [...(variants.get(group) ?? []), { name: nameOf(option), surcharge: round2(surcharge) }]);
+  }
+  for (const options of variants.values()) options.sort((a, b) => a.surcharge - b.surcharge || a.name.localeCompare(b.name, "de"));
 
   const custom = product.customFields ?? {};
   return {
@@ -306,8 +347,9 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
     : [];
 
   const gross = round2(input.price);
-  const priceFor = (amount: number): Price[] => [
-    { currencyId: channel.currencyId, gross: round2(amount), net: round2(amount) / (1 + product.tax.taxRate / 100), linked: true },
+  // a variant may carry its own tax rate
+  const priceFor = (amount: number, taxRate = product.tax.taxRate): Price[] => [
+    { currencyId: channel.currencyId, gross: round2(amount), net: round4(round2(amount) / (1 + taxRate / 100)), linked: true },
   ];
 
   // --- tags by name
@@ -377,32 +419,44 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
       return c.assignedProducts.filter((a) => !wanted.includes(a.productId)).map((a) => ({ id: a.id }));
     }));
 
-  // the dish itself
   const settingByOption = new Map(product.configuratorSettings.map((s) => [s.optionId, s.id]));
   const assignedId = (crossSellingId: string | null, productId: string) =>
     product.crossSellings.find((c) => c.id === crossSellingId)?.assignedProducts.find((a) => a.productId === productId)?.id ?? newId();
+  // the dish itself; texts and custom fields only when they change, so saving an untouched dish writes nothing new
+  const t = product.translated;
+  const customFields = changedCustomFields(product.customFields, {
+    shopbite_cart_upsell: input.upsell,
+    shopbite_receipt_print_type: input.printType,
+    shopbite_delivery_time_factor: input.deliveryTimeFactor,
+    shopbite_allergens_checked: input.allergensChecked,
+  });
+  const texts = Object.fromEntries(
+    ([
+      ["name", t.name, input.name],
+      ["description", t.description, input.description],
+      ["metaTitle", t.metaTitle, input.seo.title],
+      ["metaDescription", t.metaDescription, input.seo.description],
+      ["keywords", t.keywords, input.seo.keywords],
+    ] as const)
+      .filter(([, stored, wanted]) => !sameText(stored, wanted))
+      .map(([key, , wanted]) => [key, wanted || (key === "name" ? wanted : null)]),
+  );
+  const storedGross = grossOf(product.price, channel.currencyId);
   push("dish", "upsert", "product", [{
     id,
-    name: input.name,
-    description: input.description,
-    active: input.onMenu,
-    price: [...priceFor(gross), ...(product.price ?? []).filter((p) => p.currencyId !== channel.currencyId)],
-    metaTitle: input.seo.title || null,
-    metaDescription: input.seo.description || null,
-    keywords: input.seo.keywords || null,
-    customSearchKeywords: input.searchKeywords,
-    width: input.dimensions.width,
-    height: input.dimensions.height,
-    length: input.dimensions.length,
-    weight: input.dimensions.weight,
-    // merged with the stored fields, so fields the backoffice does not know survive
-    customFields: {
-      ...(product.customFields ?? {}),
-      shopbite_cart_upsell: input.upsell,
-      shopbite_receipt_print_type: input.printType,
-      shopbite_delivery_time_factor: input.deliveryTimeFactor,
-      shopbite_allergens_checked: input.allergensChecked,
-    },
+    ...texts,
+    ...(product.active === input.onMenu ? {} : { active: input.onMenu }),
+    ...(storedGross === gross ? {} : { price: [...priceFor(gross), ...(product.price ?? []).filter((p) => p.currencyId !== channel.currencyId)] }),
+    // unset and empty mean the same here
+    ...(JSON.stringify(t.customSearchKeywords ?? []) === JSON.stringify(input.searchKeywords)
+      ? {}
+      : { customSearchKeywords: input.searchKeywords }),
+    ...Object.fromEntries(
+      (["width", "height", "length", "weight"] as const)
+        .filter((key) => (product[key] ?? null) !== input.dimensions[key])
+        .map((key) => [key, input.dimensions[key]]),
+    ),
+    ...(customFields ? { customFields } : {}),
     categories: input.sectionIds.map((categoryId) => ({ id: categoryId })),
     properties: [...wantedProperties].map((optionId) => ({ id: optionId })),
     tags: [...wantedTags].map((tagId) => ({ id: tagId })),
@@ -447,8 +501,11 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
       productNumber: number,
       ...(existing ? {} : { stock: 999, active: true }),
       options: optionIds.map((optionId) => ({ id: optionId })),
-      // no surcharge = inherits the dish price
-      price: surcharge ? priceFor(gross + surcharge) : null,
+      // no surcharge = inherits the dish price; an existing variant keeps its price row while the
+      // amount it sells for stays the same (own tax rate, own price written elsewhere)
+      ...(existing && storedGross === gross && (grossOf(existing.price, channel.currencyId) ?? gross) === round2(gross + surcharge)
+        ? {}
+        : { price: surcharge ? priceFor(gross + surcharge, existing?.tax?.taxRate) : null }),
     };
   }));
 

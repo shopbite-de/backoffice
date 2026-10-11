@@ -35,7 +35,8 @@ export default defineEventHandler(async (event) => {
     const product = data[0];
     if (!product) throw createError({ statusCode: 404 });
     const gross = Math.round(body.price * 100) / 100;
-    const net = gross / (1 + product.tax.taxRate / 100);
+    // Shopware keeps net prices with four decimals
+    const net = Math.round((gross / (1 + product.tax.taxRate / 100)) * 10000) / 10000;
     const others = (product.price ?? []).filter(
       (p) => p.currencyId !== channel.currencyId,
     );

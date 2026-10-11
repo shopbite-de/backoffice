@@ -1,0 +1,30 @@
+# Local Shopware with the catalogue of Pizzeria La Fattoria, for testing the backoffice
+# against real data. Second project next to the quickstart demo (which stays on :8000):
+#
+#   cd ../shopbite
+#   docker compose -p sb-lafattoria -f compose.yaml -f ../backoffice/scripts/compose.lafattoria.yaml up -d
+#   cd ../backoffice && python3 -I scripts/import-from-shop.py   # see README
+#
+#   Shopware  http://localhost:8100/admin  (admin / shopbite)
+#
+# No demo menu, no storefront and no mailpit port (the quickstart owns 3000 and 8025).
+# Remove with: docker compose -p sb-lafattoria down -v
+services:
+  shopware:
+    environment:
+      APP_URL: http://localhost:8100
+    ports: !override
+      - "8100:8000"
+  setup:
+    environment:
+      SEED_DEMO_MENU: "0"
+      STOREFRONT_URL: http://localhost:3100
+    volumes: !override
+      - ./setup:/setup:ro
+      - storefront-config:/config
+      # keeps setup from overwriting the quickstart's storefront/.env
+      - ../backoffice/.data/sb-lafattoria-storefront:/storefront
+  storefront:
+    profiles: ["storefront"]
+  mailpit:
+    ports: !reset []
