@@ -78,28 +78,48 @@ export interface DishDetail {
   deliveryTimeFactor: number; // custom field shopbite_delivery_time_factor
   seo: { title: string; description: string; keywords: string };
   extras: { id: string | null; name: string; productIds: string[] }[]; // cross-sellings "productList"
-  /**
-   * Extras filled automatically by a Shopware product stream (La Fattoria: one list for many
-   * dishes). Read-only here, changed in the Shopware Administration for now (backoffice#11).
-   */
-  streamExtras: {
-    id: string;
-    name: string;
-    streamName: string;
-    products: { id: string; number: string; name: string }[];
-  }[];
+  /** extras groups (product streams) the dish uses, see ExtraGroup */
+  extraGroupIds: string[];
   variants: { group: string; options: { name: string; surcharge: number }[] }[];
 }
 
-export type DishInput = Omit<DishDetail, "id" | "number" | "taxRate" | "streamExtras">;
+export type DishInput = Omit<DishDetail, "id" | "number" | "taxRate">;
 
 export interface DishFormOptions {
   /** sections with their sub-sections, in menu order */
   sections: { id: string; name: string; children: { id: string; name: string }[] }[];
   ingredients: string[];
   propertyGroups: { name: string; options: string[] }[];
-  extraCandidates: { id: string; number: string; name: string }[];
+  extraCandidates: ExtraProduct[];
+  extraGroups: ExtraGroup[];
   tags: string[];
+}
+
+export interface ExtraProduct {
+  id: string;
+  number: string;
+  name: string;
+}
+
+/**
+ * One list of extras, kept once and used at many dishes (La Fattoria: "Pizza Extras" at every
+ * pizza). In Shopware a product stream, linked to each dish by a "productStream" cross-selling.
+ */
+export interface ExtraGroup {
+  id: string;
+  name: string;
+  /** false: the stream has other conditions than "Produkt ist eins von", change it in the Shopware Administration */
+  editable: boolean;
+  /** the products of the condition, in stored order (editable groups only) */
+  productIds: string[];
+  /** what the group shows at the dishes right now */
+  products: ExtraProduct[];
+  dishCount: number;
+}
+
+export interface ExtraGroupList {
+  groups: ExtraGroup[];
+  candidates: ExtraProduct[];
 }
 
 /** A menu section (Shopware category under the channel's menu category). */

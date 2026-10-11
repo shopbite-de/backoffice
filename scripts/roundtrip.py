@@ -29,7 +29,7 @@ def snap(pid):
     d=call(SW+"/api/search/product",{"filter":[{"type":"multi","operator":"or","queries":[{"type":"equals","field":"id","value":pid},{"type":"equals","field":"parentId","value":pid}]}],"associations":{"options":{},"properties":{},"categories":{},"tags":{},"crossSellings":{"associations":{"assignedProducts":{}}},"configuratorSettings":{}},"sort":[{"field":"productNumber"}]},headers=H)["data"]
     keys=("productNumber","name","description","price","active","customFields","metaTitle","metaDescription","keywords","width","height","length","weight","customSearchKeywords","parentId")
     return [{**{k:p.get(k) for k in keys},"opts":sorted(o["id"] for o in p.get("options") or []),"props":sorted(o["id"] for o in p.get("properties") or []),"cats":sorted(c["id"] for c in p.get("categories") or []),"tags":sorted(t["id"] for t in p.get("tags") or []),
-             "xs":sorted((x["name"],x["type"],tuple(sorted(a["productId"] for a in x.get("assignedProducts") or []))) for x in p.get("crossSellings") or []),"cfg":sorted(c["optionId"] for c in p.get("configuratorSettings") or [])} for p in d]
+             "xs":sorted((x["id"],x["name"],x["type"],x.get("productStreamId"),x.get("position"),tuple(sorted(a["productId"] for a in x.get("assignedProducts") or []))) for x in p.get("crossSellings") or []),"cfg":sorted(c["optionId"] for c in p.get("configuratorSettings") or [])} for p in d]
 menu=call(B+"/api/menu"); dishes=[d for s in menu for d in s["dishes"] + [x for sub in s.get("subsections", []) for x in sub["dishes"]]]
 bad=0
 for d in dishes:
