@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowDown, ArrowLeft, ArrowUp } from "@lucide/vue";
+import { ArrowLeft, Plus } from "@lucide/vue";
 import type { MenuSectionDetail } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "menu" });
@@ -8,17 +8,7 @@ const api = useBackofficeApi();
 const error = ref<string | null>(null);
 const saved = ref<string | null>(null);
 const { data: sections } = await useAsyncData("sections", () => api<MenuSectionDetail[]>("/api/sections"));
-
-// editable copies, keyed by id
-const drafts = ref<Record<string, { name: string; title: string; description: string; path: string }>>({});
-watchEffect(() => {
-  drafts.value = Object.fromEntries(
-    (sections.value ?? []).map((s) => [
-      s.id,
-      { name: s.name, title: s.seo.title, description: s.seo.description, path: s.seo.path },
-    ]),
-  );
-});
+const parents = computed(() => (sections.value ?? []).map((s) => ({ id: s.id, name: s.name })));
 
 async function patch(section: MenuSectionDetail, body: Record<string, unknown>, message: string) {
   error.value = null;
@@ -31,24 +21,35 @@ async function patch(section: MenuSectionDetail, body: Record<string, unknown>, 
   }
 }
 
-function save(section: MenuSectionDetail) {
-  const d = drafts.value[section.id]!;
-  patch(
-    section,
-    { name: d.name, seo: { title: d.title, description: d.description, path: d.path } },
-    `${d.name} gespeichert.`,
-  );
+async function create(name: string, parentId?: string) {
+  error.value = null;
+  try {
+    sections.value = await api<MenuSectionDetail[]>("/api/sections", { method: "POST", body: { name, parentId } });
+    saved.value = `${name} angelegt.`;
+    return true;
+  } catch (e) {
+    error.value = errorMessage(e);
+    return false;
+  }
 }
 
 const newName = ref("");
-async function create() {
-  error.value = null;
-  try {
-    sections.value = await api<MenuSectionDetail[]>("/api/sections", { method: "POST", body: { name: newName.value } });
-    saved.value = `${newName.value} angelegt.`;
-    newName.value = "";
-  } catch (e) {
-    error.value = errorMessage(e);
+const newSub = ref<Record<string, string>>({});
+// the field for a new sub-section opens on demand, so the list stays calm
+const addingTo = ref<string | null>(null);
+async function openAdd(id: string) {
+  addingTo.value = id;
+  await nextTick();
+  document.getElementById(`neu-${id}`)?.focus();
+}
+async function createSection() {
+  if (await create(newName.value)) newName.value = "";
+}
+async function createSub(parent: MenuSectionDetail) {
+  const name = newSub.value[parent.id]?.trim();
+  if (name && (await create(name, parent.id))) {
+    newSub.value[parent.id] = "";
+    addingTo.value = null;
   }
 }
 </script>
@@ -60,7 +61,10 @@ async function create() {
         <NuxtLink to="/speisekarte"><ArrowLeft aria-hidden="true" />Zur Speisekarte</NuxtLink>
       </Button>
       <h1 class="mt-1 text-2xl font-semibold">Abschnitte</h1>
-      <p class="text-muted-foreground">Reihenfolge und Namen, wie Gäste sie im Shop sehen.</p>
+      <p class="text-muted-foreground">
+        Reihenfolge und Namen, wie Gäste sie im Shop sehen. Ein Abschnitt kann Unterabschnitte haben, z. B. Nudeln ›
+        Spaghetti.
+      </p>
     </div>
     <ErrorAlert :message="error" />
     <Alert v-if="saved" role="status"
@@ -71,78 +75,46 @@ async function create() {
       <li v-for="(section, i) in sections" :key="section.id">
         <Card>
           <CardContent class="space-y-3">
-            <div class="flex flex-wrap items-center gap-3">
-              <div class="flex gap-1">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  :disabled="i === 0"
-                  @click="patch(section, { move: 'up' }, `${section.name} nach oben verschoben.`)"
+            <SectionItem
+              :section="section"
+              :first="i === 0"
+              :last="i === (sections?.length ?? 0) - 1"
+              :parents="parents"
+              @patch="(body, message) => patch(section, body, message)"
+            />
+            <ol
+              v-if="section.children.length"
+              class="space-y-3 border-l-2 pl-4"
+              :aria-label="`Unterabschnitte von ${section.name}`"
+            >
+              <li v-for="(child, j) in section.children" :key="child.id">
+                <SectionItem
+                  :section="child"
+                  :first="j === 0"
+                  :last="j === section.children.length - 1"
+                  :parents="parents"
+                  @patch="(body, message) => patch(child, body, message)"
+                />
+              </li>
+            </ol>
+            <form
+              v-if="addingTo === section.id"
+              class="flex flex-wrap items-end gap-2 pl-4"
+              @submit.prevent="createSub(section)"
+              @keydown.esc="addingTo = null"
+            >
+              <div class="grid min-w-48 flex-1 gap-2">
+                <Label :for="`neu-${section.id}`" class="font-normal text-muted-foreground"
+                  >Unterabschnitt in {{ section.name }}</Label
                 >
-                  <ArrowUp aria-hidden="true" /><span class="sr-only">{{ section.name }} nach oben</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  :disabled="i === (sections?.length ?? 0) - 1"
-                  @click="patch(section, { move: 'down' }, `${section.name} nach unten verschoben.`)"
-                >
-                  <ArrowDown aria-hidden="true" /><span class="sr-only">{{ section.name }} nach unten</span>
-                </Button>
+                <Input :id="`neu-${section.id}`" v-model="newSub[section.id]" required placeholder="z. B. Spaghetti" />
               </div>
-              <p class="min-w-0 flex-1 font-semibold">
-                {{ section.name }}
-                <span class="font-normal text-muted-foreground">· {{ section.dishCount }} Gerichte</span>
-                <Badge v-if="!section.visible" variant="secondary" class="ml-1">ausgeblendet</Badge>
-              </p>
-              <Switch
-                :model-value="section.visible"
-                :aria-label="`${section.name} im Shop zeigen`"
-                @update:model-value="
-                  patch(section, { visible: $event }, `${section.name} ${$event ? 'eingeblendet' : 'ausgeblendet'}.`)
-                "
-              />
-            </div>
-            <details>
-              <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-muted-foreground">
-                Name und SEO bearbeiten
-              </summary>
-              <form v-if="drafts[section.id]" class="mt-2 grid gap-4" @submit.prevent="save(section)">
-                <div class="grid gap-2">
-                  <Label :for="`n-${section.id}`">Name</Label>
-                  <Input :id="`n-${section.id}`" v-model="drafts[section.id]!.name" required />
-                </div>
-                <div class="grid gap-2">
-                  <Label :for="`p-${section.id}`">Adresse im Shop</Label>
-                  <p :id="`p-${section.id}-hint`" class="text-sm text-muted-foreground">
-                    Wie Speisekarte/Pizza/. Die alte Adresse leitet automatisch weiter.
-                  </p>
-                  <Input
-                    :id="`p-${section.id}`"
-                    v-model="drafts[section.id]!.path"
-                    :aria-describedby="`p-${section.id}-hint`"
-                  />
-                </div>
-                <div class="grid gap-2">
-                  <Label :for="`t-${section.id}`">Titel in Suchmaschinen</Label>
-                  <Input :id="`t-${section.id}`" v-model="drafts[section.id]!.title" maxlength="255" />
-                </div>
-                <div class="grid gap-2">
-                  <Label :for="`d-${section.id}`">Beschreibung in Suchmaschinen</Label>
-                  <Textarea
-                    :id="`d-${section.id}`"
-                    v-model="drafts[section.id]!.description"
-                    maxlength="255"
-                    rows="2"
-                  />
-                </div>
-                <div>
-                  <Button type="submit"
-                    >Speichern<span class="sr-only"> {{ section.name }}</span></Button
-                  >
-                </div>
-              </form>
-            </details>
+              <Button type="submit">Anlegen</Button>
+              <Button type="button" variant="ghost" @click="addingTo = null">Abbrechen</Button>
+            </form>
+            <Button v-else variant="ghost" size="sm" class="ml-2 text-muted-foreground" @click="openAdd(section.id)">
+              <Plus aria-hidden="true" />Unterabschnitt<span class="sr-only"> in {{ section.name }}</span>
+            </Button>
           </CardContent>
         </Card>
       </li>
@@ -150,7 +122,7 @@ async function create() {
 
     <Card>
       <CardContent>
-        <form class="flex flex-wrap items-end gap-2" @submit.prevent="create">
+        <form class="flex flex-wrap items-end gap-2" @submit.prevent="createSection">
           <div class="grid min-w-48 flex-1 gap-2">
             <Label for="neu">Neuer Abschnitt</Label>
             <Input id="neu" v-model="newName" required placeholder="z. B. Mittagstisch" />

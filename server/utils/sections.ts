@@ -1,8 +1,9 @@
 import type { H3Event } from "h3";
 import type { MenuSectionDetail } from "#shared/types/backoffice";
 
-interface CategoryRow {
+export interface CategoryRow {
   id: string;
+  parentId: string | null;
   afterCategoryId: string | null;
   active: boolean;
   productAssignmentType: string;
@@ -31,13 +32,19 @@ export function sortSiblings<T extends { id: string; afterCategoryId: string | n
   return [...sorted, ...rows.filter((c) => !sorted.includes(c))];
 }
 
+/**
+ * The sections of the channel's menu with their sub-sections (two levels, like the storefront;
+ * deeper categories are left alone). `rows` is the flat list of both levels.
+ */
 export async function loadSections(event: H3Event) {
   const channel = await currentSalesChannel(event);
-  const { data } = await adminSearch<CategoryRow>(event, "category", {
-    filter: [{ type: "equals", field: "parentId", value: channel.menuCategoryId }],
-    includes: { category: ["id", "afterCategoryId", "active", "productAssignmentType", "translated"] },
-    limit: 200,
+  const { data: all } = await adminSearch<CategoryRow>(event, "category", {
+    filter: [{ type: "contains", field: "path", value: `|${channel.menuCategoryId}|` }],
+    includes: { category: ["id", "parentId", "afterCategoryId", "active", "productAssignmentType", "translated"] },
+    limit: 500,
   });
+  const topIds = new Set(all.filter((c) => c.parentId === channel.menuCategoryId).map((c) => c.id));
+  const data = all.filter((c) => topIds.has(c.id) || (c.parentId !== null && topIds.has(c.parentId)));
   const ids = data.map((c) => c.id);
   const [seo, counts] = await Promise.all([
     ids.length
@@ -50,25 +57,28 @@ export async function loadSections(event: H3Event) {
             { type: "equalsAny", field: "foreignKey", value: ids },
           ],
           includes: { seo_url: ["id", "foreignKey", "seoPathInfo", "isModified"] },
+          limit: 500,
         })
       : { data: [] },
     adminSearch<never>(event, "product", {
       limit: 1,
       filter: [
         { type: "equals", field: "parentId", value: null },
-        { type: "equalsAny", field: "categoryIds", value: ids },
+        { type: "equalsAny", field: "categoryIds", value: ids.length ? ids : ["-"] },
       ],
-      aggregations: [{ name: "perCategory", type: "terms", field: "categories.id" }],
+      aggregations: [{ name: "perCategory", type: "terms", field: "categories.id", limit: 500 }],
     }) as Promise<{ aggregations?: { perCategory?: { buckets: { key: string; count: number }[] } } }>,
   ]);
   const count = new Map((counts.aggregations?.perCategory?.buckets ?? []).map((b) => [b.key, b.count]));
-  const sections: MenuSectionDetail[] = sortSiblings(data).map((c) => {
+  const toDetail = (c: CategoryRow, children: MenuSectionDetail[]): MenuSectionDetail => {
     const url = seo.data.find((s) => s.foreignKey === c.id);
     return {
       id: c.id,
       name: c.translated.name,
+      parentId: c.parentId === channel.menuCategoryId ? null : c.parentId,
       visible: c.active,
-      dishCount: count.get(c.id) ?? 0,
+      dishCount: (count.get(c.id) ?? 0) + children.reduce((sum, child) => sum + child.dishCount, 0),
+      children,
       seo: {
         title: c.translated.metaTitle ?? "",
         description: c.translated.metaDescription ?? "",
@@ -76,6 +86,18 @@ export async function loadSections(event: H3Event) {
         pathIsCustom: url?.isModified ?? false,
       },
     };
-  });
-  return { channel, rows: sortSiblings(data), sections, seoUrls: seo.data };
+  };
+  const top = sortSiblings(data.filter((c) => topIds.has(c.id)));
+  const sections = top.map((c) =>
+    toDetail(
+      c,
+      sortSiblings(data.filter((child) => child.parentId === c.id)).map((child) => toDetail(child, [])),
+    ),
+  );
+  return { channel, rows: data, sections, seoUrls: seo.data };
+}
+
+/** Siblings of a section in menu order (same parent). */
+export function siblingsOf(rows: CategoryRow[], parentId: string | null) {
+  return sortSiblings(rows.filter((r) => r.parentId === parentId));
 }
