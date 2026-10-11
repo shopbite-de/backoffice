@@ -17,7 +17,7 @@ interface SalesChannelRow {
   languageId: string;
 }
 
-/** NUXT_SALES_CHANNELS: "channelId:menuCategoryId,..." (menu category optional). */
+/** NUXT_SALES_CHANNELS: "channelId:menuCategoryId,..." (menu category optional, the plugin configuration knows it). */
 function configuredChannels() {
   return useRuntimeConfig()
     .salesChannels.split(",")
@@ -27,6 +27,31 @@ function configuredChannels() {
       const [id, menuCategoryId] = entry.split(":");
       return { id: id!, menuCategoryId: menuCategoryId || undefined };
     });
+}
+
+const MENU_CACHE_MS = 60_000;
+let menuCache: { at: number; byChannel: Record<string, string> } | null = null;
+
+/**
+ * Menu category per sales channel from the plugin configuration (shopware-plugin#35, falls back
+ * to the navigation category there). Kept for a minute: it changes rarely and every request
+ * needs it. An older plugin without the route means: navigation category.
+ */
+async function pluginMenuCategories(event: H3Event): Promise<Record<string, string>> {
+  if (menuCache && Date.now() - menuCache.at < MENU_CACHE_MS) return menuCache.byChannel;
+  try {
+    const { channels } = await adminApi<{ channels: Record<string, { menuCategoryId?: string }> }>(
+      event,
+      "/_action/shopbite/settings",
+    );
+    const byChannel = Object.fromEntries(
+      Object.entries(channels).flatMap(([id, s]) => (s.menuCategoryId ? [[id, s.menuCategoryId]] : [])),
+    );
+    menuCache = { at: Date.now(), byChannel };
+    return byChannel;
+  } catch {
+    return {};
+  }
 }
 
 /**
@@ -42,12 +67,15 @@ export async function restaurantChannels(event: H3Event): Promise<SalesChannel[]
     ? [{ type: "equalsAny", field: "id", value: listed }]
     : [{ type: "equals", field: "active", value: true }];
   if (channelIds) filter.push({ type: "equalsAny", field: "id", value: channelIds.length ? channelIds : ["-"] });
-  const result = await adminSearch<SalesChannelRow>(event, "sales-channel", {
-    filter,
-    includes: {
-      sales_channel: ["id", "translated", "navigationCategoryId", "currencyId", "languageId"],
-    },
-  });
+  const [result, menus] = await Promise.all([
+    adminSearch<SalesChannelRow>(event, "sales-channel", {
+      filter,
+      includes: {
+        sales_channel: ["id", "translated", "navigationCategoryId", "currencyId", "languageId"],
+      },
+    }),
+    pluginMenuCategories(event),
+  ]);
   const order = (id: string) => (listed.includes(id) ? listed.indexOf(id) : 0);
   return result.data
     .sort((a, b) => order(a.id) - order(b.id))
@@ -57,7 +85,9 @@ export async function restaurantChannels(event: H3Event): Promise<SalesChannel[]
       navigationCategoryId: row.navigationCategoryId,
       currencyId: row.currencyId,
       languageId: row.languageId,
-      menuCategoryId: configured.find((c) => c.id === row.id)?.menuCategoryId ?? row.navigationCategoryId,
+      // NUXT_SALES_CHANNELS wins, then the plugin configuration, then the navigation category
+      menuCategoryId:
+        configured.find((c) => c.id === row.id)?.menuCategoryId ?? menus[row.id] ?? row.navigationCategoryId,
     }));
 }
 
