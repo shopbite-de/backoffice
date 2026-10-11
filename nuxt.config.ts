@@ -60,6 +60,8 @@ export default defineNuxtConfig({
     cachePurgeSecret: "", // NUXT_CACHE_PURGE_SECRET, same value as in the storefronts
     session: {
       password: "", // NUXT_SESSION_PASSWORD, at least 32 characters
+      // NUXT_SESSION_SECURE=false only for plain http outside localhost-aware browsers (quickstart)
+      secure: true,
     },
   },
 });
