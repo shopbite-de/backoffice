@@ -45,6 +45,17 @@ Rundlauf-Test über die ganze Karte (lädt jedes Gericht und speichert es unver�
 
 Erneut ausführen aktualisiert die Daten. Andere Shops: `--source`, `--key` (Access Key aus dem HTML der Storefront), `--source-menu`. Extras, die im Shop als Product Stream gepflegt sind, kommen als feste Liste an (backoffice#11). Entfernen: `docker compose -p sb-lafattoria down -v`.
 
+## Anmeldung mit Fingerabdruck oder Face ID
+
+Unter „Mein Zugang“ richtet jede Person ihr Gerät einmal ein, danach meldet sie sich ohne Passwort an (Passkey, WebAuthn). Die Prüfung macht das ShopBite-Plugin (shopware-plugin#38), das Backoffice reicht nur durch. Voraussetzung in der Plugin-Konfiguration der Shopware: Host des Backoffice als Relying-Party-ID und seine URL als Origin, lokal:
+
+```bash
+docker exec -w /var/www/html sb-lafattoria-shopware-1 php bin/console system:config:set ShopBitePlugin.config.passkeyRpId localhost
+docker exec -w /var/www/html sb-lafattoria-shopware-1 php bin/console system:config:set ShopBitePlugin.config.passkeyOrigins http://localhost:3010
+```
+
+Getestet mit einem virtuellen Authenticator in Chromium (Einrichten, Anmelden, Entfernen, Wiederverwendung der Signatur, gesperrter Benutzer).
+
 ## Konfiguration
 
 | Env | Bedeutung |

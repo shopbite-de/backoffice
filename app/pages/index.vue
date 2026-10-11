@@ -82,6 +82,7 @@ const revenue = computed(() =>
     </div>
 
     <ErrorAlert :message="error" />
+    <PasskeyHint />
     <p role="status" class="sr-only">{{ saved }}</p>
 
     <section aria-labelledby="annahme">

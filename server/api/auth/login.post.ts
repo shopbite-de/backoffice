@@ -12,16 +12,6 @@ export default defineEventHandler(async (event) => {
   } catch {
     throw createError({ statusCode: 401, statusMessage: "Benutzername oder Passwort stimmt nicht" });
   }
-  const session = await useShopwareSession(event);
-  const { capabilities, channelIds } = session.data;
-  const problem = !capabilities?.length
-    ? "Dieser Zugang hat keine Rolle für das Backoffice."
-    : channelIds?.length === 0
-      ? "Dieser Zugang ist noch keiner Filiale zugeordnet."
-      : null;
-  if (problem) {
-    await session.clear();
-    throw createError({ statusCode: 403, statusMessage: `${problem} Bitte beim Management melden.` });
-  }
+  await assertCanWork(event);
   return { ok: true };
 });
