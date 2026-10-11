@@ -31,5 +31,6 @@ export default defineEventHandler(async (event) => {
       productAssignmentType: "product",
     },
   });
+  await purgeStorefronts(event, { categories: [parent] });
   return (await loadSections(event)).sections;
 });
