@@ -71,6 +71,37 @@ Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigene
 | `NUXT_CACHE_PURGE_SECRET` | derselbe Schlüssel wie `NUXT_CACHE_PURGE_SECRET` in den Storefronts (`openssl rand -hex 32`) |
 | `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 Zeichen |
 
+## Betrieb (Docker)
+
+Das Image `ghcr.io/shopbite-de/backoffice` entsteht bei jedem Merge auf `main` (`edge`) und bei Tags `vX.Y.Z` (`X.Y.Z`, `X.Y`, `latest`). Es läuft als Benutzer `bun`, schreibt nichts ins Dateisystem (`read_only` geht) und lauscht auf Port 3000; `GET /healthz` ist der Healthcheck. Das Repository ist privat, der Server braucht deshalb einen Zugang zu ghcr.io (Personal Access Token mit `read:packages`, in Dokploy unter Registry).
+
+Ein zusätzlicher Dienst im Stack des Restaurants, neben Shopware, Storefront und Order Printer:
+
+```yaml
+  backoffice:
+    image: ghcr.io/shopbite-de/backoffice:edge
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      NUXT_SHOPWARE_URL: http://web:8000            # Shopware im selben Stack
+      NUXT_RESTAURANT_NAME: Pizzeria La Fattoria
+      NUXT_SALES_CHANNELS: ""                       # leer = alle aktiven Filialen
+      NUXT_SESSION_PASSWORD: ${BACKOFFICE_SESSION_PASSWORD}   # openssl rand -hex 32
+      NUXT_STOREFRONT_URLS: https://pizzeria-lafattoria.de
+      NUXT_CACHE_PURGE_SECRET: ${CACHE_PURGE_SECRET}          # derselbe Wert wie in der Storefront
+```
+
+Wichtig:
+
+- Nur über HTTPS hinter dem Reverse Proxy (Traefik in Dokploy) erreichbar machen, z. B. `backoffice.pizzeria-lafattoria.de`. Das Session-Cookie ist `Secure`, die Passkey-Anmeldung braucht HTTPS, und das Login-Rate-Limit liest die IP aus `X-Forwarded-For`.
+- Für Passkeys in der Plugin-Konfiguration `passkeyRpId` (Host des Backoffice) und `passkeyOrigins` (`https://…`) setzen.
+- Benutzer legt das Plugin an (`bin/console shopbite:staff:create`), das Backoffice kann das nicht.
+- Shopware Administration und Admin API von außen sperren, sobald das Personal nur noch das Backoffice nutzt (shopware#13): Das Backoffice erzwingt die Filialbindung, Shopware nicht.
+
+Lokal ausprobieren: `docker build -t backoffice .` und `docker run --network host -e PORT=3030 -e NUXT_SHOPWARE_URL=http://localhost:8000 -e NUXT_SESSION_PASSWORD=$(openssl rand -hex 32) backoffice`, dann http://localhost:3030 (Chrome akzeptiert das `Secure`-Cookie auf localhost).
+
 ## Aufbau
 
 - `server/utils/profile.ts`: Rolle, Bereiche und Filialen aus `/api/_info/me`; `server/middleware/auth.ts` ordnet jedem API-Bereich die nötige Rolle zu.
