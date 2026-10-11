@@ -31,6 +31,6 @@ export function useShopwareSession(event: H3Event) {
     name: "sb-backoffice",
     password: session.password,
     maxAge: 60 * 60 * 24 * 7,
-    cookie: { httpOnly: true, sameSite: "lax", secure: !import.meta.dev },
+    cookie: { httpOnly: true, sameSite: "lax", secure: !import.meta.dev && session.secure !== false },
   });
 }
