@@ -57,9 +57,14 @@ const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.alle
   <div class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h1 class="text-2xl font-semibold">Speisekarte</h1>
-      <Button variant="outline" as-child>
-        <NuxtLink to="/speisekarte/abschnitte">Abschnitte bearbeiten</NuxtLink>
-      </Button>
+      <div class="flex flex-wrap gap-2">
+        <Button variant="outline" as-child>
+          <NuxtLink to="/speisekarte/extras">Extras-Gruppen</NuxtLink>
+        </Button>
+        <Button variant="outline" as-child>
+          <NuxtLink to="/speisekarte/abschnitte">Abschnitte bearbeiten</NuxtLink>
+        </Button>
+      </div>
     </div>
 
     <Alert v-if="missing" class="border-warning-border bg-warning text-warning-foreground">

@@ -57,6 +57,7 @@ Installation Pizzeria La Fattoria (ein Dokploy-Stack)
 | | Varianten (bis 3 Gruppen, 100 Kombinationen) mit Aufpreis | Konfigurator + Kinder, Aufpreis in `configuratorSetting.price` | ✔ |
 | | Zutaten, vegetarisch/vegan, weitere Eigenschaften (z. B. Küche) | Eigenschaftsgruppen, fehlende Optionen werden angelegt | ✔ |
 | | Extras-Listen (Extras, Beilagen) | Cross-Selling `productList` | ✔ |
+| | Extras-Gruppen für viele Gerichte (z. B. „Pizza Extras“) | Product Stream „Produkt ist eins von“ + Cross-Selling `productStream` | ✔ (#11) |
 | | Upselling, Bon-Druck, Zubereitungsfaktor | Custom Fields `shopbite_*` (zusammengeführt) | ✔ |
 | | Maße, Gewicht, Schlagwörter, Suchwörter, SEO-Titel/-Beschreibung/Keywords | Produktfelder, `tag`, `customSearchKeywords` | ✔ |
 | | Neues Gericht, duplizieren, löschen, Fotos | `product`, Media-Upload | |

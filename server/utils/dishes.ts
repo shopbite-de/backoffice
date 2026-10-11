@@ -1,13 +1,14 @@
 import type { H3Event } from "h3";
 import { createHash, randomUUID } from "node:crypto";
-import type { DishDetail, DishFormOptions, DishInput } from "#shared/types/backoffice";
+import type { DishDetail, DishFormOptions, DishInput, ExtraProduct } from "#shared/types/backoffice";
 import type { FoodLabel } from "#shared/utils/labels";
 
 /**
  * Translates between a dish (what the restaurant edits) and the Shopware
  * product model the storefront reads (see storefront/CLAUDE.md, "Product
  * data model"): ingredients and diet are property options, sizes are
- * variants with a surcharge, extras are "productList" cross-sellings.
+ * variants with a surcharge, extras are "productList" cross-sellings or an
+ * extras group ("productStream" cross-selling, see extraGroups.ts).
  */
 
 const INGREDIENTS = "Hauptzutaten";
@@ -81,7 +82,8 @@ interface ProductRow {
     sortBy?: string | null;
     sortDirection?: string | null;
     limit?: number | null;
-    productStream?: { translated: { name: string }; apiFilter: Record<string, unknown>[] | null } | null;
+    position?: number | null;
+    productStreamId?: string | null;
     translated: { name: string };
     assignedProducts: { id: string; productId: string; position: number }[];
   }[];
@@ -129,7 +131,7 @@ async function loadProduct(event: H3Event, id: string) {
       properties: { associations: { group: {} } },
       tags: {},
       configuratorSettings: { associations: { option: { associations: { group: {} } } } },
-      crossSellings: { associations: { assignedProducts: {}, productStream: {} } },
+      crossSellings: { associations: { assignedProducts: {} } },
       children: { associations: { options: { associations: { group: {} } }, tax: {} } },
     },
   });
@@ -170,37 +172,8 @@ function grossOf(prices: Price[] | null, currencyId: string): number | null {
   return (prices?.find((p) => p.currencyId === currencyId) ?? prices?.[0])?.gross ?? null;
 }
 
-/** The products a product stream currently selects, in the cross-selling's order. */
-async function streamProducts(event: H3Event, crossSelling: ProductRow["crossSellings"][number]) {
-  const filter = crossSelling.productStream?.apiFilter;
-  if (!filter?.length) return [];
-  const field =
-    crossSelling.sortBy === "price" ? "price" : crossSelling.sortBy === "releaseDate" ? "releaseDate" : "name";
-  const { data } = await adminSearch<{ id: string; productNumber: string; translated: { name: string } }>(
-    event,
-    "product",
-    {
-      filter: [...filter, { type: "equals", field: "parentId", value: null }],
-      sort: [{ field, order: crossSelling.sortDirection === "DESC" ? "DESC" : "ASC", naturalSorting: true }],
-      limit: Math.min(crossSelling.limit ?? 24, 100),
-      includes: { product: ["id", "productNumber", "translated"] },
-    },
-  );
-  // some imported names start with a space
-  return data.map((p) => ({ id: p.id, number: p.productNumber, name: nameOf(p).trim() }));
-}
-
 export async function loadDish(event: H3Event, id: string): Promise<DishDetail> {
   const [product, { channel, categories }] = await Promise.all([loadProduct(event, id), menuCategories(event)]);
-  const streams = product.crossSellings.filter((c) => c.type === "productStream");
-  const streamExtras = await Promise.all(
-    streams.map(async (c) => ({
-      id: c.id,
-      name: nameOf(c),
-      streamName: c.productStream?.translated.name ?? "",
-      products: await streamProducts(event, c),
-    })),
-  );
   const base = grossOf(product.price, channel.currencyId) ?? 0;
   const menuIds = new Set(categories.map((c) => c.id));
 
@@ -279,16 +252,22 @@ export async function loadDish(event: H3Event, id: string): Promise<DishDetail> 
         productIds: [...c.assignedProducts].sort((a, b) => a.position - b.position).map((a) => a.productId),
       })),
     variants: [...variants].map(([group, options]) => ({ group, options })),
-    streamExtras,
+    extraGroupIds: [
+      ...new Set(
+        product.crossSellings.flatMap((c) =>
+          c.type === "productStream" && c.productStreamId ? [c.productStreamId] : [],
+        ),
+      ),
+    ],
   };
 }
 
-export async function dishFormOptions(event: H3Event): Promise<DishFormOptions> {
-  const [{ categories, channel }, groups, extras, tags] = await Promise.all([
-    menuCategories(event),
-    propertyGroups(event),
-    // extras are products without a category (see the storefront data model)
-    adminSearch<{ id: string; productNumber: string; translated: { name: string } }>(event, "product", {
+/** Extras are products without a category (see the storefront data model). */
+export async function extraCandidates(event: H3Event): Promise<ExtraProduct[]> {
+  const { data } = await adminSearch<{ id: string; productNumber: string; translated: { name: string } }>(
+    event,
+    "product",
+    {
       limit: 500,
       filter: [
         { type: "equals", field: "parentId", value: null },
@@ -296,8 +275,19 @@ export async function dishFormOptions(event: H3Event): Promise<DishFormOptions> 
       ],
       sort: [{ field: "productNumber", order: "ASC", naturalSorting: true }],
       includes: { product: ["id", "productNumber", "translated"] },
-    }),
+    },
+  );
+  // some imported names start with a space
+  return data.map((p) => ({ id: p.id, number: p.productNumber, name: nameOf(p).trim() }));
+}
+
+export async function dishFormOptions(event: H3Event): Promise<DishFormOptions> {
+  const [{ categories, channel }, groups, extras, tags, extraGroups] = await Promise.all([
+    menuCategories(event),
+    propertyGroups(event),
+    extraCandidates(event),
     adminSearch<{ name: string }>(event, "tag", { limit: 500, includes: { tag: ["name"] } }),
+    loadExtraGroups(event),
   ]);
   const options = (group: string) =>
     (groups.find((g) => nameOf(g) === group)?.options ?? []).map(nameOf).sort((a, b) => a.localeCompare(b, "de"));
@@ -314,7 +304,8 @@ export async function dishFormOptions(event: H3Event): Promise<DishFormOptions> 
     propertyGroups: groups
       .map((g) => ({ name: nameOf(g), options: options(nameOf(g)) }))
       .filter((g) => !SPECIAL_GROUPS.includes(g.name)),
-    extraCandidates: extras.data.map((p) => ({ id: p.id, number: p.productNumber, name: nameOf(p) })),
+    extraCandidates: extras,
+    extraGroups,
     tags: tags.data.map((t) => t.name).sort((a, b) => a.localeCompare(b, "de")),
   };
 }
@@ -519,6 +510,44 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
         const wanted = input.extras.find((e) => e.id === c.id)?.productIds ?? [];
         return c.assignedProducts.filter((a) => !wanted.includes(a.productId)).map((a) => ({ id: a.id }));
       }),
+  );
+
+  // extras groups: a "productStream" cross-selling per group; groups already linked stay as they are
+  const streamLinks = product.crossSellings.filter((c) => c.type === "productStream");
+  push(
+    "drop-extra-groups",
+    "delete",
+    "product_cross_selling",
+    streamLinks.filter((c) => !input.extraGroupIds.includes(c.productStreamId ?? "")).map((c) => ({ id: c.id })),
+  );
+  const linked = new Set(streamLinks.map((c) => c.productStreamId));
+  const addedGroupIds = input.extraGroupIds.filter((g) => !linked.has(g));
+  const { data: addedGroups } = addedGroupIds.length
+    ? await adminSearch<{ id: string; translated: { name: string | null } }>(event, "product-stream", {
+        ids: addedGroupIds,
+        includes: { product_stream: ["id", "translated"] },
+      })
+    : { data: [] };
+  if (addedGroups.length !== addedGroupIds.length) {
+    throw createError({ statusCode: 400, statusMessage: "Unbekannte Extras-Gruppe" });
+  }
+  const lastPosition = Math.max(input.extras.length - 1, ...product.crossSellings.map((c) => c.position ?? 0));
+  push(
+    "extra-groups",
+    "upsert",
+    "product_cross_selling",
+    addedGroups.map((group, i) => ({
+      id: newId(),
+      productId: id,
+      name: group.translated.name?.trim() || "Extras",
+      type: "productStream",
+      productStreamId: group.id,
+      active: true,
+      position: lastPosition + 1 + i,
+      sortBy: "name",
+      sortDirection: "ASC",
+      limit: 100,
+    })),
   );
 
   const settingByOption = new Map(product.configuratorSettings.map((s) => [s.optionId, s.id]));
