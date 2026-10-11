@@ -5,6 +5,12 @@ const Body = z.object({
   name: z.string().trim().min(1).max(255).optional(),
   visible: z.boolean().optional(),
   move: z.enum(["up", "down"]).optional(),
+  // move under another section (sub-section) or back to the menu (null)
+  parentId: z
+    .string()
+    .regex(/^[0-9a-f]{32}$/)
+    .nullable()
+    .optional(),
   seo: z
     .object({
       title: z.string().trim().max(255),
@@ -28,7 +34,8 @@ export default defineEventHandler(async (event) => {
   const id = Id.parse(getRouterParam(event, "id"));
   const body = await readValidBody(event, Body);
   const { channel, rows, seoUrls } = await loadSections(event);
-  if (!rows.some((r) => r.id === id)) throw createError({ statusCode: 404, statusMessage: "Abschnitt nicht gefunden" });
+  const row = rows.find((r) => r.id === id);
+  if (!row) throw createError({ statusCode: 404, statusMessage: "Abschnitt nicht gefunden" });
 
   const category: Record<string, unknown> = { id };
   if (body.name !== undefined) category.name = body.name;
@@ -39,21 +46,45 @@ export default defineEventHandler(async (event) => {
   }
 
   const payload: Record<string, unknown>[] = [category];
-  if (body.move) {
-    const order = rows.map((r) => r.id);
+  // Shopware keeps siblings as a linked list (afterCategoryId): write every row whose predecessor changes
+  const relink = (order: string[]) =>
+    order.forEach((sectionId, i) => {
+      const after = i === 0 ? null : order[i - 1]!;
+      if (rows.find((r) => r.id === sectionId)?.afterCategoryId !== after) {
+        const entry = payload.find((p) => p.id === sectionId) ?? { id: sectionId };
+        entry.afterCategoryId = after;
+        if (!payload.includes(entry)) payload.push(entry);
+      }
+    });
+
+  if (body.parentId !== undefined) {
+    const target = body.parentId ?? channel.menuCategoryId;
+    if (target !== row.parentId) {
+      const intoSection = body.parentId !== null;
+      if (intoSection && !rows.some((r) => r.id === target && r.parentId === channel.menuCategoryId)) {
+        throw createError({ statusCode: 400, statusMessage: "Unterabschnitte gibt es nur in Abschnitten der Karte" });
+      }
+      if (intoSection && (target === id || rows.some((r) => r.parentId === id))) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: "Ein Abschnitt mit Unterabschnitten kann kein Unterabschnitt werden",
+        });
+      }
+      relink(
+        siblingsOf(rows, row.parentId)
+          .map((r) => r.id)
+          .filter((sid) => sid !== id),
+      );
+      category.parentId = target;
+      category.afterCategoryId = siblingsOf(rows, target).at(-1)?.id ?? null;
+    }
+  } else if (body.move) {
+    const order = siblingsOf(rows, row.parentId).map((r) => r.id);
     const from = order.indexOf(id);
     const to = body.move === "up" ? from - 1 : from + 1;
     if (to >= 0 && to < order.length) {
       [order[from], order[to]] = [order[to]!, order[from]!];
-      // rewrite the linked list for every sibling whose predecessor changed
-      order.forEach((sectionId, i) => {
-        const after = i === 0 ? null : order[i - 1]!;
-        if (rows.find((r) => r.id === sectionId)?.afterCategoryId !== after) {
-          const row = payload.find((p) => p.id === sectionId) ?? { id: sectionId };
-          row.afterCategoryId = after;
-          if (!payload.includes(row)) payload.push(row);
-        }
-      });
+      relink(order);
     }
   }
 
