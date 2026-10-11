@@ -1,9 +1,10 @@
 # Copies the public menu of a live ShopBite shop into a local Shopware, for testing with real data.
 #
-#   python3 -I scripts/import-from-shop.py [--source URL --key ACCESS_KEY --target URL]
+#   python3 -I scripts/import-from-shop.py --source URL --key ACCESS_KEY --source-menu CATEGORY_ID [--target URL]
 #
-# Defaults: Pizzeria La Fattoria (store-api access key is public, it is in the storefront's HTML)
-# into the local instance from scripts/compose.lafattoria.yaml on :8100.
+# --source is the shop's Shopware (Store API), --key the store-api access key from the storefront's
+# HTML, --source-menu its menu category. Target default: the local instance from
+# scripts/compose.lafattoria.yaml on :8100.
 #
 # Reads ONLY the public Store API of the source (no credentials, nothing is written there).
 # Copies the sections under the menu category (with sub-sections), dishes, variants, extras
@@ -15,9 +16,9 @@ import argparse, hashlib, json, re, sys, urllib.error, urllib.request, uuid
 from concurrent.futures import ThreadPoolExecutor
 
 p = argparse.ArgumentParser()
-p.add_argument("--source", default="https://backend.pizzeria-lafattoria.de")
-p.add_argument("--key", default="SWSCWK03ELNBQ043VERHB3U3UA")
-p.add_argument("--source-menu", default="01a111748de97f25b7ba75dab27fb7aa", help="menu category id of the source shop")
+p.add_argument("--source", required=True, help="Shopware URL of the source shop, e.g. https://backend.example.de")
+p.add_argument("--key", required=True, help="store-api access key of the source shop (in its storefront HTML)")
+p.add_argument("--source-menu", required=True, help="menu category id of the source shop")
 p.add_argument("--target", default="http://localhost:8100")
 p.add_argument("--user", default="admin")
 p.add_argument("--password", default="shopbite")
