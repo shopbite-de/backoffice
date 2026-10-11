@@ -12,5 +12,10 @@ const Body = z
 export default defineEventHandler(async (event) => {
   const body = await readValidBody(event, Body);
   const channel = await currentSalesChannel(event);
-  return adminApi<ShopSettings>(event, `/_action/shopbite/settings/${channel.id}`, { method: "PATCH", body });
+  const { orderingOpen, deliveryMinutes } = await adminApi<ShopSettings>(
+    event,
+    `/_action/shopbite/settings/${channel.id}`,
+    { method: "PATCH", body },
+  );
+  return { orderingOpen, deliveryMinutes } satisfies ShopSettings;
 });
