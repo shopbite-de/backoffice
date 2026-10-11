@@ -102,3 +102,16 @@ export interface MenuSectionDetail {
 export type Capability = "orders" | "settings" | "menu" | "hours";
 
 export type StaffRole = "management" | "personal";
+
+/** A device the person can log in with by fingerprint or face (WebAuthn passkey). */
+export interface Passkey {
+  id: string;
+  name: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+}
+
+export interface PasskeyList {
+  enabled: boolean;
+  passkeys: Passkey[];
+}

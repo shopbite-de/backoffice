@@ -8,6 +8,7 @@ const management = (await import("../docs/notes/management-privileges.json")).de
 const personal = (await import("../docs/notes/personal-privileges.json")).default as string[];
 
 const me = (privileges: string[], customFields: Record<string, unknown> | null = null, admin = false) => ({
+  username: "anna",
   firstName: "Anna",
   lastName: "Rossi",
   admin,
@@ -18,6 +19,7 @@ const me = (privileges: string[], customFields: Record<string, unknown> | null =
 describe("profileFromMe", () => {
   it("gives management every area and all branches without an assignment", () => {
     expect(profileFromMe(me(management))).toEqual({
+      username: "anna",
       name: "Anna Rossi",
       role: "management",
       capabilities: ["orders", "settings", "menu", "hours"],

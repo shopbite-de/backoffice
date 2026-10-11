@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { Clock, ClipboardList, LogOut, UtensilsCrossed } from "@lucide/vue";
+import { CircleUser, Clock, ClipboardList, LogOut, UtensilsCrossed } from "@lucide/vue";
 import type { Capability } from "#shared/types/backoffice";
 
 const route = useRoute();
 const session = useAuthState();
 const auth = computed(() => (session.value?.loggedIn ? session.value : null));
 
-const LINKS: { to: string; label: string; icon: typeof Clock; capability: Capability }[] = [
+const LINKS: { to: string; label: string; icon: typeof Clock; capability?: Capability }[] = [
   { to: "/", label: "Heute", icon: ClipboardList, capability: "orders" },
   { to: "/speisekarte", label: "Speisekarte", icon: UtensilsCrossed, capability: "menu" },
   { to: "/oeffnungszeiten", label: "Öffnungszeiten", icon: Clock, capability: "hours" },
+  // everyone: own passkeys
+  { to: "/zugang", label: "Mein Zugang", icon: CircleUser },
 ];
 // the role decides which areas a person sees (Shopware enforces it on top)
-const links = computed(() => LINKS.filter((l) => auth.value?.capabilities.includes(l.capability)));
+const links = computed(() => LINKS.filter((l) => !l.capability || auth.value?.capabilities.includes(l.capability)));
 // a section stays marked on its sub pages (dish editor, sections)
 const isActive = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to));
 // two columns only with the sidebar (see template root); the login page is centred
