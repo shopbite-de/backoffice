@@ -44,5 +44,6 @@ export default defineEventHandler(async (event) => {
   const id = Id.parse(getRouterParam(event, "id"));
   const input = await readValidBody(event, Body);
   await saveDish(event, id, input);
+  await purgeStorefronts(event, { products: [id] });
   return loadDish(event, id);
 });

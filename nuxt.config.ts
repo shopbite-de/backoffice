@@ -55,6 +55,9 @@ export default defineNuxtConfig({
     shopwareUrl: "http://localhost:8000", // NUXT_SHOPWARE_URL
     restaurantName: "Backoffice", // NUXT_RESTAURANT_NAME
     salesChannels: "", // NUXT_SALES_CHANNELS, "channelId:menuCategoryId,..."
+    // storefronts whose cache is emptied after a menu change (storefront#484)
+    storefrontUrls: "", // NUXT_STOREFRONT_URLS, "https://shop-a.de,https://shop-b.de"
+    cachePurgeSecret: "", // NUXT_CACHE_PURGE_SECRET, same value as in the storefronts
     session: {
       password: "", // NUXT_SESSION_PASSWORD, at least 32 characters
     },
