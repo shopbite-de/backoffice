@@ -78,10 +78,20 @@ export interface DishDetail {
   deliveryTimeFactor: number; // custom field shopbite_delivery_time_factor
   seo: { title: string; description: string; keywords: string };
   extras: { id: string | null; name: string; productIds: string[] }[]; // cross-sellings "productList"
+  /**
+   * Extras filled automatically by a Shopware product stream (La Fattoria: one list for many
+   * dishes). Read-only here, changed in the Shopware Administration for now (backoffice#11).
+   */
+  streamExtras: {
+    id: string;
+    name: string;
+    streamName: string;
+    products: { id: string; number: string; name: string }[];
+  }[];
   variants: { group: string; options: { name: string; surcharge: number }[] }[];
 }
 
-export type DishInput = Omit<DishDetail, "id" | "number" | "taxRate">;
+export type DishInput = Omit<DishDetail, "id" | "number" | "taxRate" | "streamExtras">;
 
 export interface DishFormOptions {
   /** sections with their sub-sections, in menu order */

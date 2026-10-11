@@ -318,6 +318,20 @@ const diet = computed({
     </FormSection>
 
     <FormSection title="Extras" hint="Listen, aus denen Gäste beim Bestellen wählen, z. B. Extras oder Beilagen.">
+      <div v-for="stream in dish.streamExtras" :key="stream.id" class="space-y-2 rounded-lg border border-dashed p-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <p class="font-medium">{{ stream.name }}</p>
+          <Badge variant="secondary">automatisch</Badge>
+          <span class="text-sm text-muted-foreground">{{ stream.products.length }} Extras</span>
+        </div>
+        <p class="text-sm text-muted-foreground">
+          Diese Liste füllt Shopware automatisch<template v-if="stream.streamName">
+            (Regel „{{ stream.streamName }}“)</template
+          >, sie gilt für alle Gerichte mit derselben Liste. Ändern geht derzeit nur in der Shopware Administration.
+        </p>
+        <p v-if="stream.products.length" class="text-sm">{{ stream.products.map((p) => p.name).join(", ") }}</p>
+        <p v-else class="text-sm text-muted-foreground">Die Regel findet gerade keine Produkte.</p>
+      </div>
       <div v-for="(extra, e) in form.extras" :key="extra.id ?? `neu-${e}`" class="space-y-3 rounded-lg border p-4">
         <div class="flex flex-wrap items-end gap-2">
           <div class="grid min-w-48 flex-1 gap-2">
