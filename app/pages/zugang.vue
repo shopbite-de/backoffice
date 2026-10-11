@@ -15,9 +15,14 @@ const { data, refresh } = await useAsyncData("passkeys", () => api<PasskeyList>(
 
 const supported = ref(true);
 const deviceName = ref("");
+// iPhone/iPad have no install prompt; Safari adds the app via the share menu
+const isIos = ref(false);
+const installed = ref(false);
 onMounted(() => {
   supported.value = browserSupportsWebAuthn();
   deviceName.value = guessDeviceName(navigator.userAgent);
+  isIos.value = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  installed.value = window.matchMedia("(display-mode: standalone)").matches;
 });
 
 async function setUp() {
@@ -102,6 +107,26 @@ const date = (value: string | null) =>
         </li>
       </ul>
       <p v-else-if="data?.enabled" class="text-sm text-muted-foreground">Noch kein Gerät eingerichtet.</p>
+    </FormSection>
+
+    <FormSection
+      title="Als App auf dem Gerät"
+      hint="Mit eigenem Symbol auf dem Startbildschirm und ohne Browserleiste, gut für Handy und Küchentablet."
+    >
+      <p v-if="installed" class="text-muted-foreground">Läuft schon als App.</p>
+      <template v-else-if="isIos">
+        <p>So geht es auf iPhone und iPad (in Safari):</p>
+        <ol class="list-decimal space-y-1 pl-5 text-muted-foreground">
+          <li>Unten auf das Teilen-Symbol tippen (Quadrat mit Pfeil nach oben).</li>
+          <li>„Zum Home-Bildschirm“ wählen und „Hinzufügen“ tippen.</li>
+        </ol>
+      </template>
+      <div v-else class="flex flex-wrap items-center gap-3">
+        <InstallAppButton />
+        <p class="text-sm text-muted-foreground">
+          Kein Knopf zu sehen? Im Browsermenü „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen.
+        </p>
+      </div>
     </FormSection>
   </div>
 </template>

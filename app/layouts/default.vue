@@ -92,6 +92,7 @@ async function switchChannel(id: unknown) {
             </li>
           </ul>
         </nav>
+        <div class="hidden px-3 md:block"><InstallAppButton class="w-full" /></div>
         <div class="hidden items-center gap-1 p-3 md:flex">
           <ColorModeButton />
           <Button variant="ghost" class="flex-1 justify-start" @click="logout">
@@ -101,6 +102,7 @@ async function switchChannel(id: unknown) {
       </div>
     </header>
     <main id="inhalt" tabindex="-1" class="mx-auto w-full max-w-4xl px-4 py-6 md:px-8 md:py-8">
+      <OfflineNotice class="mb-4 rounded-lg" />
       <slot />
     </main>
   </div>

@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2026-10-01",
   devtools: { enabled: false },
   ssr: false,
-  modules: ["shadcn-nuxt", "@nuxt/eslint"],
+  modules: ["shadcn-nuxt", "@nuxt/eslint", "@vite-pwa/nuxt"],
   shadcn: { prefix: "", componentDir: "./app/components/ui" },
   css: ["~/assets/css/main.css"],
   vite: { plugins: [tailwindcss()] },
@@ -16,8 +16,15 @@ export default defineNuxtConfig({
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "robots", content: "noindex, nofollow" },
         { name: "theme-color", content: "#ffffff" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-status-bar-style", content: "default" },
       ],
-      link: [{ rel: "icon", href: "/favicon.ico" }],
+      link: [
+        { rel: "icon", href: "/favicon.ico" },
+        // served by server/routes/manifest.webmanifest.ts (restaurant name from the env)
+        { rel: "manifest", href: "/manifest.webmanifest" },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
+      ],
       // dark mode before the first paint, no flash (see app/composables/useColorMode.ts)
       script: [
         {
@@ -27,6 +34,21 @@ export default defineNuxtConfig({
       ],
     },
   },
+  // Installable app (backoffice#6). The service worker precaches the app shell only, never
+  // /api responses: orders must always be live. The manifest comes from a server route.
+  pwa: {
+    registerType: "autoUpdate",
+    manifest: false,
+    client: { installPrompt: true },
+    workbox: {
+      navigateFallback: "/",
+      navigateFallbackDenylist: [/^\/api\//],
+      globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
+      runtimeCaching: [],
+    },
+  },
+  // the SPA shell as a file, so the service worker can serve it offline
+  nitro: { prerender: { routes: ["/"] } },
   runtimeConfig: {
     // Server only: the browser never sees a Shopware URL or a token.
     // One backoffice per restaurant, next to its own Shopware (see .env.example).
