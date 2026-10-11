@@ -78,6 +78,10 @@ interface ProductRow {
   crossSellings: {
     id: string;
     type: string;
+    sortBy?: string | null;
+    sortDirection?: string | null;
+    limit?: number | null;
+    productStream?: { translated: { name: string }; apiFilter: Record<string, unknown>[] | null } | null;
     translated: { name: string };
     assignedProducts: { id: string; productId: string; position: number }[];
   }[];
@@ -125,7 +129,7 @@ async function loadProduct(event: H3Event, id: string) {
       properties: { associations: { group: {} } },
       tags: {},
       configuratorSettings: { associations: { option: { associations: { group: {} } } } },
-      crossSellings: { associations: { assignedProducts: {} } },
+      crossSellings: { associations: { assignedProducts: {}, productStream: {} } },
       children: { associations: { options: { associations: { group: {} } }, tax: {} } },
     },
   });
@@ -166,8 +170,37 @@ function grossOf(prices: Price[] | null, currencyId: string): number | null {
   return (prices?.find((p) => p.currencyId === currencyId) ?? prices?.[0])?.gross ?? null;
 }
 
+/** The products a product stream currently selects, in the cross-selling's order. */
+async function streamProducts(event: H3Event, crossSelling: ProductRow["crossSellings"][number]) {
+  const filter = crossSelling.productStream?.apiFilter;
+  if (!filter?.length) return [];
+  const field =
+    crossSelling.sortBy === "price" ? "price" : crossSelling.sortBy === "releaseDate" ? "releaseDate" : "name";
+  const { data } = await adminSearch<{ id: string; productNumber: string; translated: { name: string } }>(
+    event,
+    "product",
+    {
+      filter: [...filter, { type: "equals", field: "parentId", value: null }],
+      sort: [{ field, order: crossSelling.sortDirection === "DESC" ? "DESC" : "ASC", naturalSorting: true }],
+      limit: Math.min(crossSelling.limit ?? 24, 100),
+      includes: { product: ["id", "productNumber", "translated"] },
+    },
+  );
+  // some imported names start with a space
+  return data.map((p) => ({ id: p.id, number: p.productNumber, name: nameOf(p).trim() }));
+}
+
 export async function loadDish(event: H3Event, id: string): Promise<DishDetail> {
   const [product, { channel, categories }] = await Promise.all([loadProduct(event, id), menuCategories(event)]);
+  const streams = product.crossSellings.filter((c) => c.type === "productStream");
+  const streamExtras = await Promise.all(
+    streams.map(async (c) => ({
+      id: c.id,
+      name: nameOf(c),
+      streamName: c.productStream?.translated.name ?? "",
+      products: await streamProducts(event, c),
+    })),
+  );
   const base = grossOf(product.price, channel.currencyId) ?? 0;
   const menuIds = new Set(categories.map((c) => c.id));
 
@@ -246,6 +279,7 @@ export async function loadDish(event: H3Event, id: string): Promise<DishDetail> 
         productIds: [...c.assignedProducts].sort((a, b) => a.position - b.position).map((a) => a.productId),
       })),
     variants: [...variants].map(([group, options]) => ({ group, options })),
+    streamExtras,
   };
 }
 
