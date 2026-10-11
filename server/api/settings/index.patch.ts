@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ShopSettings } from "#shared/types/backoffice";
 
 const Body = z
   .object({
@@ -7,21 +8,9 @@ const Body = z
   })
   .refine((b) => Object.keys(b).length > 0);
 
-/** Written for this sales channel only, so other shops on the same Shopware keep theirs. */
+/** Written for this sales channel only, so other branches keep theirs (plugin settings route, no system_config). */
 export default defineEventHandler(async (event) => {
   const body = await readValidBody(event, Body);
   const channel = await currentSalesChannel(event);
-  const values: Record<string, unknown> = {};
-  if (body.orderingOpen !== undefined) {
-    values["ShopBitePlugin.config.isCheckoutEnabled"] = body.orderingOpen;
-  }
-  if (body.deliveryMinutes !== undefined) {
-    values["ShopBitePlugin.config.defaultDeliveryTime"] = body.deliveryMinutes;
-  }
-  await adminApi(event, "/_action/system-config", {
-    method: "POST",
-    query: { salesChannelId: channel.id },
-    body: values,
-  });
-  return { ok: true };
+  return adminApi<ShopSettings>(event, `/_action/shopbite/settings/${channel.id}`, { method: "PATCH", body });
 });
