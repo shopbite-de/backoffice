@@ -76,23 +76,30 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 409, statusMessage: "Dieser SEO-Pfad gehört schon zu einer anderen Seite" });
     }
     if (current) {
-      ops.push({ key: "seo-old", action: "upsert", entity: "seo_url", payload: [{ id: current.id, isCanonical: null }] });
+      ops.push({
+        key: "seo-old",
+        action: "upsert",
+        entity: "seo_url",
+        payload: [{ id: current.id, isCanonical: null }],
+      });
     }
     ops.push({
       key: "seo",
       action: "upsert",
       entity: "seo_url",
-      payload: [{
-        id: taken[0]?.id ?? crypto.randomUUID().replaceAll("-", ""),
-        salesChannelId: channel.id,
-        languageId: channel.languageId,
-        foreignKey: id,
-        routeName: "frontend.navigation.page",
-        pathInfo: `/navigation/${id}`,
-        seoPathInfo: body.seo.path,
-        isCanonical: true,
-        isModified: true,
-      }],
+      payload: [
+        {
+          id: taken[0]?.id ?? crypto.randomUUID().replaceAll("-", ""),
+          salesChannelId: channel.id,
+          languageId: channel.languageId,
+          foreignKey: id,
+          routeName: "frontend.navigation.page",
+          pathInfo: `/navigation/${id}`,
+          seoPathInfo: body.seo.path,
+          isCanonical: true,
+          isModified: true,
+        },
+      ],
     });
   }
   await adminApi(event, "/_action/sync", { method: "POST", body: ops });

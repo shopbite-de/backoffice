@@ -5,13 +5,17 @@ const id = useId();
 </script>
 
 <template>
-  <section :aria-labelledby="id"><Card>
-    <CardHeader>
-      <CardTitle><h2 :id="id" class="text-lg font-semibold">{{ title }}</h2></CardTitle>
-      <CardDescription v-if="hint">{{ hint }}</CardDescription>
-    </CardHeader>
-    <CardContent class="space-y-5">
-      <slot />
-    </CardContent>
-  </Card></section>
+  <section :aria-labelledby="id">
+    <Card>
+      <CardHeader>
+        <CardTitle
+          ><h2 :id="id" class="text-lg font-semibold">{{ title }}</h2></CardTitle
+        >
+        <CardDescription v-if="hint">{{ hint }}</CardDescription>
+      </CardHeader>
+      <CardContent class="space-y-5">
+        <slot />
+      </CardContent>
+    </Card>
+  </section>
 </template>

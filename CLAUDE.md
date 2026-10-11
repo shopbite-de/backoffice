@@ -7,8 +7,11 @@ Backoffice for a restaurant's staff (PoC, 2026-10-10): Nuxt 4 SPA (bun, shadcn-v
 ```bash
 bun install
 bun run dev       # http://localhost:3010, needs the quickstart stack, see README
+bun run lint      # ESLint (@nuxt/eslint) + Prettier; lint:fix formats
 bun run typecheck # must stay at zero errors
+bun run test      # Vitest: server logic against real La Fattoria data (test/fixtures)
 bun run build
+bun run roundtrip # every dish loaded + saved unchanged must leave Shopware identical (needs a running stack)
 bunx shadcn-vue@latest add <component>   # see "shadcn" below
 ```
 
@@ -18,6 +21,7 @@ bunx shadcn-vue@latest add <component>   # see "shadcn" below
 - Every Shopware call goes through `adminApi()` / `adminSearch()` with the logged-in user's token, so Shopware's ACL decides. Never add an integration key with more rights. No central service, no tenant registry: one deployment talks to one Shopware.
 - The API speaks restaurant terms (`shared/types/backoffice.ts`); translation to Shopware entities happens only in `server/`. Validate every request body with Zod.
 - Multi-entity writes (dish, section) are ONE `/_action/sync` request. Upserts only add mapping rows; delete removed ones explicitly (`product_property`, `product_category`, `product_tag`, …). Write only fields the backoffice knows; merge custom fields; keep other currencies and categories outside the menu.
+- Tests: `test/*.test.ts` stub the Nitro auto-imports (`adminSearch`, `adminApi`, `currentSalesChannel`, the label catalogue) with `vi.stubGlobal` and answer from `test/fixtures/lafattoria.json` (refresh it from a local import when the data model changes). Logic that needs no request goes into pure functions (`profileFromMe`). CI (`.github/workflows/ci.yml`) runs lint, typecheck, test, build.
 - Saving an untouched dish must not change Shopware at all: write texts, prices, custom fields and dimensions only when they differ (unset equals default/empty). Variants come from configurator settings AND the children's options, so a missing setting never deletes a variant. Check with the round trip over the real La Fattoria menu (README, "Mit echten Daten testen").
 - Never edit product SEO URLs: the storefront opens dishes via `?produkt=` (storefront#289). Category SEO URLs are fine (old path stays as non-canonical alias, storefront redirects 301).
 - Branches are sales channels. Menu, hours and settings are per selected channel (`currentSalesChannel`), orders span the person's channels (`restaurantChannels`).

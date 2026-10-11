@@ -23,7 +23,7 @@ export interface StaffProfile {
   channelIds: string[] | null;
 }
 
-interface MeResponse {
+export interface MeResponse {
   data: {
     firstName: string | null;
     lastName: string | null;
@@ -37,6 +37,11 @@ export async function fetchProfile(baseUrl: string, token: string): Promise<Staf
   const { data: me } = await $fetch<MeResponse>(`${baseUrl}/api/_info/me`, {
     headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
   });
+  return profileFromMe(me);
+}
+
+/** Role, capabilities and branches of a Shopware user (`/api/_info/me`). */
+export function profileFromMe(me: MeResponse["data"]): StaffProfile {
   const privileges = new Set(me.aclRoles.flatMap((role) => role.privileges));
   const capabilities = (Object.keys(CAPABILITY_PRIVILEGE) as Capability[]).filter(
     (cap) => me.admin || privileges.has(CAPABILITY_PRIVILEGE[cap]),

@@ -25,16 +25,12 @@ const Body = z.object({
   printType: z.enum(["number", "label"]),
   deliveryTimeFactor: z.number().int().min(1).max(10),
   seo: z.object({ title: Text(255), description: Text(255), keywords: Text(255) }),
-  extras: z
-    .array(z.object({ id: Uuid.nullable(), name: Name, productIds: z.array(Uuid).max(100) }))
-    .max(10),
+  extras: z.array(z.object({ id: Uuid.nullable(), name: Name, productIds: z.array(Uuid).max(100) })).max(10),
   variants: z
     .array(
       z.object({
         group: Name,
-        options: z
-          .array(z.object({ name: Name, surcharge: z.number().min(0).max(1000) }))
-          .max(20),
+        options: z.array(z.object({ name: Name, surcharge: z.number().min(0).max(1000) })).max(20),
       }),
     )
     .max(3)

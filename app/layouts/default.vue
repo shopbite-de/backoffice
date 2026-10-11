@@ -15,6 +15,7 @@ const LINKS: { to: string; label: string; icon: typeof Clock; capability: Capabi
 const links = computed(() => LINKS.filter((l) => auth.value?.capabilities.includes(l.capability)));
 // a section stays marked on its sub pages (dish editor, sections)
 const isActive = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to));
+// two columns only with the sidebar (see template root); the login page is centred
 const roleLabel = computed(() => (auth.value?.role === "management" ? "Management" : "Personal"));
 
 async function logout() {
@@ -32,7 +33,6 @@ async function switchChannel(id: unknown) {
 </script>
 
 <template>
-  <!-- two columns only with the sidebar; the login page is centred -->
   <div class="min-h-dvh" :class="{ 'md:grid md:grid-cols-[16rem_1fr]': auth }">
     <a
       href="#inhalt"
@@ -42,8 +42,20 @@ async function switchChannel(id: unknown) {
     <header v-if="auth" class="border-b bg-card md:sticky md:top-0 md:h-dvh md:border-b-0 md:border-r">
       <div class="flex h-full flex-col">
         <div class="space-y-3 px-4 py-3 md:px-5 md:py-6">
-          <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="hidden h-6 w-auto md:mb-5 md:block dark:md:hidden" />
-          <img src="/brand/shopbite-logo-white.svg" alt="ShopBite" width="324" height="103" class="hidden h-6 w-auto md:mb-5 dark:md:block" />
+          <img
+            src="/brand/shopbite-logo.svg"
+            alt="ShopBite"
+            width="324"
+            height="103"
+            class="hidden h-6 w-auto md:mb-5 md:block dark:md:hidden"
+          />
+          <img
+            src="/brand/shopbite-logo-white.svg"
+            alt="ShopBite"
+            width="324"
+            height="103"
+            class="hidden h-6 w-auto md:mb-5 dark:md:block"
+          />
           <div class="flex items-center justify-between gap-2 md:block">
             <div>
               <p class="text-lg font-semibold">{{ auth.restaurant }}</p>

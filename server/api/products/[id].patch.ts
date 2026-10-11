@@ -37,13 +37,8 @@ export default defineEventHandler(async (event) => {
     const gross = Math.round(body.price * 100) / 100;
     // Shopware keeps net prices with four decimals
     const net = Math.round((gross / (1 + product.tax.taxRate / 100)) * 10000) / 10000;
-    const others = (product.price ?? []).filter(
-      (p) => p.currencyId !== channel.currencyId,
-    );
-    payload.price = [
-      { currencyId: channel.currencyId, gross, net, linked: true },
-      ...others,
-    ];
+    const others = (product.price ?? []).filter((p) => p.currencyId !== channel.currencyId);
+    payload.price = [{ currencyId: channel.currencyId, gross, net, linked: true }, ...others];
   }
 
   await adminApi(event, `/product/${id}`, { method: "PATCH", body: payload });

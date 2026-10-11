@@ -8,12 +8,4 @@ export const time = (iso: string) =>
     timeZone: "Europe/Berlin",
   }).format(new Date(iso));
 
-export const WEEKDAYS = [
-  "Montag",
-  "Dienstag",
-  "Mittwoch",
-  "Donnerstag",
-  "Freitag",
-  "Samstag",
-  "Sonntag",
-];
+export const WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];

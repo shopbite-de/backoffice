@@ -25,7 +25,9 @@ const keysOf = (catalogue: FoodLabel[], names: string[] = []) =>
 const newId = () => randomUUID().replaceAll("-", "");
 /** Stable id for a variant: same parent + same options = same child. */
 const variantId = (parentId: string, optionIds: string[]) =>
-  createHash("md5").update(`${parentId}:${[...optionIds].sort().join(",")}`).digest("hex");
+  createHash("md5")
+    .update(`${parentId}:${[...optionIds].sort().join(",")}`)
+    .digest("hex");
 
 interface Price {
   currencyId: string;
@@ -108,7 +110,9 @@ const CUSTOM_FIELD_DEFAULTS: Record<string, unknown> = {
 function changedCustomFields(stored: Record<string, unknown> | null, wanted: Record<string, unknown>) {
   const current = stored ?? {};
   const changes = Object.fromEntries(
-    Object.entries(wanted).filter(([key, value]) => (key in current ? current[key] : CUSTOM_FIELD_DEFAULTS[key]) !== value),
+    Object.entries(wanted).filter(
+      ([key, value]) => (key in current ? current[key] : CUSTOM_FIELD_DEFAULTS[key]) !== value,
+    ),
   );
   return Object.keys(changes).length ? { ...current, ...changes } : null;
 }
@@ -183,7 +187,10 @@ export async function loadDish(event: H3Event, id: string): Promise<DishDetail> 
         .map((c) => grossOf(c.price, channel.currencyId) ?? base);
       surcharge = prices.length ? Math.max(0, Math.min(...prices) - base) : 0;
     }
-    variants.set(group, [...(variants.get(group) ?? []), { name: nameOf(setting.option), surcharge: round2(surcharge) }]);
+    variants.set(group, [
+      ...(variants.get(group) ?? []),
+      { name: nameOf(setting.option), surcharge: round2(surcharge) },
+    ]);
   }
   // variant options without a configurator setting (data edited elsewhere) still count, otherwise
   // saving would treat their variants as removed and delete them
@@ -198,7 +205,8 @@ export async function loadDish(event: H3Event, id: string): Promise<DishDetail> 
     const surcharge = prices.length ? Math.max(0, Math.min(...prices) - base) : 0;
     variants.set(group, [...(variants.get(group) ?? []), { name: nameOf(option), surcharge: round2(surcharge) }]);
   }
-  for (const options of variants.values()) options.sort((a, b) => a.surcharge - b.surcharge || a.name.localeCompare(b.name, "de"));
+  for (const options of variants.values())
+    options.sort((a, b) => a.surcharge - b.surcharge || a.name.localeCompare(b.name, "de"));
 
   const custom = product.customFields ?? {};
   return {
@@ -349,7 +357,12 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
   const gross = round2(input.price);
   // a variant may carry its own tax rate
   const priceFor = (amount: number, taxRate = product.tax.taxRate): Price[] => [
-    { currencyId: channel.currencyId, gross: round2(amount), net: round4(round2(amount) / (1 + taxRate / 100)), linked: true },
+    {
+      currencyId: channel.currencyId,
+      gross: round2(amount),
+      net: round4(round2(amount) / (1 + taxRate / 100)),
+      linked: true,
+    },
   ];
 
   // --- tags by name
@@ -359,9 +372,7 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
         includes: { tag: ["id", "name"] },
       })
     : { data: [] };
-  const newTags = input.tags
-    .filter((t) => !knownTags.some((k) => k.name === t))
-    .map((name) => ({ id: newId(), name }));
+  const newTags = input.tags.filter((t) => !knownTags.some((k) => k.name === t)).map((name) => ({ id: newId(), name }));
   const wantedTags = new Set([...knownTags.filter((k) => input.tags.includes(k.name)), ...newTags].map((t) => t.id));
 
   const ops: Operation[] = [];
@@ -369,59 +380,111 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
     if (payload.length) ops.push({ key, action, entity, payload });
   };
 
-  push("groups", "upsert", "property_group", [...newGroups.values()].map((g) => ({
-    id: g.id,
-    ...(groupByName.has(g.name.toLowerCase())
-      ? {}
-      : { name: g.name, displayType: "text", sortingType: "position", filterable: false, visibleOnProductDetailPage: true }),
-    options: g.options,
-  })));
+  push(
+    "groups",
+    "upsert",
+    "property_group",
+    [...newGroups.values()].map((g) => ({
+      id: g.id,
+      ...(groupByName.has(g.name.toLowerCase())
+        ? {}
+        : {
+            name: g.name,
+            displayType: "text",
+            sortingType: "position",
+            filterable: false,
+            visibleOnProductDetailPage: true,
+          }),
+      options: g.options,
+    })),
+  );
   push("tags", "upsert", "tag", newTags);
   // catalogue options created elsewhere (Shopware Admin, import) get code and position
-  push("label-options", "upsert", "property_group_option", LABEL_GROUPS.flatMap(({ group, catalogue }) =>
-    (groupByName.get(group.toLowerCase())?.options ?? []).flatMap((option) => {
-      const label = catalogue.find((l) => l.name.toLowerCase() === nameOf(option).toLowerCase());
-      const position = label ? catalogue.indexOf(label) + 1 : 0;
-      return label && (option.customFields?.shopbite_code !== label.code || option.position !== position)
-        ? [{ id: option.id, position, customFields: { ...(option.customFields ?? {}), shopbite_code: label.code } }]
-        : [];
-    })));
+  push(
+    "label-options",
+    "upsert",
+    "property_group_option",
+    LABEL_GROUPS.flatMap(({ group, catalogue }) =>
+      (groupByName.get(group.toLowerCase())?.options ?? []).flatMap((option) => {
+        const label = catalogue.find((l) => l.name.toLowerCase() === nameOf(option).toLowerCase());
+        const position = label ? catalogue.indexOf(label) + 1 : 0;
+        return label && (option.customFields?.shopbite_code !== label.code || option.position !== position)
+          ? [{ id: option.id, position, customFields: { ...(option.customFields ?? {}), shopbite_code: label.code } }]
+          : [];
+      }),
+    ),
+  );
 
   // removed mappings
-  push("drop-properties", "delete", "product_property", product.properties
-    .filter((o) => !wantedProperties.has(o.id))
-    .map((o) => ({ productId: id, optionId: o.id })));
-  push("drop-sections", "delete", "product_category", (product.categoryIds ?? [])
-    .filter((c) => menuIds.has(c) && !input.sectionIds.includes(c))
-    .map((categoryId) => ({ productId: id, categoryId })));
-  push("drop-tags", "delete", "product_tag", product.tags
-    .filter((t) => !wantedTags.has(t.id))
-    .map((t) => ({ productId: id, tagId: t.id })));
+  push(
+    "drop-properties",
+    "delete",
+    "product_property",
+    product.properties.filter((o) => !wantedProperties.has(o.id)).map((o) => ({ productId: id, optionId: o.id })),
+  );
+  push(
+    "drop-sections",
+    "delete",
+    "product_category",
+    (product.categoryIds ?? [])
+      .filter((c) => menuIds.has(c) && !input.sectionIds.includes(c))
+      .map((categoryId) => ({ productId: id, categoryId })),
+  );
+  push(
+    "drop-tags",
+    "delete",
+    "product_tag",
+    product.tags.filter((t) => !wantedTags.has(t.id)).map((t) => ({ productId: id, tagId: t.id })),
+  );
 
   const wantedOptionIds = new Set(variantGroups.flat().map((o) => o.id));
-  push("drop-settings", "delete", "product_configurator_setting", product.configuratorSettings
-    .filter((s) => !wantedOptionIds.has(s.optionId))
-    .map((s) => ({ id: s.id })));
-  const wantedChildren = new Set(combos.map((combo) => variantId(id, combo.map((o) => o.id))));
+  push(
+    "drop-settings",
+    "delete",
+    "product_configurator_setting",
+    product.configuratorSettings.filter((s) => !wantedOptionIds.has(s.optionId)).map((s) => ({ id: s.id })),
+  );
+  const wantedChildren = new Set(
+    combos.map((combo) =>
+      variantId(
+        id,
+        combo.map((o) => o.id),
+      ),
+    ),
+  );
   const childByOptions = new Map(product.children.map((c) => [variantId(id, c.optionIds ?? []), c]));
-  push("drop-variants", "delete", "product", product.children
-    .filter((c) => !wantedChildren.has(variantId(id, c.optionIds ?? [])))
-    .map((c) => ({ id: c.id })));
+  push(
+    "drop-variants",
+    "delete",
+    "product",
+    product.children.filter((c) => !wantedChildren.has(variantId(id, c.optionIds ?? []))).map((c) => ({ id: c.id })),
+  );
 
   const keptCrossSellings = new Set(input.extras.map((e) => e.id).filter(Boolean));
-  push("drop-extras", "delete", "product_cross_selling", product.crossSellings
-    .filter((c) => c.type === "productList" && !keptCrossSellings.has(c.id))
-    .map((c) => ({ id: c.id })));
-  push("drop-extra-items", "delete", "product_cross_selling_assigned_products", product.crossSellings
-    .filter((c) => keptCrossSellings.has(c.id))
-    .flatMap((c) => {
-      const wanted = input.extras.find((e) => e.id === c.id)?.productIds ?? [];
-      return c.assignedProducts.filter((a) => !wanted.includes(a.productId)).map((a) => ({ id: a.id }));
-    }));
+  push(
+    "drop-extras",
+    "delete",
+    "product_cross_selling",
+    product.crossSellings
+      .filter((c) => c.type === "productList" && !keptCrossSellings.has(c.id))
+      .map((c) => ({ id: c.id })),
+  );
+  push(
+    "drop-extra-items",
+    "delete",
+    "product_cross_selling_assigned_products",
+    product.crossSellings
+      .filter((c) => keptCrossSellings.has(c.id))
+      .flatMap((c) => {
+        const wanted = input.extras.find((e) => e.id === c.id)?.productIds ?? [];
+        return c.assignedProducts.filter((a) => !wanted.includes(a.productId)).map((a) => ({ id: a.id }));
+      }),
+  );
 
   const settingByOption = new Map(product.configuratorSettings.map((s) => [s.optionId, s.id]));
   const assignedId = (crossSellingId: string | null, productId: string) =>
-    product.crossSellings.find((c) => c.id === crossSellingId)?.assignedProducts.find((a) => a.productId === productId)?.id ?? newId();
+    product.crossSellings.find((c) => c.id === crossSellingId)?.assignedProducts.find((a) => a.productId === productId)
+      ?.id ?? newId();
   // the dish itself; texts and custom fields only when they change, so saving an untouched dish writes nothing new
   const t = product.translated;
   const customFields = changedCustomFields(product.customFields, {
@@ -431,83 +494,96 @@ export async function saveDish(event: H3Event, id: string, input: DishInput) {
     shopbite_allergens_checked: input.allergensChecked,
   });
   const texts = Object.fromEntries(
-    ([
-      ["name", t.name, input.name],
-      ["description", t.description, input.description],
-      ["metaTitle", t.metaTitle, input.seo.title],
-      ["metaDescription", t.metaDescription, input.seo.description],
-      ["keywords", t.keywords, input.seo.keywords],
-    ] as const)
+    (
+      [
+        ["name", t.name, input.name],
+        ["description", t.description, input.description],
+        ["metaTitle", t.metaTitle, input.seo.title],
+        ["metaDescription", t.metaDescription, input.seo.description],
+        ["keywords", t.keywords, input.seo.keywords],
+      ] as const
+    )
       .filter(([, stored, wanted]) => !sameText(stored, wanted))
       .map(([key, , wanted]) => [key, wanted || (key === "name" ? wanted : null)]),
   );
   const storedGross = grossOf(product.price, channel.currencyId);
-  push("dish", "upsert", "product", [{
-    id,
-    ...texts,
-    ...(product.active === input.onMenu ? {} : { active: input.onMenu }),
-    ...(storedGross === gross ? {} : { price: [...priceFor(gross), ...(product.price ?? []).filter((p) => p.currencyId !== channel.currencyId)] }),
-    // unset and empty mean the same here
-    ...(JSON.stringify(t.customSearchKeywords ?? []) === JSON.stringify(input.searchKeywords)
-      ? {}
-      : { customSearchKeywords: input.searchKeywords }),
-    ...Object.fromEntries(
-      (["width", "height", "length", "weight"] as const)
-        .filter((key) => (product[key] ?? null) !== input.dimensions[key])
-        .map((key) => [key, input.dimensions[key]]),
-    ),
-    ...(customFields ? { customFields } : {}),
-    categories: input.sectionIds.map((categoryId) => ({ id: categoryId })),
-    properties: [...wantedProperties].map((optionId) => ({ id: optionId })),
-    tags: [...wantedTags].map((tagId) => ({ id: tagId })),
-    configuratorSettings: variantGroups.flat().map((o) => ({
-      id: settingByOption.get(o.id) ?? newId(),
-      optionId: o.id,
-      price: o.surcharge ? priceFor(o.surcharge) : null,
-    })),
-    ...(combos.length ? { variantListingConfig: { displayParent: true } } : {}),
-    crossSellings: input.extras.map((extra, position) => ({
-      id: extra.id ?? newId(),
-      name: extra.name,
-      type: "productList",
-      active: true,
-      position,
-      sortBy: "name",
-      sortDirection: "ASC",
-      limit: 24,
-      assignedProducts: extra.productIds.map((productId, i) => ({
-        id: assignedId(extra.id, productId),
-        productId,
-        position: i,
+  push("dish", "upsert", "product", [
+    {
+      id,
+      ...texts,
+      ...(product.active === input.onMenu ? {} : { active: input.onMenu }),
+      ...(storedGross === gross
+        ? {}
+        : { price: [...priceFor(gross), ...(product.price ?? []).filter((p) => p.currencyId !== channel.currencyId)] }),
+      // unset and empty mean the same here
+      ...(JSON.stringify(t.customSearchKeywords ?? []) === JSON.stringify(input.searchKeywords)
+        ? {}
+        : { customSearchKeywords: input.searchKeywords }),
+      ...Object.fromEntries(
+        (["width", "height", "length", "weight"] as const)
+          .filter((key) => (product[key] ?? null) !== input.dimensions[key])
+          .map((key) => [key, input.dimensions[key]]),
+      ),
+      ...(customFields ? { customFields } : {}),
+      categories: input.sectionIds.map((categoryId) => ({ id: categoryId })),
+      properties: [...wantedProperties].map((optionId) => ({ id: optionId })),
+      tags: [...wantedTags].map((tagId) => ({ id: tagId })),
+      configuratorSettings: variantGroups.flat().map((o) => ({
+        id: settingByOption.get(o.id) ?? newId(),
+        optionId: o.id,
+        price: o.surcharge ? priceFor(o.surcharge) : null,
       })),
-    })),
-  }]);
+      ...(combos.length ? { variantListingConfig: { displayParent: true } } : {}),
+      crossSellings: input.extras.map((extra, position) => ({
+        id: extra.id ?? newId(),
+        name: extra.name,
+        type: "productList",
+        active: true,
+        position,
+        sortBy: "name",
+        sortDirection: "ASC",
+        limit: 24,
+        assignedProducts: extra.productIds.map((productId, i) => ({
+          id: assignedId(extra.id, productId),
+          productId,
+          position: i,
+        })),
+      })),
+    },
+  ]);
 
   const usedNumbers = new Set(product.children.map((c) => c.productNumber));
-  push("variants", "upsert", "product", combos.map((combo) => {
-    const optionIds = combo.map((o) => o.id);
-    const existing = childByOptions.get(variantId(id, optionIds));
-    const surcharge = combo.reduce((sum, o) => sum + o.surcharge, 0);
-    let number = existing?.productNumber;
-    if (!number) {
-      const slug = combo.map((o) => o.name.split(/\s+/)[0]!.toLowerCase()).join("-");
-      number = `${product.productNumber}-${slug}`;
-      for (let i = 2; usedNumbers.has(number); i++) number = `${product.productNumber}-${slug}-${i}`;
-      usedNumbers.add(number);
-    }
-    return {
-      id: existing?.id ?? variantId(id, optionIds),
-      parentId: id,
-      productNumber: number,
-      ...(existing ? {} : { stock: 999, active: true }),
-      options: optionIds.map((optionId) => ({ id: optionId })),
-      // no surcharge = inherits the dish price; an existing variant keeps its price row while the
-      // amount it sells for stays the same (own tax rate, own price written elsewhere)
-      ...(existing && storedGross === gross && (grossOf(existing.price, channel.currencyId) ?? gross) === round2(gross + surcharge)
-        ? {}
-        : { price: surcharge ? priceFor(gross + surcharge, existing?.tax?.taxRate) : null }),
-    };
-  }));
+  push(
+    "variants",
+    "upsert",
+    "product",
+    combos.map((combo) => {
+      const optionIds = combo.map((o) => o.id);
+      const existing = childByOptions.get(variantId(id, optionIds));
+      const surcharge = combo.reduce((sum, o) => sum + o.surcharge, 0);
+      let number = existing?.productNumber;
+      if (!number) {
+        const slug = combo.map((o) => o.name.split(/\s+/)[0]!.toLowerCase()).join("-");
+        number = `${product.productNumber}-${slug}`;
+        for (let i = 2; usedNumbers.has(number); i++) number = `${product.productNumber}-${slug}-${i}`;
+        usedNumbers.add(number);
+      }
+      return {
+        id: existing?.id ?? variantId(id, optionIds),
+        parentId: id,
+        productNumber: number,
+        ...(existing ? {} : { stock: 999, active: true }),
+        options: optionIds.map((optionId) => ({ id: optionId })),
+        // no surcharge = inherits the dish price; an existing variant keeps its price row while the
+        // amount it sells for stays the same (own tax rate, own price written elsewhere)
+        ...(existing &&
+        storedGross === gross &&
+        (grossOf(existing.price, channel.currencyId) ?? gross) === round2(gross + surcharge)
+          ? {}
+          : { price: surcharge ? priceFor(gross + surcharge, existing?.tax?.taxRate) : null }),
+      };
+    }),
+  );
 
   await adminApi(event, "/_action/sync", { method: "POST", body: ops });
 }

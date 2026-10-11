@@ -84,12 +84,14 @@ async function save() {
       length: toNumber(measures.value.length),
       weight: toNumber(measures.value.weight),
     },
-    variants: form.value.variants.map((g, gi) => ({
-      group: g.group.trim(),
-      options: g.options
-        .map((o, oi) => ({ name: o.name.trim(), surcharge: toNumber(surcharges.value[gi]![oi]!) ?? 0 }))
-        .filter((o) => o.name),
-    })).filter((g) => g.group && g.options.length),
+    variants: form.value.variants
+      .map((g, gi) => ({
+        group: g.group.trim(),
+        options: g.options
+          .map((o, oi) => ({ name: o.name.trim(), surcharge: toNumber(surcharges.value[gi]![oi]!) ?? 0 }))
+          .filter((o) => o.name),
+      }))
+      .filter((g) => g.group && g.options.length),
     properties: form.value.properties.filter((p) => p.group.trim() && p.options.length),
     extras: form.value.extras.filter((e) => e.name.trim()),
   };
@@ -104,8 +106,8 @@ async function save() {
   }
 }
 
-const variantCount = computed(() =>
-  form.value?.variants.reduce((n, g) => n * Math.max(1, g.options.filter((o) => o.name.trim()).length), 1) ?? 1,
+const variantCount = computed(
+  () => form.value?.variants.reduce((n, g) => n * Math.max(1, g.options.filter((o) => o.name.trim()).length), 1) ?? 1,
 );
 // allergens grouped like on a menu: single ones, then cereals and nuts by name
 const allergenGroups = computed(() => {
@@ -155,7 +157,11 @@ const diet = computed({
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Abschnitte</legend>
         <div class="flex flex-wrap gap-x-6">
-          <div v-for="s in options.sections" :key="s.id" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+          <div
+            v-for="s in options.sections"
+            :key="s.id"
+            class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2"
+          >
             <Checkbox
               :id="`abschnitt-${s.id}`"
               :model-value="form.sectionIds.includes(s.id)"
@@ -183,7 +189,8 @@ const diet = computed({
                 @update:model-value="toggle(form.allergens, a.key, $event === true)"
               />
               <Label :for="`allergen-${a.key}`" class="font-normal">
-                <span class="w-5 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span>{{ a.name }}
+                <span class="w-5 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
+                >{{ a.name }}
               </Label>
             </div>
           </div>
@@ -200,7 +207,8 @@ const diet = computed({
               @update:model-value="toggle(form.additives, a.key, $event === true)"
             />
             <Label :for="`zusatz-${a.key}`" class="font-normal">
-              <span class="w-6 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span>{{ a.name }}
+              <span class="w-6 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
+              >{{ a.name }}
             </Label>
           </div>
         </div>
@@ -211,13 +219,17 @@ const diet = computed({
         <div class="grid gap-1">
           <Label for="geprueft">Angaben geprüft</Label>
           <p class="text-sm text-muted-foreground">
-            Die Auswahl oben ist vollständig, auch wenn nichts angehakt ist. Ohne Häkchen gilt das Gericht als „Allergene fehlen“.
+            Die Auswahl oben ist vollständig, auch wenn nichts angehakt ist. Ohne Häkchen gilt das Gericht als
+            „Allergene fehlen“.
           </p>
         </div>
       </div>
     </FormSection>
 
-    <FormSection title="Preis und Varianten" hint="Varianten sind z. B. Größen. Jede Kombination wird ein eigenes bestellbares Gericht, der Preis ist Grundpreis plus Aufpreise.">
+    <FormSection
+      title="Preis und Varianten"
+      hint="Varianten sind z. B. Größen. Jede Kombination wird ein eigenes bestellbares Gericht, der Preis ist Grundpreis plus Aufpreise."
+    >
       <div class="grid max-w-40 gap-2">
         <Label for="preis">Preis in Euro</Label>
         <Input id="preis" v-model="priceText" inputmode="decimal" required />
@@ -243,7 +255,9 @@ const diet = computed({
         <Button variant="outline" @click="addVariantOption(g)"><Plus aria-hidden="true" />Auswahl</Button>
       </div>
       <div class="flex flex-wrap items-center gap-3">
-        <Button v-if="form.variants.length < 3" variant="outline" @click="addVariantGroup"><Plus aria-hidden="true" />Variante</Button>
+        <Button v-if="form.variants.length < 3" variant="outline" @click="addVariantGroup"
+          ><Plus aria-hidden="true" />Variante</Button
+        >
         <p v-if="form.variants.length" class="text-sm text-muted-foreground">{{ variantCount }} Kombinationen</p>
       </div>
     </FormSection>
@@ -286,7 +300,9 @@ const diet = computed({
         <option v-for="g in options.propertyGroups" :key="g.name" :value="g.name" />
         <option value="Küche" />
       </datalist>
-      <Button variant="outline" @click="form.properties.push({ group: '', options: [] })"><Plus aria-hidden="true" />Eigenschaft</Button>
+      <Button variant="outline" @click="form.properties.push({ group: '', options: [] })"
+        ><Plus aria-hidden="true" />Eigenschaft</Button
+      >
     </FormSection>
 
     <FormSection title="Extras" hint="Listen, aus denen Gäste beim Bestellen wählen, z. B. Extras oder Beilagen.">
@@ -303,7 +319,11 @@ const diet = computed({
         <fieldset>
           <legend class="sr-only">Gerichte in {{ extra.name }}</legend>
           <div class="grid gap-x-4 sm:grid-cols-2">
-            <div v-for="c in options.extraCandidates" :key="c.id" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+            <div
+              v-for="c in options.extraCandidates"
+              :key="c.id"
+              class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2"
+            >
               <Checkbox
                 :id="`extra-${e}-${c.id}`"
                 :model-value="extra.productIds.includes(c.id)"
@@ -314,7 +334,9 @@ const diet = computed({
           </div>
         </fieldset>
       </div>
-      <Button variant="outline" @click="form.extras.push({ id: null, name: 'Extras', productIds: [] })"><Plus aria-hidden="true" />Liste</Button>
+      <Button variant="outline" @click="form.extras.push({ id: null, name: 'Extras', productIds: [] })"
+        ><Plus aria-hidden="true" />Liste</Button
+      >
     </FormSection>
 
     <FormSection title="Bestellung und Bon">
@@ -337,14 +359,33 @@ const diet = computed({
       </fieldset>
       <div class="grid max-w-60 gap-2">
         <Label for="faktor">Zubereitungsfaktor</Label>
-        <p id="faktor-hint" class="text-sm text-muted-foreground">Wie viel länger als üblich dieses Gericht braucht (1 = normal).</p>
-        <Input id="faktor" v-model.number="form.deliveryTimeFactor" type="number" min="1" max="10" aria-describedby="faktor-hint" class="w-24" />
+        <p id="faktor-hint" class="text-sm text-muted-foreground">
+          Wie viel länger als üblich dieses Gericht braucht (1 = normal).
+        </p>
+        <Input
+          id="faktor"
+          v-model.number="form.deliveryTimeFactor"
+          type="number"
+          min="1"
+          max="10"
+          aria-describedby="faktor-hint"
+          class="w-24"
+        />
       </div>
     </FormSection>
 
     <FormSection title="Maße und Gewicht">
       <div class="grid gap-4 sm:grid-cols-4">
-        <div v-for="m in [{ k: 'width', l: 'Breite (mm)' }, { k: 'height', l: 'Höhe (mm)' }, { k: 'length', l: 'Länge (mm)' }, { k: 'weight', l: 'Gewicht (kg)' }] as const" :key="m.k" class="grid gap-2">
+        <div
+          v-for="m in [
+            { k: 'width', l: 'Breite (mm)' },
+            { k: 'height', l: 'Höhe (mm)' },
+            { k: 'length', l: 'Länge (mm)' },
+            { k: 'weight', l: 'Gewicht (kg)' },
+          ] as const"
+          :key="m.k"
+          class="grid gap-2"
+        >
           <Label :for="`mass-${m.k}`">{{ m.l }}</Label>
           <Input :id="`mass-${m.k}`" v-model="measures[m.k]" inputmode="decimal" />
         </div>
@@ -352,17 +393,38 @@ const diet = computed({
     </FormSection>
 
     <FormSection title="Suche und SEO">
-      <ListField id="tags" v-model="form.tags" label="Schlagwörter" hint="Interne Gruppierung, z. B. Klassiker, Neu." :suggestions="options.tags" />
-      <ListField id="suchwoerter" v-model="form.searchKeywords" label="Suchwörter" hint="Damit Gäste das Gericht auch unter anderen Namen finden, z. B. Margarita." />
+      <ListField
+        id="tags"
+        v-model="form.tags"
+        label="Schlagwörter"
+        hint="Interne Gruppierung, z. B. Klassiker, Neu."
+        :suggestions="options.tags"
+      />
+      <ListField
+        id="suchwoerter"
+        v-model="form.searchKeywords"
+        label="Suchwörter"
+        hint="Damit Gäste das Gericht auch unter anderen Namen finden, z. B. Margarita."
+      />
       <div class="grid gap-2">
         <Label for="metatitle">Titel in Suchmaschinen</Label>
         <Input id="metatitle" v-model="form.seo.title" maxlength="255" aria-describedby="metatitle-count" />
-        <p id="metatitle-count" class="text-sm text-muted-foreground">{{ form.seo.title.length }} von etwa 60 Zeichen</p>
+        <p id="metatitle-count" class="text-sm text-muted-foreground">
+          {{ form.seo.title.length }} von etwa 60 Zeichen
+        </p>
       </div>
       <div class="grid gap-2">
         <Label for="metadesc">Beschreibung in Suchmaschinen</Label>
-        <Textarea id="metadesc" v-model="form.seo.description" maxlength="255" rows="2" aria-describedby="metadesc-count" />
-        <p id="metadesc-count" class="text-sm text-muted-foreground">{{ form.seo.description.length }} von etwa 155 Zeichen</p>
+        <Textarea
+          id="metadesc"
+          v-model="form.seo.description"
+          maxlength="255"
+          rows="2"
+          aria-describedby="metadesc-count"
+        />
+        <p id="metadesc-count" class="text-sm text-muted-foreground">
+          {{ form.seo.description.length }} von etwa 155 Zeichen
+        </p>
       </div>
       <div class="grid gap-2">
         <Label for="keywords">Meta-Keywords</Label>

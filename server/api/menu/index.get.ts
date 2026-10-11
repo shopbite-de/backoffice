@@ -41,15 +41,11 @@ export default defineEventHandler(async (event): Promise<MenuSection[]> => {
 
   const categories = await adminSearch<Category>(event, "category", {
     limit: 500,
-    filter: [
-      { type: "contains", field: "path", value: `|${rootId}|` },
-    ],
+    filter: [{ type: "contains", field: "path", value: `|${rootId}|` }],
     includes: { category: ["id", "parentId", "afterCategoryId", "translated"] },
   });
 
-  const sections = sortSiblings(
-    categories.data.filter((c) => c.parentId === rootId),
-  );
+  const sections = sortSiblings(categories.data.filter((c) => c.parentId === rootId));
   const sectionOf = new Map<string, string>();
   for (const section of sections) sectionOf.set(section.id, section.id);
   // deeper levels: walk up until a section is found
@@ -81,14 +77,10 @@ export default defineEventHandler(async (event): Promise<MenuSection[]> => {
   }));
   const menuById = new Map(menu.map((s) => [s.id, s]));
   for (const product of products.data) {
-    const sectionId = (product.categoryIds ?? [])
-      .map((id) => sectionOf.get(id))
-      .find(Boolean);
+    const sectionId = (product.categoryIds ?? []).map((id) => sectionOf.get(id)).find(Boolean);
     const section = sectionId ? menuById.get(sectionId) : undefined;
     if (!section) continue;
-    const price =
-      product.price?.find((p) => p.currencyId === channel.currencyId) ??
-      product.price?.[0];
+    const price = product.price?.find((p) => p.currencyId === channel.currencyId) ?? product.price?.[0];
     section.dishes.push({
       id: product.id,
       number: product.productNumber,

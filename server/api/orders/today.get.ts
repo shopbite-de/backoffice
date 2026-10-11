@@ -63,9 +63,7 @@ function toLines(items: LineItem[]): OrderLine[] {
     .sort((a, b) => a.position - b.position)
     .map((item) => {
       // a dish with extras is a container line item: first child = dish
-      const children = (byParent.get(item.id) ?? []).sort(
-        (a, b) => a.position - b.position,
-      );
+      const children = (byParent.get(item.id) ?? []).sort((a, b) => a.position - b.position);
       return {
         quantity: item.quantity,
         label: children[0]?.label ?? item.label,
@@ -132,13 +130,8 @@ export default defineEventHandler(async (event): Promise<OrderSummary[]> => {
       status: STATUS[order.stateMachineState.technicalName] ?? "neu",
       total: order.amountTotal,
       mode: isPickup ? "abholung" : "lieferung",
-      customer: order.orderCustomer
-        ? `${order.orderCustomer.firstName} ${order.orderCustomer.lastName}`
-        : "Gast",
-      address:
-        !isPickup && address
-          ? `${address.street}, ${address.zipcode} ${address.city}`
-          : null,
+      customer: order.orderCustomer ? `${order.orderCustomer.firstName} ${order.orderCustomer.lastName}` : "Gast",
+      address: !isPickup && address ? `${address.street}, ${address.zipcode} ${address.city}` : null,
       comment: order.customerComment,
       lines: toLines(order.lineItems),
     };

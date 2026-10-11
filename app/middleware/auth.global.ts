@@ -9,8 +9,7 @@ declare module "#app" {
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const session = useAuthState();
-  const state: AuthState =
-    session.value ?? (await $fetch<AuthState>("/api/auth/session"));
+  const state: AuthState = session.value ?? (await $fetch<AuthState>("/api/auth/session"));
   session.value = state;
   if (!state.loggedIn && to.path !== "/login") return navigateTo("/login");
   if (state.loggedIn && to.path === "/login") return navigateTo("/");

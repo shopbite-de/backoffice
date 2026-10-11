@@ -41,6 +41,8 @@ python3 -I scripts/create-poc-users.py http://localhost:8100   # chef, theke, ab
 # .env: NUXT_SHOPWARE_URL=http://localhost:8100, NUXT_RESTAURANT_NAME=Pizzeria La Fattoria
 ```
 
+Rundlauf-Test über die ganze Karte (lädt jedes Gericht und speichert es unverändert, Shopware muss danach identisch sein): `bun run roundtrip`.
+
 Erneut ausführen aktualisiert die Daten. Andere Shops: `--source`, `--key` (Access Key aus dem HTML der Storefront), `--source-menu`. Extras, die im Shop als Product Stream gepflegt sind, kommen als feste Liste an (backoffice#11). Entfernen: `docker compose -p sb-lafattoria down -v`.
 
 ## Konfiguration

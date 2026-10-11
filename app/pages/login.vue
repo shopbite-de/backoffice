@@ -26,8 +26,20 @@ async function submit() {
 
 <template>
   <div class="mx-auto mt-[10vh] max-w-sm">
-    <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 h-10 w-auto dark:hidden" />
-    <img src="/brand/shopbite-logo-white.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 hidden h-10 w-auto dark:block" />
+    <img
+      src="/brand/shopbite-logo.svg"
+      alt="ShopBite"
+      width="324"
+      height="103"
+      class="mx-auto mb-8 h-10 w-auto dark:hidden"
+    />
+    <img
+      src="/brand/shopbite-logo-white.svg"
+      alt="ShopBite"
+      width="324"
+      height="103"
+      class="mx-auto mb-8 hidden h-10 w-auto dark:block"
+    />
     <div class="fixed top-3 right-3"><ColorModeButton /></div>
     <Card>
       <CardHeader>
@@ -39,7 +51,14 @@ async function submit() {
           <ErrorAlert :message="error" />
           <div class="grid gap-2">
             <Label for="username">Benutzername</Label>
-            <Input id="username" v-model="username" autocomplete="username" autocapitalize="none" spellcheck="false" required />
+            <Input
+              id="username"
+              v-model="username"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              required
+            />
           </div>
           <div class="grid gap-2">
             <Label for="password">Passwort</Label>
