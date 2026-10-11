@@ -50,7 +50,7 @@ Logo im Dunkeln: `shopbite-logo-white.svg`.
 
 ## Schrift
 
-**Public Sans**, im Backoffice selbst gehostet (`@fontsource-variable/public-sans`, kein Google Fonts). Gewichte 400, 500, 600. Grundgröße 16 px, Eingabefelder nie kleiner (sonst zoomt iOS).
+**Public Sans**, im Backoffice selbst gehostet (`@fontsource-variable/public-sans`, kein Google Fonts). Gewichte 400, 500, 600. Seitentext 16 px, Komponenten mit Maus 12 px (Mira), auf Touch-Geräten Eingabefelder 16 px (sonst zoomt iOS beim Antippen).
 
 ## Formen und Bedienung
 
