@@ -70,6 +70,7 @@ Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigene
 | `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://pizzeria-lafattoria.de`); nach jeder Kartenänderung leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst nach bis zu 24 Stunden |
 | `NUXT_CACHE_PURGE_SECRET` | derselbe Schlüssel wie `NUXT_CACHE_PURGE_SECRET` in den Storefronts (`openssl rand -hex 32`) |
 | `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 Zeichen |
+| `NUXT_SESSION_SECURE` | `false` nur für einen lokalen Stack ohne HTTPS (Quickstart), sonst weglassen |
 
 ## Betrieb (Docker)
 
