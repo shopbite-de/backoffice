@@ -18,7 +18,7 @@ bun run dev                                                   # http://localhost
 
 | Benutzername | Passwort | Rolle | Filiale | sieht |
 |---|---|---|---|---|
-| `chef` | `chef-poc-1234` | Management (64 Rechte) | alle | Heute, Speisekarte, Öffnungszeiten |
+| `chef` | `chef-poc-1234` | Management (65 Rechte) | alle | Heute, Speisekarte, Öffnungszeiten |
 | `theke` | `theke-poc-1234` | Personal (17 Rechte) | ShopBite | Heute (Bestellungen, Bestellannahme, Lieferzeit) |
 | `abholung` | `abholung-poc-1234` | Personal | ShopBite Abholung | Heute |
 | `admin` | `shopbite` | Shopware-Admin | alle | alles (nur zum Vergleich) |
