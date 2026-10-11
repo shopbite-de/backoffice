@@ -134,5 +134,6 @@ export default defineEventHandler(async (event) => {
     });
   }
   await adminApi(event, "/_action/sync", { method: "POST", body: ops });
+  await purgeStorefronts(event, { categories: [id] });
   return (await loadSections(event)).sections;
 });

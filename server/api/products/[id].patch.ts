@@ -42,5 +42,6 @@ export default defineEventHandler(async (event) => {
   }
 
   await adminApi(event, `/product/${id}`, { method: "PATCH", body: payload });
+  await purgeStorefronts(event, { products: [id] });
   return { ok: true };
 });
