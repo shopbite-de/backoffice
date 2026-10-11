@@ -20,6 +20,9 @@ export interface OrderSummary {
   address: string | null;
   comment: string | null;
   lines: OrderLine[];
+  /** "Jetzt drucken": requested and last printed (custom fields of the ShopBite plugin, ISO times) */
+  printRequestedAt: string | null;
+  printedAt: string | null;
 }
 
 export interface MenuDish {

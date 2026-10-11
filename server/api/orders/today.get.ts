@@ -15,6 +15,7 @@ interface Order {
   orderDateTime: string;
   amountTotal: number;
   customerComment: string | null;
+  customFields: Record<string, unknown> | null;
   stateMachineState: { technicalName: string };
   orderCustomer: { firstName: string; lastName: string } | null;
   lineItems: LineItem[];
@@ -72,6 +73,11 @@ function toLines(items: LineItem[]): OrderLine[] {
     });
 }
 
+function textField(fields: Record<string, unknown> | null, key: string): string | null {
+  const value = fields?.[key];
+  return typeof value === "string" && value ? value : null;
+}
+
 export default defineEventHandler(async (event): Promise<OrderSummary[]> => {
   // all channels of the restaurant: the kitchen sees every order
   const channels = await restaurantChannels(event);
@@ -103,6 +109,7 @@ export default defineEventHandler(async (event): Promise<OrderSummary[]> => {
         "orderDateTime",
         "amountTotal",
         "customerComment",
+        "customFields",
         "stateMachineState",
         "orderCustomer",
         "lineItems",
@@ -133,6 +140,8 @@ export default defineEventHandler(async (event): Promise<OrderSummary[]> => {
       customer: order.orderCustomer ? `${order.orderCustomer.firstName} ${order.orderCustomer.lastName}` : "Gast",
       address: !isPickup && address ? `${address.street}, ${address.zipcode} ${address.city}` : null,
       comment: order.customerComment,
+      printRequestedAt: textField(order.customFields, "shopbite_print_requested_at"),
+      printedAt: textField(order.customFields, "shopbite_printed_at"),
       lines: toLines(order.lineItems),
     };
   });

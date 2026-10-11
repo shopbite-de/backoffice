@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Bike, ShoppingBag } from "@lucide/vue";
+import { Bike, Printer, ShoppingBag } from "@lucide/vue";
 import type { OrderStatus, OrderSummary, ShopSettings } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "orders" });
@@ -44,6 +44,40 @@ const orderingOpen = computed(() => settings.value?.orderingOpen ?? true);
 const deliveryOptions = computed(() =>
   [...new Set([20, 30, 45, 60, 75, 90, 120, settings.value?.deliveryMinutes ?? 45])].sort((a, b) => a - b),
 );
+
+// "Jetzt drucken": the order printer polls every 10 s, so look again a few times after a request
+const now = ref(Date.now());
+let clock: ReturnType<typeof setInterval> | undefined;
+onMounted(() => (clock = setInterval(() => (now.value = Date.now()), 10_000)));
+onBeforeUnmount(() => clearInterval(clock));
+const printing = ref(new Set<string>());
+
+async function printNow(order: OrderSummary) {
+  error.value = null;
+  printing.value.add(order.id);
+  try {
+    await api(`/api/orders/${order.id}/print`, { method: "POST" });
+    saved.value = `Bon für ${order.number} angefordert.`;
+    await refreshOrders();
+    for (const delay of [6_000, 13_000, 25_000]) setTimeout(refreshOrders, delay);
+  } catch (e) {
+    error.value = errorMessage(e);
+  } finally {
+    printing.value.delete(order.id);
+  }
+}
+
+type PrintState = { label: string; warn: boolean } | null;
+function printState(order: OrderSummary): PrintState {
+  const requested = order.printRequestedAt ? Date.parse(order.printRequestedAt) : null;
+  const printed = order.printedAt ? Date.parse(order.printedAt) : null;
+  if (requested && (!printed || printed < requested)) {
+    return now.value - requested > 60_000
+      ? { label: "Drucker antwortet nicht", warn: true }
+      : { label: "Druck angefordert", warn: false };
+  }
+  return printed ? { label: `Gedruckt um ${time(order.printedAt!)}`, warn: false } : null;
+}
 
 async function setStatus(order: OrderSummary, status: "fertig" | "storniert") {
   error.value = null;
@@ -160,13 +194,29 @@ const revenue = computed(() =>
                 </li>
               </ul>
               <p v-if="order.comment" class="rounded-lg bg-muted px-3 py-2 text-sm">{{ order.comment }}</p>
-              <div v-if="order.status === 'neu' || order.status === 'in_arbeit'" class="flex flex-wrap gap-2 pt-1">
-                <Button v-if="order.status === 'in_arbeit'" @click="setStatus(order, 'fertig')">
-                  Fertig<span class="sr-only"> {{ order.number }}</span>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <template v-if="order.status === 'neu' || order.status === 'in_arbeit'">
+                  <Button v-if="order.status === 'in_arbeit'" @click="setStatus(order, 'fertig')">
+                    Fertig<span class="sr-only"> {{ order.number }}</span>
+                  </Button>
+                  <Button variant="destructive" @click="setStatus(order, 'storniert')">
+                    Stornieren<span class="sr-only"> {{ order.number }}</span>
+                  </Button>
+                </template>
+                <Button
+                  v-if="order.status !== 'storniert'"
+                  variant="outline"
+                  :disabled="printing.has(order.id)"
+                  @click="printNow(order)"
+                >
+                  <Printer aria-hidden="true" />Jetzt drucken<span class="sr-only"> {{ order.number }}</span>
                 </Button>
-                <Button variant="destructive" @click="setStatus(order, 'storniert')">
-                  Stornieren<span class="sr-only"> {{ order.number }}</span>
-                </Button>
+                <span
+                  v-if="printState(order)"
+                  class="text-sm"
+                  :class="printState(order)!.warn ? 'font-medium text-destructive' : 'text-muted-foreground'"
+                  >{{ printState(order)!.label }}</span
+                >
               </div>
             </CardContent>
           </Card>
