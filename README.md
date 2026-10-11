@@ -35,7 +35,8 @@ Eine zweite lokale Shopware auf Port 8100 mit der echten Karte von La Fattoria (
 cd ../shopbite
 docker compose -p sb-lafattoria -f compose.yaml -f ../backoffice/scripts/compose.lafattoria.yaml up -d
 cd ../backoffice
-python3 -I scripts/import-from-shop.py                         # Abschnitte, Gerichte, Varianten, Extras, Eigenschaften
+# Shopware-URL, Access Key (steht im HTML der Storefront) und Menü-Kategorie des Shops
+python3 -I scripts/import-from-shop.py --source https://… --key SWSC… --source-menu <id>   # Abschnitte, Gerichte, Varianten, Extras, Eigenschaften
 python3 -I scripts/add-poc-channel.py http://localhost:8100    # zweite Filiale
 python3 -I scripts/create-poc-users.py http://localhost:8100   # chef, theke, abholung
 # .env: NUXT_SHOPWARE_URL=http://localhost:8100, NUXT_RESTAURANT_NAME=Pizzeria La Fattoria
@@ -43,7 +44,7 @@ python3 -I scripts/create-poc-users.py http://localhost:8100   # chef, theke, ab
 
 Rundlauf-Test über die ganze Karte (lädt jedes Gericht und speichert es unverändert, Shopware muss danach identisch sein): `bun run roundtrip`.
 
-Erneut ausführen aktualisiert die Daten. Andere Shops: `--source`, `--key` (Access Key aus dem HTML der Storefront), `--source-menu`. Extras, die im Shop als Product Stream gepflegt sind, kommen als feste Liste an (backoffice#11). Entfernen: `docker compose -p sb-lafattoria down -v`.
+Erneut ausführen aktualisiert die Daten. Funktioniert mit jedem ShopBite-Shop, es liest nur den öffentlichen Katalog. Extras, die im Shop als Product Stream gepflegt sind, kommen als feste Liste an (backoffice#11). Entfernen: `docker compose -p sb-lafattoria down -v`.
 
 ## Anmeldung mit Fingerabdruck oder Face ID
 
@@ -67,7 +68,7 @@ Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigene
 | `NUXT_SHOPWARE_URL` | Shopware dieses Restaurants, im Stack die interne Adresse |
 | `NUXT_RESTAURANT_NAME` | Name im Kopf der Seite |
 | `NUXT_SALES_CHANNELS` | optional `channelId,…`, Auswahl und Reihenfolge der Filialen; leer = alle aktiven Sales Channels. Die Speisekarte jeder Filiale kommt aus der Plugin-Konfiguration („Kategorie der Speisekarte“, sonst die Navigationskategorie); `channelId:menuCategoryId` überschreibt sie |
-| `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://pizzeria-lafattoria.de`); nach jeder Kartenänderung leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst nach bis zu 24 Stunden |
+| `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://mein-restaurant.de`); nach jeder Kartenänderung leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst nach bis zu 24 Stunden |
 | `NUXT_CACHE_PURGE_SECRET` | derselbe Schlüssel wie `NUXT_CACHE_PURGE_SECRET` in den Storefronts (`openssl rand -hex 32`) |
 | `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 Zeichen |
 | `NUXT_SESSION_SECURE` | `false` nur für einen lokalen Stack ohne HTTPS (Quickstart), sonst weglassen |
@@ -87,16 +88,16 @@ Ein zusätzlicher Dienst im Stack des Restaurants, neben Shopware, Storefront un
     security_opt: [no-new-privileges:true]
     environment:
       NUXT_SHOPWARE_URL: http://web:8000            # Shopware im selben Stack
-      NUXT_RESTAURANT_NAME: Pizzeria La Fattoria
+      NUXT_RESTAURANT_NAME: Mein Restaurant
       NUXT_SALES_CHANNELS: ""                       # leer = alle aktiven Filialen
       NUXT_SESSION_PASSWORD: ${BACKOFFICE_SESSION_PASSWORD}   # openssl rand -hex 32
-      NUXT_STOREFRONT_URLS: https://pizzeria-lafattoria.de
+      NUXT_STOREFRONT_URLS: https://mein-restaurant.de
       NUXT_CACHE_PURGE_SECRET: ${CACHE_PURGE_SECRET}          # derselbe Wert wie in der Storefront
 ```
 
 Wichtig:
 
-- Nur über HTTPS hinter dem Reverse Proxy (Traefik in Dokploy) erreichbar machen, z. B. `backoffice.pizzeria-lafattoria.de`. Das Session-Cookie ist `Secure`, die Passkey-Anmeldung braucht HTTPS, und das Login-Rate-Limit liest die IP aus `X-Forwarded-For`.
+- Nur über HTTPS hinter dem Reverse Proxy (Traefik in Dokploy) erreichbar machen, z. B. `backoffice.mein-restaurant.de`. Das Session-Cookie ist `Secure`, die Passkey-Anmeldung braucht HTTPS, und das Login-Rate-Limit liest die IP aus `X-Forwarded-For`.
 - Für Passkeys in der Plugin-Konfiguration `passkeyRpId` (Host des Backoffice) und `passkeyOrigins` (`https://…`) setzen.
 - Benutzer legt das Plugin an (`bin/console shopbite:staff:create`), das Backoffice kann das nicht.
 - Shopware Administration und Admin API von außen sperren, sobald das Personal nur noch das Backoffice nutzt (shopware#13): Das Backoffice erzwingt die Filialbindung, Shopware nicht.
