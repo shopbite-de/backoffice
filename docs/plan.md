@@ -11,6 +11,7 @@ Entschieden (Lirim, 2026-10-10 und 2026-10-11):
 - **Filialen:** Das Personal sieht **nur die eigene Filiale**.
 - **Allergene und Zusatzstoffe:** Pflicht, kommen in **Phase 1**.
 - **Technik:** bun als Paketmanager und Laufzeit für Skripte, shadcn-vue (reka-ui) als UI.
+- **Weitere Anforderungen (2026-10-11):** als App installierbar (PWA), Anmeldung per Fingerabdruck/Biometrie (Passkey), Unterabschnitte in den Abschnitten, Button "Jetzt drucken" an jeder Bestellung.
 
 ## Ziel
 
@@ -75,17 +76,27 @@ Bewusst nicht im Editor: **SEO-URLs von Gerichten.** Die Storefront hat keine Pr
 - ADR 0001 (Backoffice) und Root-ADR 0001 (Sylius einfrieren) annehmen oder ändern.
 - Repo `shopbite-de/backoffice` anlegen, PoC übernehmen.
 
-### Phase 1: Fundament und Pflichtangaben (M)
-1. **Plugin:** ACL-Rollen "ShopBite Management" und "ShopBite Personal" per Installer (Muster `OrderPrinterRoleInstaller`), Rechte aus `docs/notes/management-privileges.json` (64) und `personal-privileges.json` (17), im PoC ermittelt.
-2. **Plugin:** CLI `shopbite:staff:create <benutzername> --role=management|personal [--branch=<salesChannelId>]...` (Shopware verlangt für Benutzer und Rollen ein `user-verified`-Token, das das Backoffice nicht haben soll). Setzt das Custom Field `shopbite_sales_channel_ids`, das als Custom-Field-Set für `user` registriert wird.
-3. **Plugin:** Admin-Route `/api/_action/shopbite/settings` mit eigenem Recht; ersetzt `system_config:*` (öffnet sonst die ganze Systemkonfiguration, auch für das Personal).
-4. **Plugin:** Menü-Kategorie pro Sales Channel als Plugin-Config, damit Storefront und Backoffice dieselbe Quelle lesen (heute je ein Env in Storefront und Backoffice).
-5. **Plugin:** Allergene und Zusatzstoffe: Eigenschaftsgruppen mit festen IDs und Kürzeln per Migration anlegen (statt beim ersten Speichern im Backoffice), Custom Fields `shopbite_code` (Option) und `shopbite_allergens_checked` (Produkt) registrieren, Store API liefert sie mit.
-6. **Storefront:** Allergene und Zusatzstoffe beim Gericht zeigen (Kürzel mit Legende auf der Karte, Klartext im Gericht-Dialog) und Hinweis für Gerichte ohne geprüfte Angaben.
-7. **Storefront:** Cache-Invalidierung (Route mit Secret, leert Produkt-, Listing- und Kategorie-Caches); das Backoffice ruft sie nach jeder Kartenänderung für jede Storefront der Installation auf (Liste per Env).
-8. **Backoffice:** Repo-Setup (bun, ESLint/Prettier, Vitest für die Übersetzungen in `server/utils`, Playwright gegen den Quickstart, axe), Docker-Image (oven/bun) auf ghcr, Eintrag im Quickstart-Compose.
-9. **Betrieb La Fattoria:** Backoffice in den Dokploy-Stack von La Fattoria, Domain z. B. `backoffice.pizzeria-lafattoria.de`, Benutzer für Management und Personal je Filiale anlegen, Allergene der Karte einmal mit dem Restaurant erfassen.
-10. **Härtung:** Rate-Limit auf den Login; Shopware Administration (`/admin`) und Admin API von außen nur noch für ShopBite (Backoffice und Order Printer sprechen intern). Sonst könnte sich das Personal mit denselben Zugangsdaten in der Shopware Administration anmelden und dort alle Filialen sehen.
+### Phase 1: Fundament und Pflichtangaben (L)
+
+Sammel-Issue: [shopbite-de/backoffice#10](https://github.com/shopbite-de/backoffice/issues/10) (Sub-Issues und Abhängigkeiten dort).
+
+| Bereich | Issue |
+|---|---|
+| ACL-Rollen Management und Personal per Installer | shopware-plugin#32 |
+| CLI `shopbite:staff:create`, Filialbindung am Benutzer | shopware-plugin#33 |
+| Admin-Route Bestellannahme/Lieferzeit mit eigenem Recht (statt `system_config:*`) | shopware-plugin#34 |
+| Menü-Kategorie pro Sales Channel als Plugin-Konfiguration | shopware-plugin#35, storefront#486, backoffice#3 |
+| Allergene und Zusatzstoffe: feste Gruppen, Custom Fields, Anzeige im Shop | shopware-plugin#36, storefront#485 |
+| Cache-Invalidierung der Storefront nach Kartenänderungen | storefront#484, backoffice#4 |
+| "Jetzt drucken": Druckanforderung an der Bestellung, Order Printer druckt (auch Nachdruck) | shopware-plugin#37, order-printer#74, backoffice#8 |
+| Anmeldung per Passkey (Fingerabdruck, Face ID), Spike zum OAuth-Grant zuerst | shopware-plugin#38, backoffice#7 |
+| PWA: installierbar, Offline-Seite, Bildschirm wach auf "Heute" | backoffice#6 |
+| Unterabschnitte (zwei Ebenen) | backoffice#9, storefront#487 |
+| Repo-Setup (Lint, Vitest, Playwright, axe, CI), Docker-Image auf ghcr | backoffice#1, backoffice#2 |
+| Login-Rate-Limit | backoffice#5 |
+| Backoffice im Quickstart | shopbite#2 |
+| `/admin` und Admin API von außen nur für ShopBite | shopware#13 |
+| Rollout Pizzeria La Fattoria (Zugänge, Allergene der Karte erfassen, vier Wochen ohne Shopware-Admin) | shopware#14 |
 
 ### Phase 2: Katalog komplett (M), Ziel: La Fattoria pflegt die Karte selbst
 1. Gericht anlegen, duplizieren, löschen; Fotos hochladen und sortieren.
@@ -95,14 +106,14 @@ Bewusst nicht im Editor: **SEO-URLs von Gerichten.** Die Storefront hat keine Pr
 5. Weitere Rollen nach Bedarf (z. B. Fahrer, Filialleitung mit Karte nur für die eigene Filiale).
 
 ### Phase 3: Alltag (S–M)
-- Bestelldetail (Bon-Ansicht, Telefon, Zahlungsart und -status), Ton bei neuer Bestellung, "bis heute Abend pausieren".
+- Bestelldetail (Bon-Ansicht, Telefon, Zahlungsart und -status), Ton und Push-Benachrichtigung bei neuer Bestellung (PWA), "bis heute Abend pausieren".
 - Feiertage/Betriebsferien, Restaurant-Kontaktdaten.
 
 ### Phase 4: Lieferung (M–L)
 - Liefergebiete als PLZ-Liste mit Mindestbestellwert und Gebühr pro Zone; das Plugin übersetzt in Versandart-Preise/Regeln oder prüft selbst im Checkout. Ersetzt den Rule Builder und behebt das "Valide Lieferung"-Problem von La Fattoria.
 
 ### Phase 5: Wachstum
-- Gutscheine, Auswertungen (Umsatz, Top-Gerichte), PWA fürs Küchentablet, Lead-Demos mit Demo-Zugang.
+- Gutscheine, Auswertungen (Umsatz, Top-Gerichte), Lead-Demos mit Demo-Zugang.
 
 ## Risiken und Antworten
 
