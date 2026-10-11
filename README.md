@@ -108,11 +108,11 @@ Erkenntnisse für den Plan:
 
 1. OAuth-Parameter heißt `scope`, nicht `scopes` (wird sonst ignoriert).
 2. Rollen und Benutzer anlegen braucht ein Token mit Scope `user-verified` → Benutzerverwaltung bleibt beim Plugin/CLI.
-3. Einstellungen speichern braucht `system_config:create/update/delete` (gesamte Systemkonfiguration) → eigene Plugin-Route.
-4. Die Storefront cacht Produkte, Listings und Kategorien 24 h → Cache-Invalidierung nötig.
+3. Einstellungen speichern braucht `system_config:create/update/delete` (gesamte Systemkonfiguration) → gelöst: eigene Plugin-Route mit Recht `shopbite_settings:*` (shopware-plugin#34).
+4. Die Storefront cacht Produkte, Listings und Kategorien 24 h → gelöst: Purge-Route der Storefront (storefront#484, backoffice#4).
 5. Shopware-Benutzer und Eigenschaftsgruppen sind instanzweit → eine Instanz pro Restaurant, Filialen als Sales Channels.
 6. Upsert fügt Zuordnungen (Kategorien, Eigenschaften, Tags) nur hinzu; entfernte müssen explizit in den Mapping-Tabellen gelöscht werden.
-7. Personal braucht für Bestellannahme und Lieferzeit auch `system_config:delete` (Shopware löscht beim Speichern leere Werte) → um so wichtiger ist die eigene Plugin-Route.
+7. Personal braucht für Bestellannahme und Lieferzeit auch `system_config:delete` (Shopware löscht beim Speichern leere Werte) → entfällt mit der Plugin-Route.
 8. Shopware kennt keine Bindung von Benutzern an Sales Channels; das Backoffice erzwingt sie, Shopware Administration und Admin API müssen deshalb von außen gesperrt sein.
 9. Echte Daten finden, was Demodaten verbergen: Varianten ohne Konfigurator-Einstellungen wurden beim Speichern gelöscht, unveränderte Gerichte bekamen Standardwerte geschrieben, Variantenpreise den Steuersatz des Gerichts. Speichern schreibt jetzt nur, was sich ändert.
 10. La Fattoria pflegt Extras als Product Stream (eine Liste für 38 Gerichte), der Editor kennt nur feste Listen (backoffice#11).
