@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { CircleUser, Clock, ClipboardList, LogOut, UtensilsCrossed } from "@lucide/vue";
+import { CircleUser, Clock, ClipboardList, LogOut, TriangleAlert, UtensilsCrossed } from "@lucide/vue";
 import type { Capability } from "#shared/types/backoffice";
 
 const route = useRoute();
 const session = useAuthState();
+const stale = useStorefrontStale();
 const auth = computed(() => (session.value?.loggedIn ? session.value : null));
 
 const LINKS: { to: string; label: string; icon: typeof Clock; capability?: Capability }[] = [
@@ -103,6 +104,14 @@ async function switchChannel(id: unknown) {
     </header>
     <main id="inhalt" tabindex="-1" class="mx-auto w-full max-w-4xl px-4 py-6 md:px-8 md:py-8">
       <OfflineNotice class="mb-4 rounded-lg" />
+      <Alert v-if="stale" role="status" class="mb-4 border-warning-border bg-warning text-warning-foreground">
+        <TriangleAlert aria-hidden="true" />
+        <AlertTitle>Gespeichert, im Shop eventuell erst später sichtbar</AlertTitle>
+        <AlertDescription class="text-warning-foreground">
+          Der Shop war gerade nicht erreichbar. Die Änderung ist sicher gespeichert, Gäste sehen sie spätestens morgen.
+          Beim nächsten Speichern wird es erneut versucht.
+        </AlertDescription>
+      </Alert>
       <slot />
     </main>
   </div>
