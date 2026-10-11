@@ -8,6 +8,7 @@ const AREAS: [prefix: string, capability: Capability][] = [
   ["/api/products", "menu"],
   ["/api/dishes", "menu"],
   ["/api/sections", "menu"],
+  ["/api/extra-groups", "menu"],
   ["/api/hours", "hours"],
 ];
 

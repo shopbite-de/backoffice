@@ -318,20 +318,30 @@ const diet = computed({
     </FormSection>
 
     <FormSection title="Extras" hint="Listen, aus denen Gäste beim Bestellen wählen, z. B. Extras oder Beilagen.">
-      <div v-for="stream in dish.streamExtras" :key="stream.id" class="space-y-2 rounded-lg border border-dashed p-4">
-        <div class="flex flex-wrap items-center gap-2">
-          <p class="font-medium">{{ stream.name }}</p>
-          <Badge variant="secondary">automatisch</Badge>
-          <span class="text-sm text-muted-foreground">{{ stream.products.length }} Extras</span>
-        </div>
+      <fieldset v-if="options.extraGroups.length" class="space-y-2">
+        <legend class="mb-2 text-sm font-medium">Extras-Gruppen</legend>
         <p class="text-sm text-muted-foreground">
-          Diese Liste füllt Shopware automatisch<template v-if="stream.streamName">
-            (Regel „{{ stream.streamName }}“)</template
-          >, sie gilt für alle Gerichte mit derselben Liste. Ändern geht derzeit nur in der Shopware Administration.
+          Einmal gepflegt, an vielen Gerichten genutzt. Was in einer Gruppe steht, ändern Sie unter
+          <NuxtLink to="/speisekarte/extras" class="underline underline-offset-4">Extras-Gruppen</NuxtLink>.
         </p>
-        <p v-if="stream.products.length" class="text-sm">{{ stream.products.map((p) => p.name).join(", ") }}</p>
-        <p v-else class="text-sm text-muted-foreground">Die Regel findet gerade keine Produkte.</p>
-      </div>
+        <div v-for="group in options.extraGroups" :key="group.id" class="flex gap-2 py-1">
+          <Checkbox
+            :id="`gruppe-${group.id}`"
+            :model-value="form.extraGroupIds.includes(group.id)"
+            :aria-describedby="`gruppe-${group.id}-inhalt`"
+            class="mt-0.5"
+            @update:model-value="toggle(form.extraGroupIds, group.id, $event === true)"
+          />
+          <div class="grid gap-1">
+            <Label :for="`gruppe-${group.id}`">{{ group.name }}</Label>
+            <p :id="`gruppe-${group.id}-inhalt`" class="text-sm text-muted-foreground">
+              {{ group.products.length }} Extras<template v-if="group.products.length"
+                >: {{ group.products.map((p) => p.name).join(", ") }}</template
+              >
+            </p>
+          </div>
+        </div>
+      </fieldset>
       <div v-for="(extra, e) in form.extras" :key="extra.id ?? `neu-${e}`" class="space-y-3 rounded-lg border p-4">
         <div class="flex flex-wrap items-end gap-2">
           <div class="grid min-w-48 flex-1 gap-2">
@@ -343,7 +353,7 @@ const diet = computed({
           </Button>
         </div>
         <fieldset>
-          <legend class="sr-only">Gerichte in {{ extra.name }}</legend>
+          <legend class="sr-only">Extras in {{ extra.name }}</legend>
           <div class="grid gap-x-4 sm:grid-cols-2">
             <div
               v-for="c in options.extraCandidates"
@@ -361,7 +371,7 @@ const diet = computed({
         </fieldset>
       </div>
       <Button variant="outline" @click="form.extras.push({ id: null, name: 'Extras', productIds: [] })"
-        ><Plus aria-hidden="true" />Liste</Button
+        ><Plus aria-hidden="true" />Liste nur für dieses Gericht</Button
       >
     </FormSection>
 
