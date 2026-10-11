@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -41,6 +40,35 @@
   --warning: #fef9c3;
   --warning-foreground: #713f12;
   --warning-border: #ca8a04;
+}
+
+/*
+ * Dark mode (docs/ci.md): the brand orange itself is the primary here
+ * (5.4:1 on cards), filled controls get dark text on it (5.9:1).
+ */
+.dark {
+  --background: #141414;
+  --foreground: #ededed;
+  --card: #1e1e1e;
+  --card-foreground: #ededed;
+  --popover: #1e1e1e;
+  --popover-foreground: #ededed;
+  --primary: #ff5b00;
+  --primary-foreground: #141414;
+  --secondary: #262626;
+  --secondary-foreground: #ededed;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #3a2010;
+  --accent-foreground: #ffb07a;
+  --destructive: #f87171;
+  --border: #2e2e2e;
+  --input: #737373;
+  --ring: #ff5b00;
+  --warning: #3b2f07;
+  --warning-foreground: #fde68a;
+  --warning-border: #a16207;
+  color-scheme: dark;
 }
 
 @theme inline {

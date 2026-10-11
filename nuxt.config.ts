@@ -18,6 +18,13 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#ffffff" },
       ],
       link: [{ rel: "icon", href: "/favicon.ico" }],
+      // dark mode before the first paint, no flash (see app/composables/useColorMode.ts)
+      script: [
+        {
+          innerHTML:
+            "try{var m=localStorage.getItem('sb-color-mode');if(m==='dark'||(m!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}",
+        },
+      ],
     },
   },
   runtimeConfig: {

@@ -38,11 +38,11 @@ const delegatedProps = reactiveOmit(props, 'class', 'size')
       v-bind="{ ...$attrs, ...delegatedProps }"
       v-model="modelValue"
       data-slot="native-select"
-      class="border-input placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-11 w-full min-w-0 appearance-none rounded-lg border bg-background py-1 pr-9 pl-3 text-base transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:h-9 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:py-0.5 outline-none disabled:pointer-events-none disabled:cursor-not-allowed"
+      class="border-input bg-background placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-7 w-full min-w-0 appearance-none rounded-md border py-0.5 pr-6 pl-2 text-xs/relaxed pointer-coarse:h-11 pointer-coarse:pl-3 pointer-coarse:pr-8 pointer-coarse:text-base transition-colors select-none focus-visible:ring-2 aria-invalid:ring-2 data-[size=sm]:h-6 data-[size=sm]:text-[0.625rem] outline-none disabled:pointer-events-none disabled:cursor-not-allowed"
       :data-size="props.size ?? 'default'"
     >
       <slot />
     </select>
-    <ChevronDownIcon class="text-muted-foreground top-1/2 right-2.5 size-4 -translate-y-1/2 pointer-events-none absolute select-none" aria-hidden="true" data-slot="native-select-icon" />
+    <ChevronDownIcon class="text-muted-foreground top-1/2 right-1.5 size-3.5 -translate-y-1/2 group-data-[size=sm]/native-select:size-3 group-data-[size=sm]/native-select:-translate-y-[calc(--spacing(1.25))] pointer-events-none absolute select-none" aria-hidden="true" data-slot="native-select-icon" />
   </div>
 </template>

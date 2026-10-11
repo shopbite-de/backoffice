@@ -42,15 +42,19 @@ async function switchChannel(id: unknown) {
     <header v-if="auth" class="border-b bg-card md:sticky md:top-0 md:h-dvh md:border-b-0 md:border-r">
       <div class="flex h-full flex-col">
         <div class="space-y-3 px-4 py-3 md:px-5 md:py-6">
-          <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="hidden h-7 w-auto md:mb-5 md:block" />
+          <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="hidden h-6 w-auto md:mb-5 md:block dark:md:hidden" />
+          <img src="/brand/shopbite-logo-white.svg" alt="ShopBite" width="324" height="103" class="hidden h-6 w-auto md:mb-5 dark:md:block" />
           <div class="flex items-center justify-between gap-2 md:block">
             <div>
               <p class="text-lg font-semibold">{{ auth.restaurant }}</p>
               <p class="text-sm text-muted-foreground">{{ auth.name }} · {{ roleLabel }}</p>
             </div>
-            <Button variant="ghost" size="icon" class="md:hidden" @click="logout">
-              <LogOut aria-hidden="true" /><span class="sr-only">Abmelden</span>
-            </Button>
+            <div class="flex items-center gap-1 md:hidden">
+              <ColorModeButton />
+              <Button variant="ghost" size="icon" @click="logout">
+                <LogOut aria-hidden="true" /><span class="sr-only">Abmelden</span>
+              </Button>
+            </div>
           </div>
           <div v-if="auth.channels.length > 1" class="grid gap-1.5">
             <Label for="filiale" class="text-muted-foreground">Filiale</Label>
@@ -65,7 +69,7 @@ async function switchChannel(id: unknown) {
             <li v-for="link in links" :key="link.to">
               <NuxtLink
                 :to="link.to"
-                class="flex min-h-11 items-center gap-3 whitespace-nowrap rounded-lg px-3 font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-3 whitespace-nowrap rounded-lg px-3 font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                 :class="{ 'bg-accent text-accent-foreground': isActive(link.to) }"
                 :aria-current="isActive(link.to) ? 'page' : undefined"
               >
@@ -74,8 +78,9 @@ async function switchChannel(id: unknown) {
             </li>
           </ul>
         </nav>
-        <div class="hidden p-3 md:block">
-          <Button variant="ghost" class="w-full justify-start" @click="logout">
+        <div class="hidden items-center gap-1 p-3 md:flex">
+          <ColorModeButton />
+          <Button variant="ghost" class="flex-1 justify-start" @click="logout">
             <LogOut aria-hidden="true" />Abmelden<span class="sr-only"> ({{ auth.username }})</span>
           </Button>
         </div>

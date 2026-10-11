@@ -73,10 +73,10 @@ const missing = computed(() =>
         <Label for="suche">Gericht suchen</Label>
         <div class="relative">
           <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input id="suche" v-model="query" type="search" class="pl-9" placeholder="Name oder Nummer" />
+          <Input id="suche" v-model="query" type="search" class="pl-9 pointer-coarse:pl-10" placeholder="Name oder Nummer" />
         </div>
       </div>
-      <div class="flex min-h-11 items-center gap-2">
+      <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
         <Checkbox id="fehlend" v-model="onlyMissing" />
         <Label for="fehlend">Nur ohne geprüfte Allergene</Label>
       </div>

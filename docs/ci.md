@@ -32,14 +32,31 @@ Im Backoffice steht das Logo klein über dem Namen des Restaurants: Das Restaura
 
 Grautöne sind neutral (kein Blau- oder Braunstich), wie `neutral` in der Homepage.
 
+### Dark Mode
+
+Folgt der Einstellung des Geräts, umschaltbar (wie Gerät, Hell, Dunkel), gespeichert pro Gerät.
+
+| Token | Wert | Kontrast |
+|---|---|---|
+| `--background` / `--card` / `--muted` | `#141414` / `#1e1e1e` / `#262626` | |
+| `--foreground` / `--muted-foreground` | `#ededed` / `#a3a3a3` | 14,2:1 / 6,6:1 auf Karten |
+| `--primary` | `#ff5b00` (Markenorange), Schrift darauf `#141414` | 5,4:1 auf Karten, 5,9:1 Schrift auf Orange |
+| `--accent` / `--accent-foreground` | `#3a2010` / `#ffb07a` | 8,4:1 |
+| `--input` | `#737373` | 3,5:1 |
+| `--warning` / `--warning-foreground` / `--warning-border` | `#3b2f07` / `#fde68a` / `#a16207` | 10,6:1 |
+| `--destructive` | `#f87171` | 6,0:1 |
+
+Logo im Dunkeln: `shopbite-logo-white.svg`.
+
 ## Schrift
 
 **Public Sans**, im Backoffice selbst gehostet (`@fontsource-variable/public-sans`, kein Google Fonts). Gewichte 400, 500, 600. Grundgröße 16 px, Eingabefelder nie kleiner (sonst zoomt iOS).
 
 ## Formen und Bedienung
 
+- Komponenten im shadcn-Stil **Mira** ("kompakt, für dichte Oberflächen"): mit Maus dicht (Buttons und Felder 28 px, Schrift 12 px).
+- **Touch (Handy, Tablet) automatisch größer** über `pointer-coarse`: Buttons und Felder 44 px, Felder mit 16 px Schrift (kein Zoom unter iOS), größere Checkboxen, Radios und Schalter.
 - Radius 10 px (`--radius`), Karten mit 1 px Rahmen statt Schatten.
-- Touch-Ziele mindestens 44 px, Buttons 44 px hoch.
 - Fokus immer sichtbar: 2 px Rahmen in `--primary` mit 2 px Abstand.
 - Icons: Lucide, Linienstärke Standard, immer mit Text oder `sr-only`-Beschriftung.
 - Bewegung nur zur Orientierung, `prefers-reduced-motion` respektieren.

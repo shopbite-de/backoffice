@@ -83,7 +83,7 @@ async function create() {
               />
             </div>
             <details>
-              <summary class="min-h-11 cursor-pointer py-2 text-muted-foreground">Name und SEO bearbeiten</summary>
+              <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-muted-foreground">Name und SEO bearbeiten</summary>
               <form v-if="drafts[section.id]" class="mt-2 grid gap-4" @submit.prevent="save(section)">
                 <div class="grid gap-2">
                   <Label :for="`n-${section.id}`">Name</Label>

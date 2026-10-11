@@ -26,7 +26,9 @@ async function submit() {
 
 <template>
   <div class="mx-auto mt-[10vh] max-w-sm">
-    <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 h-10 w-auto" />
+    <img src="/brand/shopbite-logo.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 h-10 w-auto dark:hidden" />
+    <img src="/brand/shopbite-logo-white.svg" alt="ShopBite" width="324" height="103" class="mx-auto mb-8 hidden h-10 w-auto dark:block" />
+    <div class="fixed top-3 right-3"><ColorModeButton /></div>
     <Card>
       <CardHeader>
         <CardTitle><h1 class="text-2xl font-semibold">Anmelden</h1></CardTitle>

@@ -60,7 +60,7 @@ Erneut ausführen aktualisiert die Daten. Andere Shops: `--source`, `--key` (Acc
 - `server/utils/salesChannel.ts`: Filialen (Sales Channels) und die gewählte Filiale.
 - `server/utils/dishes.ts`, `server/utils/sections.ts`: Übersetzung Gericht/Abschnitt ↔ Shopware (Produkt, Eigenschaften, Varianten, Cross-Selling, Custom Fields, Tags, SEO-URLs), Speichern als ein Sync-Request.
 - `server/api/*`: die Gastro-API, Zod-validiert. Typen in `shared/types/backoffice.ts`.
-- `app/`: SPA (`ssr: false`), shadcn-vue (Stil nova, reka-ui, lucide) mit Tailwind v4 im ShopBite-CI (`docs/ci.md`); Komponenten in `app/components/ui`.
+- `app/`: SPA (`ssr: false`), shadcn-vue (Stil Mira, reka-ui, lucide, touch-groß auf Handy/Tablet, Dark Mode) mit Tailwind v4 im ShopBite-CI (`docs/ci.md`); Komponenten in `app/components/ui`.
 
 ## PoC-Ergebnis (2026-10-10, Shopware aus dem Quickstart)
 

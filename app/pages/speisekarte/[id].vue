@@ -155,7 +155,7 @@ const diet = computed({
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Abschnitte</legend>
         <div class="flex flex-wrap gap-x-6">
-          <div v-for="s in options.sections" :key="s.id" class="flex min-h-11 items-center gap-2">
+          <div v-for="s in options.sections" :key="s.id" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <Checkbox
               :id="`abschnitt-${s.id}`"
               :model-value="form.sectionIds.includes(s.id)"
@@ -176,7 +176,7 @@ const diet = computed({
         <div v-for="group in allergenGroups" :key="group.title ?? 'einzeln'">
           <p v-if="group.title" class="mb-1 text-sm text-muted-foreground">{{ group.title }}</p>
           <div class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="a in group.items" :key="a.key" class="flex min-h-11 items-center gap-2">
+            <div v-for="a in group.items" :key="a.key" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
               <Checkbox
                 :id="`allergen-${a.key}`"
                 :model-value="form.allergens.includes(a.key)"
@@ -193,7 +193,7 @@ const diet = computed({
       <fieldset>
         <legend class="mb-1 text-sm font-medium">Zusatzstoffe</legend>
         <div class="grid gap-x-4 sm:grid-cols-2">
-          <div v-for="a in ADDITIVES" :key="a.key" class="flex min-h-11 items-center gap-2">
+          <div v-for="a in ADDITIVES" :key="a.key" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <Checkbox
               :id="`zusatz-${a.key}`"
               :model-value="form.additives.includes(a.key)"
@@ -259,7 +259,7 @@ const diet = computed({
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Ernährung</legend>
         <RadioGroup v-model="diet" class="flex flex-wrap gap-x-6">
-          <div v-for="d in diets" :key="d.value" class="flex min-h-11 items-center gap-2">
+          <div v-for="d in diets" :key="d.value" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem :id="`diet-${d.value}`" :value="d.value" />
             <Label :for="`diet-${d.value}`" class="font-normal">{{ d.label }}</Label>
           </div>
@@ -303,7 +303,7 @@ const diet = computed({
         <fieldset>
           <legend class="sr-only">Gerichte in {{ extra.name }}</legend>
           <div class="grid gap-x-4 sm:grid-cols-2">
-            <div v-for="c in options.extraCandidates" :key="c.id" class="flex min-h-11 items-center gap-2">
+            <div v-for="c in options.extraCandidates" :key="c.id" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
               <Checkbox
                 :id="`extra-${e}-${c.id}`"
                 :model-value="extra.productIds.includes(c.id)"
@@ -318,18 +318,18 @@ const diet = computed({
     </FormSection>
 
     <FormSection title="Bestellung und Bon">
-      <div class="flex min-h-11 items-center gap-2">
+      <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
         <Checkbox id="upsell" v-model="form.upsell" />
         <Label for="upsell" class="font-normal">Vor dem Bestellen als Ergänzung vorschlagen</Label>
       </div>
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Auf dem Bon</legend>
         <RadioGroup v-model="form.printType" class="flex flex-wrap gap-x-6">
-          <div class="flex min-h-11 items-center gap-2">
+          <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem id="print-number" value="number" />
             <Label for="print-number" class="font-normal">Nummer</Label>
           </div>
-          <div class="flex min-h-11 items-center gap-2">
+          <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem id="print-label" value="label" />
             <Label for="print-label" class="font-normal">Name</Label>
           </div>
