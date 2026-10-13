@@ -93,7 +93,7 @@ const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.alle
       </div>
       <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
         <Checkbox id="fehlend" v-model="onlyMissing" />
-        <Label for="fehlend">Nur ohne geprüfte Allergene</Label>
+        <Label for="fehlend" class="flex-1 self-stretch font-normal">Nur ohne geprüfte Allergene</Label>
       </div>
     </div>
 

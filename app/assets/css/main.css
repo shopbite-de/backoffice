@@ -72,6 +72,28 @@
   color-scheme: dark;
 }
 
+/*
+ * Touch devices (phones, kitchen tablets): small text grows to 16 px and 14 px, so text-sm and
+ * text-xs stay usable for someone who does not like screens. --nav-bottom is the height of the
+ * bottom navigation on phones (app/layouts/default.vue); fixed bars and the page sit above it.
+ */
+:root {
+  --nav-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 48rem) {
+  :root {
+    --nav-bottom: 0px;
+  }
+}
+@media (pointer: coarse) {
+  :root {
+    --text-xs: 0.875rem;
+    --text-xs--line-height: 1.25rem;
+    --text-sm: 1rem;
+    --text-sm--line-height: 1.5rem;
+  }
+}
+
 @theme inline {
   --font-sans: "Public Sans Variable", system-ui, sans-serif;
   --color-brand: var(--brand);
