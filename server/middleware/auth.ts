@@ -10,6 +10,7 @@ const AREAS: [prefix: string, capability: Capability][] = [
   ["/api/sections", "menu"],
   ["/api/extra-groups", "menu"],
   ["/api/hours", "hours"],
+  ["/api/holidays", "hours"],
 ];
 
 /** Every /api route except login and session needs a logged-in user with the right role. */

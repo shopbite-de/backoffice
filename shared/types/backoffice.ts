@@ -55,6 +55,13 @@ export interface OpeningInterval {
   closingTime: string;
 }
 
+/** A closed period of a branch (holiday, company vacation), whole days "YYYY-MM-DD" inclusive. */
+export interface Holiday {
+  id: string;
+  start: string;
+  end: string;
+}
+
 export interface ShopSettings {
   orderingOpen: boolean;
   deliveryMinutes: number | null;
