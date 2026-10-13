@@ -46,8 +46,9 @@ const printing = ref(new Set<string>());
 
 async function printNow(order: OrderSummary) {
   printing.value.add(order.id);
-  // the print state next to the button ("Druck angefordert") is the confirmation
-  if (await saves.run(order.id, () => api(`/api/orders/${order.id}/print`, { method: "POST" }), "Bon angefordert")) {
+  // the print state next to the button ("Druck angefordert") is the confirmation, only errors show
+  if (await saves.run(order.id, () => api(`/api/orders/${order.id}/print`, { method: "POST" }))) {
+    saves.set(order.id, null);
     await refreshOrders();
     for (const delay of [6_000, 13_000, 25_000]) setTimeout(refreshOrders, delay);
   }
@@ -77,10 +78,13 @@ async function setStatus(order: OrderSummary, status: "fertig" | "storniert") {
 
 // cancelling cannot be undone and the guest is waiting: always ask first
 const cancelling = ref<OrderSummary | null>(null);
+const askCancel = ref(false);
+function askToCancel(order: OrderSummary) {
+  cancelling.value = order;
+  askCancel.value = true;
+}
 async function confirmCancel() {
-  const order = cancelling.value;
-  cancelling.value = null;
-  if (order) await setStatus(order, "storniert");
+  if (cancelling.value) await setStatus(cancelling.value, "storniert");
 }
 
 const GROUPS: { status: OrderStatus; title: string; hint: string }[] = [
@@ -211,7 +215,7 @@ const revenue = computed(() =>
                   v-if="order.status === 'neu' || order.status === 'in_arbeit'"
                   variant="destructive"
                   class="ml-auto"
-                  @click="cancelling = order"
+                  @click="askToCancel(order)"
                 >
                   Stornieren<span class="sr-only"> {{ order.number }}</span>
                 </Button>
@@ -223,7 +227,7 @@ const revenue = computed(() =>
       </ul>
     </section>
 
-    <AlertDialog :open="!!cancelling" @update:open="!$event && (cancelling = null)">
+    <AlertDialog v-model:open="askCancel">
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Bestellung {{ cancelling?.number }} stornieren?</AlertDialogTitle>
