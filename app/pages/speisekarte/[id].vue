@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ArrowLeft, Plus, X } from "@lucide/vue";
+import { ArrowLeft, ChevronDown, Plus, X } from "@lucide/vue";
 import { useEventListener } from "@vueuse/core";
-import type { FoodLabel } from "#shared/utils/labels";
 import type { DishDetail, DishFormOptions, DishInput } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "menu" });
@@ -138,17 +137,29 @@ async function save(): Promise<boolean> {
 const variantCount = computed(
   () => form.value?.variants.reduce((n, g) => n * Math.max(1, g.options.filter((o) => o.name.trim()).length), 1) ?? 1,
 );
-// allergens grouped like on a menu: single ones, then cereals and nuts by name
-const allergenGroups = computed(() => {
-  const groups: { title: string | null; items: FoodLabel[] }[] = [{ title: null, items: [] }];
-  for (const label of ALLERGENS) {
-    const title = label.kind ?? null;
-    let group = groups.find((g) => g.title === title);
-    if (!group) groups.push((group = { title, items: [] }));
-    group.items.push(label);
-  }
-  return groups;
+// one section is the home of a dish; more are possible but rare, so they sit behind a fold
+const sectionOptions = computed(() =>
+  (options.value?.sections ?? []).flatMap((s) => [
+    { id: s.id, name: s.name },
+    ...s.children.map((c) => ({ id: c.id, name: `${s.name} › ${c.name}` })),
+  ]),
+);
+const mainSection = computed({
+  get: () => form.value?.sectionIds[0] ?? "",
+  set: (id: unknown) => {
+    const rest = form.value!.sectionIds.filter((s) => s !== id).slice(form.value!.sectionIds.length ? 1 : 0);
+    form.value!.sectionIds = typeof id === "string" && id ? [id, ...rest] : rest;
+  },
 });
+const otherSections = computed(() => sectionOptions.value.filter((o) => o.id !== mainSection.value));
+const moreSections = ref(false);
+// a dish's own extras list has 40 candidates: closed it shows what is chosen, open it is the grid
+const openExtras = ref(new Set<number>());
+const chosenExtras = (ids: string[]) =>
+  (options.value?.extraCandidates ?? []).filter((c) => ids.includes(c.id)).map((c) => c.name);
+// everything a restaurant rarely touches (ingredients, receipt, measures, SEO) sits behind one fold
+const more = ref(false);
+
 const diets = [
   { value: "keine", label: "Keine Angabe" },
   { value: "vegetarisch", label: "Vegetarisch" },
@@ -183,34 +194,52 @@ const diet = computed({
         <Label for="aufkarte">Auf der Karte</Label>
         <Switch id="aufkarte" v-model="form.onMenu" />
       </div>
-      <fieldset>
-        <legend class="mb-2 text-sm font-medium">Abschnitte</legend>
-        <div class="grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div v-for="s in options.sections" :key="s.id">
-            <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+      <div class="grid gap-2">
+        <Label for="abschnitt">Abschnitt</Label>
+        <NativeSelect id="abschnitt" v-model="mainSection" class="w-full sm:max-w-sm">
+          <option value="">Kein Abschnitt (nicht in der Karte)</option>
+          <option v-for="o in sectionOptions" :key="o.id" :value="o.id">{{ o.name }}</option>
+        </NativeSelect>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="flex min-h-8 items-center gap-2 text-sm font-medium focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none pointer-coarse:min-h-11"
+          :aria-expanded="moreSections"
+          @click="moreSections = !moreSections"
+        >
+          <ChevronDown
+            class="size-4 transition-transform"
+            :class="{ '-rotate-90': !moreSections }"
+            aria-hidden="true"
+          />
+          Auch in weiteren Abschnitten zeigen
+          <span v-if="form.sectionIds.length > 1" class="font-normal text-muted-foreground"
+            >({{ form.sectionIds.length - 1 }})</span
+          >
+        </button>
+        <fieldset v-if="moreSections" class="mt-2">
+          <legend class="sr-only">Weitere Abschnitte</legend>
+          <div class="grid gap-x-6 sm:grid-cols-2">
+            <div v-for="o in otherSections" :key="o.id" class="flex min-h-8 items-center gap-2 pointer-coarse:min-h-11">
               <Checkbox
-                :id="`abschnitt-${s.id}`"
-                :model-value="form.sectionIds.includes(s.id)"
-                @update:model-value="toggle(form.sectionIds, s.id, $event === true)"
+                :id="`abschnitt-${o.id}`"
+                :model-value="form.sectionIds.includes(o.id)"
+                @update:model-value="toggle(form.sectionIds, o.id, $event === true)"
               />
-              <Label :for="`abschnitt-${s.id}`" class="flex-1 self-stretch font-normal">{{ s.name }}</Label>
-            </div>
-            <div
-              v-for="child in s.children"
-              :key="child.id"
-              class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2 pl-6"
-            >
-              <Checkbox
-                :id="`abschnitt-${child.id}`"
-                :model-value="form.sectionIds.includes(child.id)"
-                @update:model-value="toggle(form.sectionIds, child.id, $event === true)"
-              />
-              <Label :for="`abschnitt-${child.id}`" class="flex-1 self-stretch font-normal"
-                ><span class="sr-only">{{ s.name }}, </span>{{ child.name }}</Label
-              >
+              <Label :for="`abschnitt-${o.id}`" class="flex-1 self-stretch font-normal">{{ o.name }}</Label>
             </div>
           </div>
-        </div>
+        </fieldset>
+      </div>
+      <fieldset>
+        <legend class="mb-2 text-sm font-medium">Ernährung</legend>
+        <RadioGroup v-model="diet" class="flex flex-wrap gap-x-6">
+          <div v-for="d in diets" :key="d.value" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+            <RadioGroupItem :id="`diet-${d.value}`" :value="d.value" />
+            <Label :for="`diet-${d.value}`" class="flex-1 self-stretch font-normal">{{ d.label }}</Label>
+          </div>
+        </RadioGroup>
       </fieldset>
     </FormSection>
 
@@ -218,41 +247,14 @@ const diet = computed({
       title="Allergene und Zusatzstoffe"
       hint="Pflichtangaben für Online-Bestellungen. Der Shop zeigt sie beim Gericht mit Kürzel."
     >
-      <fieldset class="space-y-3">
-        <legend class="mb-1 text-sm font-medium">Allergene</legend>
-        <div v-for="group in allergenGroups" :key="group.title ?? 'einzeln'">
-          <p v-if="group.title" class="mb-1 text-sm text-muted-foreground">{{ group.title }}</p>
-          <div class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="a in group.items" :key="a.key" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-              <Checkbox
-                :id="`allergen-${a.key}`"
-                :model-value="form.allergens.includes(a.key)"
-                @update:model-value="toggle(form.allergens, a.key, $event === true)"
-              />
-              <Label :for="`allergen-${a.key}`" class="flex-1 self-stretch font-normal">
-                <span class="w-5 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
-                >{{ a.name }}
-              </Label>
-            </div>
-          </div>
-        </div>
+      <fieldset>
+        <legend class="mb-2 text-sm font-medium">Allergene</legend>
+        <FoodLabelTiles v-model="form.allergens" :labels="ALLERGENS" id-prefix="allergen" />
       </fieldset>
       <Separator />
       <fieldset>
-        <legend class="mb-1 text-sm font-medium">Zusatzstoffe</legend>
-        <div class="grid gap-x-4 sm:grid-cols-2">
-          <div v-for="a in ADDITIVES" :key="a.key" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-            <Checkbox
-              :id="`zusatz-${a.key}`"
-              :model-value="form.additives.includes(a.key)"
-              @update:model-value="toggle(form.additives, a.key, $event === true)"
-            />
-            <Label :for="`zusatz-${a.key}`" class="flex-1 self-stretch font-normal">
-              <span class="w-6 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
-              >{{ a.name }}
-            </Label>
-          </div>
-        </div>
+        <legend class="mb-2 text-sm font-medium">Zusatzstoffe</legend>
+        <FoodLabelTiles v-model="form.additives" :labels="ADDITIVES" id-prefix="zusatz" />
       </fieldset>
       <Separator />
       <div class="flex items-start gap-3 rounded-lg bg-muted p-3">
@@ -303,49 +305,6 @@ const diet = computed({
       </div>
     </FormSection>
 
-    <FormSection title="Zutaten und Kennzeichnung">
-      <ListField
-        id="zutaten"
-        v-model="form.ingredients"
-        label="Zutaten"
-        hint="Mit Komma trennen. Gäste können Zutaten abwählen."
-        :suggestions="options.ingredients"
-      />
-      <fieldset>
-        <legend class="mb-2 text-sm font-medium">Ernährung</legend>
-        <RadioGroup v-model="diet" class="flex flex-wrap gap-x-6">
-          <div v-for="d in diets" :key="d.value" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-            <RadioGroupItem :id="`diet-${d.value}`" :value="d.value" />
-            <Label :for="`diet-${d.value}`" class="flex-1 self-stretch font-normal">{{ d.label }}</Label>
-          </div>
-        </RadioGroup>
-      </fieldset>
-      <div v-for="(prop, p) in form.properties" :key="p" class="flex flex-wrap items-end gap-2">
-        <div class="grid w-48 gap-2">
-          <Label :for="`eig-${p}`" class="flex-1 self-stretch font-normal">Eigenschaft</Label>
-          <Input :id="`eig-${p}`" v-model="prop.group" list="gruppen" placeholder="z. B. Küche" />
-        </div>
-        <div class="min-w-48 flex-1">
-          <ListField
-            :id="`eigw-${p}`"
-            v-model="prop.options"
-            label="Werte"
-            :suggestions="options.propertyGroups.find((g) => g.name === prop.group)?.options"
-          />
-        </div>
-        <Button variant="ghost" size="icon" @click="form.properties.splice(p, 1)">
-          <X aria-hidden="true" /><span class="sr-only">{{ prop.group || "Eigenschaft" }} entfernen</span>
-        </Button>
-      </div>
-      <datalist id="gruppen">
-        <option v-for="g in options.propertyGroups" :key="g.name" :value="g.name" />
-        <option value="Küche" />
-      </datalist>
-      <Button variant="outline" @click="form.properties.push({ group: '', options: [] })"
-        ><Plus aria-hidden="true" />Eigenschaft</Button
-      >
-    </FormSection>
-
     <FormSection title="Extras" hint="Listen, aus denen Gäste beim Bestellen wählen, z. B. Extras oder Beilagen.">
       <fieldset v-if="options.extraGroups.length" class="space-y-2">
         <legend class="mb-2 text-sm font-medium">Extras-Gruppen</legend>
@@ -381,7 +340,27 @@ const diet = computed({
             Liste entfernen<span class="sr-only"> {{ extra.name }}</span>
           </Button>
         </div>
-        <fieldset>
+        <button
+          type="button"
+          class="flex min-h-8 w-full items-center gap-2 text-left text-sm focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none pointer-coarse:min-h-11"
+          :aria-expanded="openExtras.has(e)"
+          @click="openExtras.has(e) ? openExtras.delete(e) : openExtras.add(e)"
+        >
+          <ChevronDown
+            class="size-4 shrink-0 transition-transform"
+            :class="{ '-rotate-90': !openExtras.has(e) }"
+            aria-hidden="true"
+          />
+          <span class="flex-1">
+            <span class="font-medium"
+              >{{ extra.productIds.length }} von {{ options.extraCandidates.length }} gewählt</span
+            >
+            <span v-if="extra.productIds.length" class="block text-muted-foreground">{{
+              chosenExtras(extra.productIds).join(", ")
+            }}</span>
+          </span>
+        </button>
+        <fieldset v-if="openExtras.has(e)">
           <legend class="sr-only">Extras in {{ extra.name }}</legend>
           <div class="grid gap-x-4 sm:grid-cols-2">
             <div
@@ -404,98 +383,148 @@ const diet = computed({
       >
     </FormSection>
 
-    <FormSection title="Bestellung und Bon">
-      <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-        <Checkbox id="upsell" v-model="form.upsell" />
-        <Label for="upsell" class="flex-1 self-stretch font-normal">Vor dem Bestellen als Ergänzung vorschlagen</Label>
-      </div>
-      <fieldset>
-        <legend class="mb-2 text-sm font-medium">Auf dem Bon</legend>
-        <RadioGroup v-model="form.printType" class="flex flex-wrap gap-x-6">
-          <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-            <RadioGroupItem id="print-number" value="number" />
-            <Label for="print-number" class="flex-1 self-stretch font-normal">Nummer</Label>
+    <div class="space-y-6">
+      <button
+        type="button"
+        class="flex min-h-11 w-full items-center gap-2 rounded-lg border bg-card px-4 text-left font-medium focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        :aria-expanded="more"
+        @click="more = !more"
+      >
+        <ChevronDown class="size-5 transition-transform" :class="{ '-rotate-90': !more }" aria-hidden="true" />
+        Weitere Einstellungen
+        <span class="text-sm font-normal text-muted-foreground">Zutaten, Bon, Maße, Suchmaschinen</span>
+      </button>
+      <div v-show="more" class="space-y-6">
+        <FormSection title="Zutaten und Kennzeichnung">
+          <ListField
+            id="zutaten"
+            v-model="form.ingredients"
+            label="Zutaten"
+            hint="Mit Komma trennen. Gäste können Zutaten abwählen."
+            :suggestions="options.ingredients"
+          />
+          <div v-for="(prop, p) in form.properties" :key="p" class="flex flex-wrap items-end gap-2">
+            <div class="grid w-48 gap-2">
+              <Label :for="`eig-${p}`" class="flex-1 self-stretch font-normal">Eigenschaft</Label>
+              <Input :id="`eig-${p}`" v-model="prop.group" list="gruppen" placeholder="z. B. Küche" />
+            </div>
+            <div class="min-w-48 flex-1">
+              <ListField
+                :id="`eigw-${p}`"
+                v-model="prop.options"
+                label="Werte"
+                :suggestions="options.propertyGroups.find((g) => g.name === prop.group)?.options"
+              />
+            </div>
+            <Button variant="ghost" size="icon" @click="form.properties.splice(p, 1)">
+              <X aria-hidden="true" /><span class="sr-only">{{ prop.group || "Eigenschaft" }} entfernen</span>
+            </Button>
           </div>
+          <datalist id="gruppen">
+            <option v-for="g in options.propertyGroups" :key="g.name" :value="g.name" />
+            <option value="Küche" />
+          </datalist>
+          <Button variant="outline" @click="form.properties.push({ group: '', options: [] })"
+            ><Plus aria-hidden="true" />Eigenschaft</Button
+          >
+        </FormSection>
+
+        <FormSection title="Bestellung und Bon">
           <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
-            <RadioGroupItem id="print-label" value="label" />
-            <Label for="print-label" class="flex-1 self-stretch font-normal">Name</Label>
+            <Checkbox id="upsell" v-model="form.upsell" />
+            <Label for="upsell" class="flex-1 self-stretch font-normal"
+              >Vor dem Bestellen als Ergänzung vorschlagen</Label
+            >
           </div>
-        </RadioGroup>
-      </fieldset>
-      <div class="grid max-w-60 gap-2">
-        <Label for="faktor">Zubereitungsfaktor</Label>
-        <p id="faktor-hint" class="text-sm text-muted-foreground">
-          Wie viel länger als üblich dieses Gericht braucht (1 = normal).
-        </p>
-        <Input
-          id="faktor"
-          v-model.number="form.deliveryTimeFactor"
-          type="number"
-          min="1"
-          max="10"
-          aria-describedby="faktor-hint"
-          class="w-24"
-        />
-      </div>
-    </FormSection>
+          <fieldset>
+            <legend class="mb-2 text-sm font-medium">Auf dem Bon</legend>
+            <RadioGroup v-model="form.printType" class="flex flex-wrap gap-x-6">
+              <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+                <RadioGroupItem id="print-number" value="number" />
+                <Label for="print-number" class="flex-1 self-stretch font-normal">Nummer</Label>
+              </div>
+              <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
+                <RadioGroupItem id="print-label" value="label" />
+                <Label for="print-label" class="flex-1 self-stretch font-normal">Name</Label>
+              </div>
+            </RadioGroup>
+          </fieldset>
+          <div class="grid max-w-60 gap-2">
+            <Label for="faktor">Zubereitungsfaktor</Label>
+            <p id="faktor-hint" class="text-sm text-muted-foreground">
+              Wie viel länger als üblich dieses Gericht braucht (1 = normal).
+            </p>
+            <Input
+              id="faktor"
+              v-model.number="form.deliveryTimeFactor"
+              type="number"
+              min="1"
+              max="10"
+              aria-describedby="faktor-hint"
+              class="w-24"
+            />
+          </div>
+        </FormSection>
 
-    <FormSection title="Maße und Gewicht">
-      <div class="grid gap-4 sm:grid-cols-4">
-        <div
-          v-for="m in [
-            { k: 'width', l: 'Breite (mm)' },
-            { k: 'height', l: 'Höhe (mm)' },
-            { k: 'length', l: 'Länge (mm)' },
-            { k: 'weight', l: 'Gewicht (kg)' },
-          ] as const"
-          :key="m.k"
-          class="grid gap-2"
-        >
-          <Label :for="`mass-${m.k}`">{{ m.l }}</Label>
-          <Input :id="`mass-${m.k}`" v-model="measures[m.k]" inputmode="decimal" />
-        </div>
-      </div>
-    </FormSection>
+        <FormSection title="Maße und Gewicht">
+          <div class="grid gap-4 sm:grid-cols-4">
+            <div
+              v-for="m in [
+                { k: 'width', l: 'Breite (mm)' },
+                { k: 'height', l: 'Höhe (mm)' },
+                { k: 'length', l: 'Länge (mm)' },
+                { k: 'weight', l: 'Gewicht (kg)' },
+              ] as const"
+              :key="m.k"
+              class="grid gap-2"
+            >
+              <Label :for="`mass-${m.k}`">{{ m.l }}</Label>
+              <Input :id="`mass-${m.k}`" v-model="measures[m.k]" inputmode="decimal" />
+            </div>
+          </div>
+        </FormSection>
 
-    <FormSection title="Suche und SEO">
-      <ListField
-        id="tags"
-        v-model="form.tags"
-        label="Schlagwörter"
-        hint="Interne Gruppierung, z. B. Klassiker, Neu."
-        :suggestions="options.tags"
-      />
-      <ListField
-        id="suchwoerter"
-        v-model="form.searchKeywords"
-        label="Suchwörter"
-        hint="Damit Gäste das Gericht auch unter anderen Namen finden, z. B. Margarita."
-      />
-      <div class="grid gap-2">
-        <Label for="metatitle">Titel in Suchmaschinen</Label>
-        <Input id="metatitle" v-model="form.seo.title" maxlength="255" aria-describedby="metatitle-count" />
-        <p id="metatitle-count" class="text-sm text-muted-foreground">
-          {{ form.seo.title.length }} von etwa 60 Zeichen
-        </p>
+        <FormSection title="Suche und SEO">
+          <ListField
+            id="tags"
+            v-model="form.tags"
+            label="Schlagwörter"
+            hint="Interne Gruppierung, z. B. Klassiker, Neu."
+            :suggestions="options.tags"
+          />
+          <ListField
+            id="suchwoerter"
+            v-model="form.searchKeywords"
+            label="Suchwörter"
+            hint="Damit Gäste das Gericht auch unter anderen Namen finden, z. B. Margarita."
+          />
+          <div class="grid gap-2">
+            <Label for="metatitle">Titel in Suchmaschinen</Label>
+            <Input id="metatitle" v-model="form.seo.title" maxlength="255" aria-describedby="metatitle-count" />
+            <p id="metatitle-count" class="text-sm text-muted-foreground">
+              {{ form.seo.title.length }} von etwa 60 Zeichen
+            </p>
+          </div>
+          <div class="grid gap-2">
+            <Label for="metadesc">Beschreibung in Suchmaschinen</Label>
+            <Textarea
+              id="metadesc"
+              v-model="form.seo.description"
+              maxlength="255"
+              rows="2"
+              aria-describedby="metadesc-count"
+            />
+            <p id="metadesc-count" class="text-sm text-muted-foreground">
+              {{ form.seo.description.length }} von etwa 155 Zeichen
+            </p>
+          </div>
+          <div class="grid gap-2">
+            <Label for="keywords">Meta-Keywords</Label>
+            <Input id="keywords" v-model="form.seo.keywords" maxlength="255" />
+          </div>
+        </FormSection>
       </div>
-      <div class="grid gap-2">
-        <Label for="metadesc">Beschreibung in Suchmaschinen</Label>
-        <Textarea
-          id="metadesc"
-          v-model="form.seo.description"
-          maxlength="255"
-          rows="2"
-          aria-describedby="metadesc-count"
-        />
-        <p id="metadesc-count" class="text-sm text-muted-foreground">
-          {{ form.seo.description.length }} von etwa 155 Zeichen
-        </p>
-      </div>
-      <div class="grid gap-2">
-        <Label for="keywords">Meta-Keywords</Label>
-        <Input id="keywords" v-model="form.seo.keywords" maxlength="255" />
-      </div>
-    </FormSection>
+    </div>
 
     <div
       class="fixed inset-x-0 bottom-[var(--nav-bottom)] border-t bg-card/95 px-4 py-3 backdrop-blur md:left-64 md:pb-[max(0.75rem,env(safe-area-inset-bottom))]"
