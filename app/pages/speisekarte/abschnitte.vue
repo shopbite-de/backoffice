@@ -5,32 +5,29 @@ import type { MenuSectionDetail } from "#shared/types/backoffice";
 definePageMeta({ capability: "menu" });
 useHead({ title: "Abschnitte" });
 const api = useBackofficeApi();
-const error = ref<string | null>(null);
-const saved = ref<string | null>(null);
+// feedback at the section that changed, "neu" at the create forms
+const saves = useSaveState();
 const { data: sections } = await useAsyncData("sections", () => api<MenuSectionDetail[]>("/api/sections"));
 const parents = computed(() => (sections.value ?? []).map((s) => ({ id: s.id, name: s.name })));
 
-async function patch(section: MenuSectionDetail, body: Record<string, unknown>, message: string) {
-  error.value = null;
-  saved.value = null;
-  try {
-    sections.value = await api<MenuSectionDetail[]>(`/api/sections/${section.id}`, { method: "PATCH", body });
-    saved.value = message;
-  } catch (e) {
-    error.value = `${section.name}: ${errorMessage(e)}`;
-  }
+function patch(section: MenuSectionDetail, body: Record<string, unknown>, message: string) {
+  return saves.run(
+    section.id,
+    async () => {
+      sections.value = await api<MenuSectionDetail[]>(`/api/sections/${section.id}`, { method: "PATCH", body });
+    },
+    message,
+  );
 }
 
-async function create(name: string, parentId?: string) {
-  error.value = null;
-  try {
-    sections.value = await api<MenuSectionDetail[]>("/api/sections", { method: "POST", body: { name, parentId } });
-    saved.value = `${name} angelegt.`;
-    return true;
-  } catch (e) {
-    error.value = errorMessage(e);
-    return false;
-  }
+function create(name: string, parentId?: string) {
+  return saves.run(
+    "neu",
+    async () => {
+      sections.value = await api<MenuSectionDetail[]>("/api/sections", { method: "POST", body: { name, parentId } });
+    },
+    `${name} angelegt`,
+  );
 }
 
 const newName = ref("");
@@ -66,11 +63,6 @@ async function createSub(parent: MenuSectionDetail) {
         Spaghetti.
       </p>
     </div>
-    <ErrorAlert :message="error" />
-    <Alert v-if="saved" role="status"
-      ><AlertDescription>{{ saved }}</AlertDescription></Alert
-    >
-
     <ol class="space-y-3">
       <li v-for="(section, i) in sections" :key="section.id">
         <Card>
@@ -80,6 +72,7 @@ async function createSub(parent: MenuSectionDetail) {
               :first="i === 0"
               :last="i === (sections?.length ?? 0) - 1"
               :parents="parents"
+              :status="saves.state(section.id)"
               @patch="(body, message) => patch(section, body, message)"
             />
             <ol
@@ -93,6 +86,7 @@ async function createSub(parent: MenuSectionDetail) {
                   :first="j === 0"
                   :last="j === section.children.length - 1"
                   :parents="parents"
+                  :status="saves.state(child.id)"
                   @patch="(body, message) => patch(child, body, message)"
                 />
               </li>
@@ -111,6 +105,7 @@ async function createSub(parent: MenuSectionDetail) {
               </div>
               <Button type="submit">Anlegen</Button>
               <Button type="button" variant="ghost" @click="addingTo = null">Abbrechen</Button>
+              <SaveStatus class="basis-full" :state="saves.state('neu')" />
             </form>
             <Button v-else variant="ghost" size="sm" class="ml-2 text-muted-foreground" @click="openAdd(section.id)">
               <Plus aria-hidden="true" />Unterabschnitt<span class="sr-only"> in {{ section.name }}</span>
@@ -128,6 +123,7 @@ async function createSub(parent: MenuSectionDetail) {
             <Input id="neu" v-model="newName" required placeholder="z. B. Mittagstisch" />
           </div>
           <Button type="submit">Anlegen</Button>
+          <SaveStatus class="basis-full" :state="saves.state('neu')" />
         </form>
       </CardContent>
     </Card>
