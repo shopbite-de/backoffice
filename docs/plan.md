@@ -106,7 +106,7 @@ Nach dem Rollout bei La Fattoria: Analyse aller Seiten bei 390, 820 und 1180 px 
 | Paket | Issue |
 |---|---|
 | P1 Sicherheit und sichtbare Rückmeldung (Stornieren mit Rückfrage, "Gespeichert" an der Zeile, Warnung bei ungespeicherten Änderungen) | backoffice#27 |
-| P2 Heute als Arbeitsplatz (Pause-Banner, Ton bei neuer Bestellung, Zahlung/Telefon/Navigation, zwei Spalten auf dem Tablet), zieht Teile aus Phase 3 vor | backoffice#28 |
+| P2 Heute als Arbeitsplatz (Pause-Banner, Ton bei neuer Bestellung, Zahlung/Telefon/Navigation, zwei Spalten auf dem Tablet), zieht Teile aus Phase 3 vor | backoffice#28, "bis heute Abend pausieren" mit Plugin-Feld backoffice#36 |
 | P3 Grundgerüst Handy (untere Navigation, Touch-Größen) | backoffice#29 |
 | P4 Speisekarte (Sprungleiste, einklappbar, Filter "Allergene fehlen") | backoffice#30 |
 | P5 Gericht bearbeiten entschlacken (Allergen-Kacheln, "Weitere Einstellungen") | backoffice#31 |

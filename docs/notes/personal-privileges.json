@@ -6,6 +6,7 @@
   "order_delivery:read",
   "order_line_item:read",
   "order_transaction:read",
+  "payment_method:read",
   "sales_channel:read",
   "shipping_method:read",
   "shopbite_settings:read",

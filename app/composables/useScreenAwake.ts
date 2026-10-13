@@ -1,5 +1,5 @@
 /**
- * Keeps the screen on while "Heute" is open (kitchen tablet), if the person switches it on.
+ * Keeps the screen on while "Heute" is open (kitchen tablet): on by default on tablets, switchable.
  * Remembered per device; the browser releases the lock when the tab is hidden, so it is taken
  * again when the page becomes visible.
  */
@@ -27,10 +27,13 @@ export function useScreenAwake() {
 
   onMounted(() => {
     supported.value = "wakeLock" in navigator;
+    // a tablet on the counter is the usual kitchen screen: on by default there, off on phones
+    const tablet = matchMedia("(pointer: coarse) and (min-width: 768px)").matches;
     try {
-      enabled.value = supported.value && localStorage.getItem(KEY) === "1";
+      const stored = localStorage.getItem(KEY);
+      enabled.value = supported.value && (stored === null ? tablet : stored === "1");
     } catch {
-      enabled.value = false;
+      enabled.value = supported.value && tablet;
     }
     document.addEventListener("visibilitychange", acquire);
     void acquire();

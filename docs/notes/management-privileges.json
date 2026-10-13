@@ -10,6 +10,7 @@
   "order_delivery:read",
   "order_line_item:read",
   "order_transaction:read",
+  "payment_method:read",
   "product:create",
   "product:delete",
   "product:read",
