@@ -58,10 +58,12 @@ const dirty = computed(
 
 // unsaved changes are never lost silently: ask before leaving the page or closing the tab
 const leaveTo = ref<string | null>(null);
+const askLeave = ref(false);
 let leaving = false;
 onBeforeRouteLeave((to) => {
   if (!dirty.value || leaving) return true;
   leaveTo.value = to.fullPath;
+  askLeave.value = true;
   return false;
 });
 useEventListener(window, "beforeunload", (event) => {
@@ -69,7 +71,6 @@ useEventListener(window, "beforeunload", (event) => {
 });
 async function leave(saveFirst: boolean) {
   const to = leaveTo.value;
-  leaveTo.value = null;
   if (!to || (saveFirst && !(await save()))) return;
   leaving = true;
   await navigateTo(to);
@@ -508,7 +509,7 @@ const diet = computed({
       </div>
     </div>
 
-    <AlertDialog :open="!!leaveTo" @update:open="!$event && (leaveTo = null)">
+    <AlertDialog v-model:open="askLeave">
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Änderungen speichern?</AlertDialogTitle>
