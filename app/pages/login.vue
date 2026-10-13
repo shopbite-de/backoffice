@@ -78,7 +78,7 @@ async function loginWithPasskey() {
         <form class="grid gap-5" @submit.prevent="submit">
           <ErrorAlert :message="error" />
           <div class="grid gap-2">
-            <Label for="username">Benutzername</Label>
+            <Label for="username">Benutzername oder E-Mail</Label>
             <Input
               id="username"
               v-model="username"

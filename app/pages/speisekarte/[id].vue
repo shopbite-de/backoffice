@@ -392,7 +392,7 @@ const diet = computed({
       >
         <ChevronDown class="size-5 transition-transform" :class="{ '-rotate-90': !more }" aria-hidden="true" />
         Weitere Einstellungen
-        <span class="text-sm font-normal text-muted-foreground">Zutaten, Bon, Maße, Suchmaschinen</span>
+        <span class="text-sm font-normal text-muted-foreground">Zutaten, Bon, Maße, Google</span>
       </button>
       <div v-show="more" class="space-y-6">
         <FormSection title="Zutaten und Kennzeichnung">
@@ -450,9 +450,9 @@ const diet = computed({
             </RadioGroup>
           </fieldset>
           <div class="grid max-w-60 gap-2">
-            <Label for="faktor">Zubereitungsfaktor</Label>
+            <Label for="faktor">Braucht länger als üblich</Label>
             <p id="faktor-hint" class="text-sm text-muted-foreground">
-              Wie viel länger als üblich dieses Gericht braucht (1 = normal).
+              1 = normale Lieferzeit, 2 = doppelt so lang. Gäste sehen die längere Zeit.
             </p>
             <Input
               id="faktor"
@@ -484,29 +484,29 @@ const diet = computed({
           </div>
         </FormSection>
 
-        <FormSection title="Suche und SEO">
+        <FormSection title="Suche und Suchmaschinen">
           <ListField
             id="tags"
             v-model="form.tags"
-            label="Schlagwörter"
-            hint="Interne Gruppierung, z. B. Klassiker, Neu."
+            label="Stichwörter (nur intern)"
+            hint="Zum Sortieren für Sie selbst, z. B. Klassiker, Neu. Gäste sehen sie nicht."
             :suggestions="options.tags"
           />
           <ListField
             id="suchwoerter"
             v-model="form.searchKeywords"
-            label="Suchwörter"
-            hint="Damit Gäste das Gericht auch unter anderen Namen finden, z. B. Margarita."
+            label="Andere Schreibweisen"
+            hint="Damit Gäste das Gericht in der Suche auch so finden, z. B. Margarita."
           />
           <div class="grid gap-2">
-            <Label for="metatitle">Titel in Suchmaschinen</Label>
+            <Label for="metatitle">Titel bei Google</Label>
             <Input id="metatitle" v-model="form.seo.title" maxlength="255" aria-describedby="metatitle-count" />
             <p id="metatitle-count" class="text-sm text-muted-foreground">
               {{ form.seo.title.length }} von etwa 60 Zeichen
             </p>
           </div>
           <div class="grid gap-2">
-            <Label for="metadesc">Beschreibung in Suchmaschinen</Label>
+            <Label for="metadesc">Beschreibung bei Google</Label>
             <Textarea
               id="metadesc"
               v-model="form.seo.description"
@@ -519,7 +519,7 @@ const diet = computed({
             </p>
           </div>
           <div class="grid gap-2">
-            <Label for="keywords">Meta-Keywords</Label>
+            <Label for="keywords">Suchbegriffe für Google (optional)</Label>
             <Input id="keywords" v-model="form.seo.keywords" maxlength="255" />
           </div>
         </FormSection>

@@ -96,7 +96,7 @@ const id = (part: string) => `${part}-${props.section.id}`;
     <SaveStatus :state="status" />
     <details>
       <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-sm text-muted-foreground">
-        Bearbeiten<span class="sr-only"> ({{ section.name }}: Name, Ort, Suchmaschinen)</span>
+        Bearbeiten<span class="sr-only"> ({{ section.name }}: Name, Ort, Google)</span>
       </summary>
       <form class="mt-2 grid gap-4" @submit.prevent="save">
         <div class="grid gap-2">
@@ -125,11 +125,11 @@ const id = (part: string) => `${part}-${props.section.id}`;
           <Input :id="id('p')" v-model="draft.path" :aria-describedby="id('p-hint')" />
         </div>
         <div class="grid gap-2">
-          <Label :for="id('t')">Titel in Suchmaschinen</Label>
+          <Label :for="id('t')">Titel bei Google</Label>
           <Input :id="id('t')" v-model="draft.title" maxlength="255" />
         </div>
         <div class="grid gap-2">
-          <Label :for="id('d')">Beschreibung in Suchmaschinen</Label>
+          <Label :for="id('d')">Beschreibung bei Google</Label>
           <Textarea :id="id('d')" v-model="draft.description" maxlength="255" rows="2" />
         </div>
         <div>

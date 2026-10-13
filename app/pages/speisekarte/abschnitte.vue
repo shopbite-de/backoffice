@@ -63,6 +63,9 @@ async function createSub(parent: MenuSectionDetail) {
         Spaghetti.
       </p>
     </div>
+    <p v-if="!sections?.length" class="text-muted-foreground">
+      Noch keine Abschnitte. Legen Sie unten den ersten an, z. B. „Pizza“; danach ordnen Sie Gerichte zu.
+    </p>
     <ol class="space-y-3">
       <li v-for="(section, i) in sections" :key="section.id">
         <Card>
