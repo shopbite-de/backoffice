@@ -5,8 +5,8 @@ import type { OrderStatus, OrderSummary, ShopSettings } from "#shared/types/back
 definePageMeta({ capability: "orders" });
 useHead({ title: "Heute" });
 const api = useBackofficeApi();
-const error = ref<string | null>(null);
-const saved = ref<string | null>(null);
+// feedback where it was tapped: "settings" for the ordering card, the order id for each order
+const saves = useSaveState();
 
 const { data: settings, refresh: refreshSettings } = await useAsyncData("settings", () =>
   api<ShopSettings>("/api/settings"),
@@ -22,18 +22,10 @@ onBeforeUnmount(() => clearInterval(timer));
 
 const savingSettings = ref(false);
 async function saveSettings(change: Partial<ShopSettings>, message: string) {
-  error.value = null;
-  saved.value = null;
   savingSettings.value = true;
-  try {
-    await api("/api/settings", { method: "PATCH", body: change });
-    saved.value = message;
-  } catch (e) {
-    error.value = errorMessage(e);
-  } finally {
-    await refreshSettings();
-    savingSettings.value = false;
-  }
+  await saves.run("settings", () => api("/api/settings", { method: "PATCH", body: change }), message);
+  await refreshSettings();
+  savingSettings.value = false;
 }
 
 // kitchen tablet: keep the screen on while "Heute" is open (per device)
@@ -53,18 +45,13 @@ onBeforeUnmount(() => clearInterval(clock));
 const printing = ref(new Set<string>());
 
 async function printNow(order: OrderSummary) {
-  error.value = null;
   printing.value.add(order.id);
-  try {
-    await api(`/api/orders/${order.id}/print`, { method: "POST" });
-    saved.value = `Bon für ${order.number} angefordert.`;
+  // the print state next to the button ("Druck angefordert") is the confirmation
+  if (await saves.run(order.id, () => api(`/api/orders/${order.id}/print`, { method: "POST" }), "Bon angefordert")) {
     await refreshOrders();
     for (const delay of [6_000, 13_000, 25_000]) setTimeout(refreshOrders, delay);
-  } catch (e) {
-    error.value = errorMessage(e);
-  } finally {
-    printing.value.delete(order.id);
   }
+  printing.value.delete(order.id);
 }
 
 type PrintState = { label: string; warn: boolean } | null;
@@ -80,14 +67,20 @@ function printState(order: OrderSummary): PrintState {
 }
 
 async function setStatus(order: OrderSummary, status: "fertig" | "storniert") {
-  error.value = null;
-  try {
-    await api(`/api/orders/${order.id}/status`, { method: "POST", body: { status } });
-    saved.value = `Bestellung ${order.number} ${status === "fertig" ? "ist fertig" : "storniert"}.`;
-  } catch (e) {
-    error.value = errorMessage(e);
-  }
+  await saves.run(
+    order.id,
+    () => api(`/api/orders/${order.id}/status`, { method: "POST", body: { status } }),
+    status === "fertig" ? "Als fertig gemeldet" : "Bestellung storniert",
+  );
   await refreshOrders();
+}
+
+// cancelling cannot be undone and the guest is waiting: always ask first
+const cancelling = ref<OrderSummary | null>(null);
+async function confirmCancel() {
+  const order = cancelling.value;
+  cancelling.value = null;
+  if (order) await setStatus(order, "storniert");
 }
 
 const GROUPS: { status: OrderStatus; title: string; hint: string }[] = [
@@ -122,9 +115,7 @@ const revenue = computed(() =>
       <Label for="wach" class="font-normal">Bildschirm anlassen, solange „Heute“ offen ist</Label>
     </div>
 
-    <ErrorAlert :message="error" />
     <PasskeyHint />
-    <p role="status" class="sr-only">{{ saved }}</p>
 
     <section aria-labelledby="annahme">
       <Card :class="orderingOpen ? '' : 'bg-warning ring-warning-border'">
@@ -157,6 +148,9 @@ const revenue = computed(() =>
             >
               <option v-for="m in deliveryOptions" :key="m" :value="m">{{ m }} Min.</option>
             </NativeSelect>
+          </div>
+          <div v-if="saves.state('settings')" class="basis-full">
+            <SaveStatus :state="saves.state('settings')" />
           </div>
         </CardContent>
       </Card>
@@ -195,14 +189,9 @@ const revenue = computed(() =>
               </ul>
               <p v-if="order.comment" class="rounded-lg bg-muted px-3 py-2 text-sm">{{ order.comment }}</p>
               <div class="flex flex-wrap items-center gap-2 pt-1">
-                <template v-if="order.status === 'neu' || order.status === 'in_arbeit'">
-                  <Button v-if="order.status === 'in_arbeit'" @click="setStatus(order, 'fertig')">
-                    Fertig<span class="sr-only"> {{ order.number }}</span>
-                  </Button>
-                  <Button variant="destructive" @click="setStatus(order, 'storniert')">
-                    Stornieren<span class="sr-only"> {{ order.number }}</span>
-                  </Button>
-                </template>
+                <Button v-if="order.status === 'in_arbeit'" @click="setStatus(order, 'fertig')">
+                  Fertig<span class="sr-only"> {{ order.number }}</span>
+                </Button>
                 <Button
                   v-if="order.status !== 'storniert'"
                   variant="outline"
@@ -217,11 +206,37 @@ const revenue = computed(() =>
                   :class="printState(order)!.warn ? 'font-medium text-destructive' : 'text-muted-foreground'"
                   >{{ printState(order)!.label }}</span
                 >
+                <!-- kept apart from "Jetzt drucken" so a slip does not cancel -->
+                <Button
+                  v-if="order.status === 'neu' || order.status === 'in_arbeit'"
+                  variant="destructive"
+                  class="ml-auto"
+                  @click="cancelling = order"
+                >
+                  Stornieren<span class="sr-only"> {{ order.number }}</span>
+                </Button>
               </div>
+              <SaveStatus :state="saves.state(order.id)" />
             </CardContent>
           </Card>
         </li>
       </ul>
     </section>
+
+    <AlertDialog :open="!!cancelling" @update:open="!$event && (cancelling = null)">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Bestellung {{ cancelling?.number }} stornieren?</AlertDialogTitle>
+          <AlertDialogDescription>
+            {{ cancelling?.customer }} · {{ cancelling && euro(cancelling.total) }}. Das lässt sich nicht rückgängig
+            machen.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Nicht stornieren</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" @click="confirmCancel">Ja, stornieren</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>

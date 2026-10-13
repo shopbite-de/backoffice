@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { MenuDish } from "#shared/types/backoffice";
+import type { SaveState } from "~/composables/useSaveState";
 
 /**
  * One dish in the menu list: link to the editor, price, on the menu.
  * Phones get two lines (number, name and switch above, price below), wider screens one.
+ * The save state of this dish shows below it, where the change was made.
  */
-defineProps<{ dish: MenuDish }>();
+defineProps<{ dish: MenuDish; status: SaveState | null }>();
 const emit = defineEmits<{ price: [event: Event]; onMenu: [value: boolean] }>();
 </script>
 
@@ -45,6 +47,9 @@ const emit = defineEmits<{ price: [event: Event]; onMenu: [value: boolean] }>();
         @change="emit('price', $event)"
       />
       <span aria-hidden="true">€</span>
+    </div>
+    <div v-if="status" class="col-span-full col-start-2 sm:col-start-2">
+      <SaveStatus :state="status" />
     </div>
   </li>
 </template>
