@@ -80,11 +80,12 @@ async function switchChannel(id: unknown) {
           <p v-else-if="auth.channels[0]" class="text-sm text-muted-foreground">{{ auth.channels[0].name }}</p>
         </div>
         <nav aria-label="Bereiche" class="md:flex-1">
-          <ul class="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-col md:px-3">
+          <!-- phones: every area side by side, icon above the label; sidebar from md -->
+          <ul class="grid auto-cols-fr grid-flow-col gap-1 px-2 pb-2 md:flex md:flex-col md:px-3">
             <li v-for="link in links" :key="link.to">
               <NuxtLink
                 :to="link.to"
-                class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-3 whitespace-nowrap rounded-lg px-3 font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                class="flex min-h-11 flex-col items-center justify-center gap-1 rounded-lg px-1 py-1.5 text-center text-xs font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none md:min-h-8 md:flex-row md:justify-start md:gap-3 md:whitespace-nowrap md:px-3 md:py-0 md:text-left md:text-base pointer-coarse:md:min-h-11"
                 :class="{ 'bg-accent text-accent-foreground': isActive(link.to) }"
                 :aria-current="isActive(link.to) ? 'page' : undefined"
               >
