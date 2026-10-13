@@ -18,7 +18,13 @@ export interface OrderSummary {
   mode: "lieferung" | "abholung";
   customer: string;
   address: string | null;
+  /** the guest's number for a quick call, from the address */
+  phone: string | null;
+  /** chosen time from the checkout ("Wunschzeit: 19:30" in the comment), without the prefix */
+  wishedTime: string | null;
+  /** the guest's own note, without the wished time */
   comment: string | null;
+  payment: { method: string; paid: boolean } | null;
   lines: OrderLine[];
   /** "Jetzt drucken": requested and last printed (custom fields of the ShopBite plugin, ISO times) */
   printRequestedAt: string | null;

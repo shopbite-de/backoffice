@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { Bike, Printer, ShoppingBag } from "@lucide/vue";
+import { BellRing, Bike, Clock, MapPin, Phone, Printer, ShoppingBag, Volume2 } from "@lucide/vue";
 import type { OrderStatus, OrderSummary, ShopSettings } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "orders" });
-useHead({ title: "Heute" });
 const api = useBackofficeApi();
 // feedback where it was tapped: "settings" for the ordering card, the order id for each order
 const saves = useSaveState();
@@ -28,14 +27,17 @@ async function saveSettings(change: Partial<ShopSettings>, message: string) {
   savingSettings.value = false;
 }
 
-// kitchen tablet: keep the screen on while "Heute" is open (per device)
-const { supported: canKeepAwake, enabled: keepAwake } = useScreenAwake();
-
 const orderingOpen = computed(() => settings.value?.orderingOpen ?? true);
-// the stored value stays selectable even if it is not one of the usual steps
-const deliveryOptions = computed(() =>
-  [...new Set([20, 30, 45, 60, 75, 90, 120, settings.value?.deliveryMinutes ?? 45])].sort((a, b) => a - b),
-);
+const deliveryMinutes = computed(() => settings.value?.deliveryMinutes ?? 45);
+// the usual steps as big buttons; an unusual stored value stays selectable
+const deliveryOptions = computed(() => [...new Set([20, 30, 45, 60, 90, deliveryMinutes.value])].sort((a, b) => a - b));
+
+const newOrders = computed(() => (orders.value ?? []).filter((o) => o.status === "neu").length);
+// chime, vibration and the count on the app icon when a new order comes in
+const { soundOn, needsTap } = useNewOrderAlert(newOrders);
+useHead({ title: () => (newOrders.value ? `(${newOrders.value}) Heute` : "Heute") });
+// kitchen tablet: the screen stays on while "Heute" is open (per device, on by default on tablets)
+const { supported: canKeepAwake, enabled: keepAwake } = useScreenAwake();
 
 // "Jetzt drucken": the order printer polls every 10 s, so look again a few times after a request
 const now = ref(Date.now());
@@ -99,11 +101,19 @@ const grouped = computed(() =>
     orders: (orders.value ?? []).filter((o) => o.status === g.status),
   })).filter((g) => g.orders.length || g.status === "neu"),
 );
+// the two active groups side by side on a wide tablet (kitchen board), the rest below
+const active = computed(() => grouped.value.filter((g) => g.status === "neu" || g.status === "in_arbeit"));
+const done = computed(() => grouped.value.filter((g) => g.status === "fertig" || g.status === "storniert"));
+
 const session = useAuthState();
 const multiChannel = computed(() => session.value?.loggedIn && session.value.channels.length > 1);
 const revenue = computed(() =>
   (orders.value ?? []).filter((o) => o.status !== "storniert").reduce((sum, o) => sum + o.total, 0),
 );
+// the dialer wants digits only (and a leading +)
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+// opens the maps app on phones and tablets
+const mapsUrl = (address: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 </script>
 
 <template>
@@ -114,111 +124,222 @@ const revenue = computed(() =>
         {{ orders?.length === 1 ? "1 Bestellung" : `${orders?.length ?? 0} Bestellungen` }} · {{ euro(revenue) }}
       </p>
     </div>
-    <div v-if="canKeepAwake" class="flex items-center gap-2">
-      <Switch id="wach" v-model="keepAwake" />
-      <Label for="wach" class="font-normal">Bildschirm anlassen, solange „Heute“ offen ist</Label>
-    </div>
 
     <PasskeyHint />
 
     <section aria-labelledby="annahme">
-      <Card :class="orderingOpen ? '' : 'bg-warning ring-warning-border'">
-        <CardContent class="flex flex-wrap items-center gap-x-6 gap-y-4">
-          <div class="min-w-0 flex-1 basis-64">
-            <h2 id="annahme" class="font-semibold">Online-Bestellungen annehmen</h2>
-            <p class="text-sm" :class="orderingOpen ? 'text-muted-foreground' : 'text-warning-foreground'">
-              {{
-                orderingOpen
-                  ? "Gäste können im Shop bestellen."
-                  : "Pausiert: Der Shop zeigt die Karte, nimmt aber keine Bestellungen an."
-              }}
-            </p>
-          </div>
-          <Switch
-            :model-value="orderingOpen"
-            aria-labelledby="annahme"
-            :disabled="savingSettings"
-            @update:model-value="
-              saveSettings({ orderingOpen: $event }, $event ? 'Bestellannahme ist offen.' : 'Bestellannahme pausiert.')
-            "
-          />
-          <div class="flex items-center gap-2">
-            <Label for="lieferzeit" class="whitespace-nowrap">Lieferzeit</Label>
-            <NativeSelect
-              id="lieferzeit"
-              :model-value="settings?.deliveryMinutes ?? 45"
+      <Card :class="orderingOpen ? 'border-success/40' : 'border-warning-border bg-warning text-warning-foreground'">
+        <CardContent class="space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+            <div class="min-w-0 flex-1 basis-56">
+              <h2 id="annahme" class="text-xl font-semibold">
+                {{ orderingOpen ? "Shop ist offen" : "Shop pausiert" }}
+              </h2>
+              <p class="pointer-coarse:text-base" :class="orderingOpen ? 'text-muted-foreground' : ''">
+                {{
+                  orderingOpen
+                    ? "Gäste können online bestellen."
+                    : "Gäste sehen die Karte, können aber nicht bestellen."
+                }}
+              </p>
+            </div>
+            <Button
+              size="lg"
+              class="w-full sm:w-auto"
+              :variant="orderingOpen ? 'outline' : 'default'"
               :disabled="savingSettings"
-              @update:model-value="saveSettings({ deliveryMinutes: Number($event) }, `Lieferzeit ${$event} Minuten.`)"
+              @click="
+                saveSettings(
+                  { orderingOpen: !orderingOpen },
+                  orderingOpen ? 'Shop ist pausiert, Gäste können nicht bestellen.' : 'Shop ist wieder offen.',
+                )
+              "
             >
-              <option v-for="m in deliveryOptions" :key="m" :value="m">{{ m }} Min.</option>
-            </NativeSelect>
+              {{ orderingOpen ? "Bestellungen pausieren" : "Shop wieder öffnen" }}
+            </Button>
           </div>
-          <div v-if="saves.state('settings')" class="basis-full">
-            <SaveStatus :state="saves.state('settings')" />
+
+          <div role="group" aria-labelledby="lieferzeit" class="space-y-2">
+            <p id="lieferzeit" class="flex items-center gap-2 font-medium">
+              <Clock class="size-4" aria-hidden="true" />Lieferzeit, die Gäste sehen
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <Button
+                v-for="m in deliveryOptions"
+                :key="m"
+                size="lg"
+                :variant="m === deliveryMinutes ? 'default' : 'outline'"
+                :aria-pressed="m === deliveryMinutes"
+                :disabled="savingSettings"
+                class="min-w-20 tabular-nums"
+                @click="m !== deliveryMinutes && saveSettings({ deliveryMinutes: m }, `Lieferzeit ${m} Minuten.`)"
+              >
+                {{ m }} Min.
+              </Button>
+            </div>
           </div>
+          <SaveStatus :state="saves.state('settings')" />
         </CardContent>
       </Card>
     </section>
 
-    <section v-for="group in grouped" :key="group.status" :aria-labelledby="`g-${group.status}`" class="space-y-3">
-      <h2 :id="`g-${group.status}`" class="font-semibold">
-        {{ group.title }} <span class="font-normal text-muted-foreground">({{ group.orders.length }})</span>
-        <span v-if="group.hint" class="ml-1 text-sm font-normal text-muted-foreground">· {{ group.hint }}</span>
-      </h2>
-      <Card v-if="!group.orders.length">
-        <CardContent class="text-muted-foreground">Keine neuen Bestellungen.</CardContent>
-      </Card>
-      <ul class="space-y-3">
-        <li v-for="order in group.orders" :key="order.id">
-          <Card>
-            <CardContent class="space-y-3">
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <p class="font-semibold">
-                  {{ time(order.createdAt) }} · #{{ order.number }} · {{ order.customer }}
-                  <Badge v-if="multiChannel" variant="secondary" class="ml-1">{{ order.channel }}</Badge>
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm pointer-coarse:text-base">
+      <div class="flex items-center gap-2">
+        <Switch id="ton" v-model="soundOn" />
+        <Label for="ton" class="font-normal">Ton bei neuer Bestellung</Label>
+      </div>
+      <p v-if="soundOn && needsTap" role="status" class="flex items-center gap-1.5 text-muted-foreground">
+        <Volume2 class="size-4" aria-hidden="true" />Einmal auf die Seite tippen, dann ist der Ton an.
+      </p>
+      <div v-if="canKeepAwake" class="flex items-center gap-2">
+        <Switch id="wach" v-model="keepAwake" />
+        <Label for="wach" class="font-normal">Bildschirm bleibt an</Label>
+      </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <section
+        v-for="group in active"
+        :key="group.status"
+        :aria-labelledby="`g-${group.status}`"
+        class="space-y-3"
+        :class="{ 'lg:col-span-2': active.length === 1 }"
+      >
+        <h2 :id="`g-${group.status}`" class="flex items-center gap-2 text-lg font-semibold">
+          <BellRing
+            v-if="group.status === 'neu' && group.orders.length"
+            class="size-5 text-primary"
+            aria-hidden="true"
+          />
+          {{ group.title }} <span class="font-normal text-muted-foreground">({{ group.orders.length }})</span>
+          <span v-if="group.hint" class="text-sm font-normal text-muted-foreground">· {{ group.hint }}</span>
+        </h2>
+        <Card v-if="!group.orders.length">
+          <CardContent class="text-muted-foreground"
+            >Keine neuen Bestellungen. Neue erscheinen hier von selbst.</CardContent
+          >
+        </Card>
+        <ul class="space-y-3">
+          <li v-for="order in group.orders" :key="order.id">
+            <Card :class="{ 'border-primary/50': order.status === 'neu' }">
+              <CardContent class="space-y-3">
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4">
+                  <div class="min-w-0">
+                    <p class="text-sm text-muted-foreground pointer-coarse:text-base">
+                      {{ time(order.createdAt) }} · Nr. {{ order.number }}
+                      <Badge v-if="multiChannel" variant="secondary" class="ml-1">{{ order.channel }}</Badge>
+                    </p>
+                    <p class="text-lg font-semibold">{{ order.customer }}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-lg font-semibold tabular-nums">{{ euro(order.total) }}</p>
+                    <p
+                      v-if="order.payment"
+                      class="text-sm pointer-coarse:text-base"
+                      :class="order.payment.paid ? 'text-success' : ''"
+                    >
+                      {{
+                        order.payment.paid ? `Bezahlt (${order.payment.method})` : `Kassieren: ${order.payment.method}`
+                      }}
+                    </p>
+                  </div>
+                </div>
+
+                <p v-if="order.wishedTime" class="flex items-center gap-2 font-medium">
+                  <Clock class="size-4 shrink-0" aria-hidden="true" />{{
+                    order.mode === "abholung" ? "Abholung" : "Lieferung"
+                  }}
+                  um
+                  {{ order.wishedTime }}
                 </p>
-                <p class="font-semibold tabular-nums">{{ euro(order.total) }}</p>
-              </div>
-              <p class="flex items-center gap-2 text-sm text-muted-foreground">
-                <component :is="order.mode === 'abholung' ? ShoppingBag : Bike" class="size-4" aria-hidden="true" />
-                {{ order.mode === "abholung" ? "Abholung" : `Lieferung: ${order.address ?? "keine Adresse"}` }}
-              </p>
-              <ul class="space-y-1">
-                <li v-for="(line, i) in order.lines" :key="i">
-                  {{ line.quantity }}× {{ line.label }}
-                  <span v-if="line.extras.length" class="text-sm text-muted-foreground"
-                    >(+ {{ line.extras.join(", ") }})</span
+                <p class="flex items-center gap-2 pointer-coarse:text-base">
+                  <component
+                    :is="order.mode === 'abholung' ? ShoppingBag : Bike"
+                    class="size-4 shrink-0 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  <template v-if="order.mode === 'abholung'">Abholung im Restaurant</template>
+                  <a
+                    v-else-if="order.address"
+                    :href="mapsUrl(order.address)"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-flex min-h-8 items-center gap-1 underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-11"
+                    >{{ order.address }}<MapPin class="size-4 shrink-0 text-muted-foreground" aria-hidden="true" /><span
+                      class="sr-only"
+                    >
+                      (Karte öffnen)</span
+                    ></a
                   >
-                </li>
-              </ul>
-              <p v-if="order.comment" class="rounded-lg bg-muted px-3 py-2 text-sm">{{ order.comment }}</p>
-              <div class="flex flex-wrap items-center gap-2 pt-1">
-                <Button v-if="order.status === 'in_arbeit'" @click="setStatus(order, 'fertig')">
-                  Fertig<span class="sr-only"> {{ order.number }}</span>
+                  <span v-else>Lieferung, keine Adresse</span>
+                </p>
+                <p v-if="order.phone" class="flex items-center gap-2 pointer-coarse:text-base">
+                  <Phone class="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <a
+                    :href="telHref(order.phone)"
+                    class="inline-flex min-h-8 items-center underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-11"
+                    >{{ order.phone }}<span class="sr-only"> anrufen</span></a
+                  >
+                </p>
+
+                <ul class="space-y-1 pointer-coarse:text-base">
+                  <li v-for="(line, i) in order.lines" :key="i">
+                    <span class="font-medium tabular-nums">{{ line.quantity }}×</span> {{ line.label }}
+                    <span v-if="line.extras.length" class="text-sm text-muted-foreground"
+                      >(+ {{ line.extras.join(", ") }})</span
+                    >
+                  </li>
+                </ul>
+                <p v-if="order.comment" class="rounded-lg bg-muted px-3 py-2 pointer-coarse:text-base">
+                  <span class="font-medium">Hinweis des Gasts:</span> {{ order.comment }}
+                </p>
+
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                  <Button v-if="order.status === 'in_arbeit'" size="lg" @click="setStatus(order, 'fertig')">
+                    Fertig<span class="sr-only"> {{ order.number }}</span>
+                  </Button>
+                  <Button variant="outline" size="lg" :disabled="printing.has(order.id)" @click="printNow(order)">
+                    <Printer aria-hidden="true" />Jetzt drucken<span class="sr-only"> {{ order.number }}</span>
+                  </Button>
+                  <span
+                    v-if="printState(order)"
+                    class="text-sm pointer-coarse:text-base"
+                    :class="printState(order)!.warn ? 'font-medium text-destructive' : 'text-muted-foreground'"
+                    >{{ printState(order)!.label }}</span
+                  >
+                  <!-- kept apart from "Jetzt drucken" so a slip does not cancel -->
+                  <Button variant="destructive" class="ml-auto" @click="askToCancel(order)">
+                    Stornieren<span class="sr-only"> {{ order.number }}</span>
+                  </Button>
+                </div>
+                <SaveStatus :state="saves.state(order.id)" />
+              </CardContent>
+            </Card>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <section v-for="group in done" :key="group.status" :aria-labelledby="`g-${group.status}`" class="space-y-3">
+      <h2 :id="`g-${group.status}`" class="text-lg font-semibold">
+        {{ group.title }} <span class="font-normal text-muted-foreground">({{ group.orders.length }})</span>
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        <li v-for="order in group.orders" :key="order.id">
+          <Card class="text-muted-foreground">
+            <CardContent class="space-y-1">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <p class="font-medium text-foreground">{{ order.customer }}</p>
+                <p class="tabular-nums">{{ euro(order.total) }}</p>
+              </div>
+              <p class="text-sm">
+                {{ time(order.createdAt) }} · Nr. {{ order.number }} · {{ order.lines.length }} Positionen
+              </p>
+              <div v-if="order.status !== 'storniert'" class="flex flex-wrap items-center gap-2 pt-1">
+                <Button variant="outline" :disabled="printing.has(order.id)" @click="printNow(order)">
+                  <Printer aria-hidden="true" />Nochmal drucken<span class="sr-only"> {{ order.number }}</span>
                 </Button>
-                <Button
-                  v-if="order.status !== 'storniert'"
-                  variant="outline"
-                  :disabled="printing.has(order.id)"
-                  @click="printNow(order)"
-                >
-                  <Printer aria-hidden="true" />Jetzt drucken<span class="sr-only"> {{ order.number }}</span>
-                </Button>
-                <span
-                  v-if="printState(order)"
-                  class="text-sm"
-                  :class="printState(order)!.warn ? 'font-medium text-destructive' : 'text-muted-foreground'"
-                  >{{ printState(order)!.label }}</span
-                >
-                <!-- kept apart from "Jetzt drucken" so a slip does not cancel -->
-                <Button
-                  v-if="order.status === 'neu' || order.status === 'in_arbeit'"
-                  variant="destructive"
-                  class="ml-auto"
-                  @click="askToCancel(order)"
-                >
-                  Stornieren<span class="sr-only"> {{ order.number }}</span>
-                </Button>
+                <span v-if="printState(order)" class="text-sm">{{ printState(order)!.label }}</span>
               </div>
               <SaveStatus :state="saves.state(order.id)" />
             </CardContent>
