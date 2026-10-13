@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowDown, ArrowUp } from "@lucide/vue";
 import type { MenuSectionDetail } from "#shared/types/backoffice";
+import type { SaveState } from "~/composables/useSaveState";
 
 /**
  * One section or sub-section on the sections page: order, visibility, name, SEO and
@@ -12,6 +13,8 @@ const props = defineProps<{
   last: boolean;
   /** sections a sub-section can move to (top level only) */
   parents: { id: string; name: string }[];
+  /** feedback of the last change to this section, shown right here */
+  status: SaveState | null;
 }>();
 const emit = defineEmits<{ patch: [body: Record<string, unknown>, message: string] }>();
 
@@ -35,13 +38,13 @@ function save() {
       name: draft.value.name,
       seo: { title: draft.value.title, description: draft.value.description, path: draft.value.path },
     },
-    `${draft.value.name} gespeichert.`,
+    `${draft.value.name} gespeichert`,
   );
 }
 function moveTo(value: unknown) {
   const parentId = value === "" ? null : String(value);
   const target = parentId ? props.parents.find((p) => p.id === parentId)?.name : "die Karte";
-  emit("patch", { parentId }, `${props.section.name} nach ${target} verschoben.`);
+  emit("patch", { parentId }, `${props.section.name} nach ${target} verschoben`);
 }
 const id = (part: string) => `${part}-${props.section.id}`;
 </script>
@@ -54,7 +57,7 @@ const id = (part: string) => `${part}-${props.section.id}`;
           variant="outline"
           size="icon"
           :disabled="first"
-          @click="emit('patch', { move: 'up' }, `${section.name} nach oben verschoben.`)"
+          @click="emit('patch', { move: 'up' }, `${section.name} nach oben verschoben`)"
         >
           <ArrowUp aria-hidden="true" /><span class="sr-only">{{ section.name }} nach oben</span>
         </Button>
@@ -62,27 +65,38 @@ const id = (part: string) => `${part}-${props.section.id}`;
           variant="outline"
           size="icon"
           :disabled="last"
-          @click="emit('patch', { move: 'down' }, `${section.name} nach unten verschoben.`)"
+          @click="emit('patch', { move: 'down' }, `${section.name} nach unten verschoben`)"
         >
           <ArrowDown aria-hidden="true" /><span class="sr-only">{{ section.name }} nach unten</span>
         </Button>
       </div>
       <p class="min-w-0 flex-1" :class="isSub ? 'font-medium' : 'font-semibold'">
         {{ section.name }}
-        <span class="font-normal text-muted-foreground">· {{ section.dishCount }} Gerichte</span>
-        <Badge v-if="!section.visible" variant="secondary" class="ml-1">ausgeblendet</Badge>
+        <span class="block text-sm font-normal text-muted-foreground sm:inline sm:text-base"
+          >{{ section.dishCount }} Gerichte</span
+        >
       </p>
-      <Switch
-        :model-value="section.visible"
-        :aria-label="`${section.name} im Shop zeigen`"
-        @update:model-value="
-          emit('patch', { visible: $event }, `${section.name} ${$event ? 'eingeblendet' : 'ausgeblendet'}.`)
-        "
-      />
+      <div class="flex items-center gap-2">
+        <Label :for="id('sichtbar')" class="font-normal" :class="{ 'text-muted-foreground': !section.visible }">
+          {{ section.visible ? "Im Shop sichtbar" : "Ausgeblendet" }}<span class="sr-only">: {{ section.name }}</span>
+        </Label>
+        <Switch
+          :id="id('sichtbar')"
+          :model-value="section.visible"
+          @update:model-value="
+            emit(
+              'patch',
+              { visible: $event },
+              `${section.name} ist ${$event ? 'wieder im Shop sichtbar' : 'ausgeblendet'}`,
+            )
+          "
+        />
+      </div>
     </div>
+    <SaveStatus :state="status" />
     <details>
-      <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-muted-foreground">
-        Name, Ort und SEO bearbeiten
+      <summary class="min-h-8 pointer-coarse:min-h-11 cursor-pointer py-2 text-sm text-muted-foreground">
+        Bearbeiten<span class="sr-only"> ({{ section.name }}: Name, Ort, Suchmaschinen)</span>
       </summary>
       <form class="mt-2 grid gap-4" @submit.prevent="save">
         <div class="grid gap-2">

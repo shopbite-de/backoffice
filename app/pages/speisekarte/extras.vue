@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ArrowLeft } from "@lucide/vue";
+import { ArrowLeft, ChevronDown } from "@lucide/vue";
 import type { ExtraGroup, ExtraGroupList, ExtraProduct } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "menu" });
 useHead({ title: "Extras-Gruppen" });
 const api = useBackofficeApi();
-const error = ref<string | null>(null);
-const saved = ref<string | null>(null);
+// feedback at the group that changed, "neu" at the create form
+const saves = useSaveState();
 const busy = ref<string | null>(null);
+// groups are closed by default: the name and what is in them is enough to find the right one
+const open = ref(new Set<string>());
+const toggleOpen = (id: string) => (open.value.has(id) ? open.value.delete(id) : open.value.add(id));
 const { data } = await useAsyncData("extra-groups", () => api<ExtraGroupList>("/api/extra-groups"));
 
 // every group is edited on its own copy and saved on its own
@@ -36,17 +39,11 @@ function toggle(list: string[], value: string, on: boolean) {
   if (!on && i >= 0) list.splice(i, 1);
 }
 
-async function run(key: string, action: () => Promise<void>) {
-  error.value = null;
-  saved.value = null;
+async function run(key: string, action: () => Promise<string>) {
   busy.value = key;
-  try {
-    await action();
-  } catch (e) {
-    error.value = errorMessage(e);
-  } finally {
-    busy.value = null;
-  }
+  let done = "Gespeichert";
+  await saves.run(key, async () => (done = await action()), done);
+  busy.value = null;
 }
 
 const save = (group: ExtraGroup) =>
@@ -56,14 +53,14 @@ const save = (group: ExtraGroup) =>
       body: drafts.value[group.id],
     });
     data.value = { ...data.value!, groups };
-    saved.value = `${drafts.value[group.id]?.name ?? group.name} gespeichert, gilt sofort an ${dishes(group.dishCount)}.`;
+    return `Gespeichert, gilt sofort an ${dishes(group.dishCount)}`;
   });
 
 const remove = (group: ExtraGroup) =>
   run(group.id, async () => {
     const groups = await api<ExtraGroup[]>(`/api/extra-groups/${group.id}`, { method: "DELETE" });
     data.value = { ...data.value!, groups };
-    saved.value = `${group.name} gelöscht.`;
+    return `${group.name} gelöscht`;
   });
 
 const newName = ref("");
@@ -76,9 +73,10 @@ const create = () =>
     });
     data.value = { ...data.value!, groups };
     newName.value = "";
-    saved.value = `${name} angelegt. Haken Sie jetzt die Extras an und speichern Sie.`;
+    open.value.add(id);
     await nextTick();
     document.getElementById(`name-${id}`)?.focus();
+    return `${name} angelegt. Haken Sie jetzt die Extras an und speichern Sie.`;
   });
 
 const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
@@ -96,23 +94,37 @@ const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
         das sind, legen Sie im Gericht unter Extras fest.
       </p>
     </div>
-    <ErrorAlert :message="error" />
-    <Alert v-if="saved" role="status"
-      ><AlertDescription>{{ saved }}</AlertDescription></Alert
-    >
-
     <p v-if="!data?.groups.length" class="text-muted-foreground">Noch keine Extras-Gruppen.</p>
 
     <Card v-for="group in data?.groups" :key="group.id">
       <CardContent class="space-y-4">
-        <template v-if="group.editable && drafts[group.id]">
+        <button
+          type="button"
+          class="flex min-h-8 w-full items-center gap-3 rounded-md text-left focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none pointer-coarse:min-h-11"
+          :aria-expanded="open.has(group.id)"
+          @click="toggleOpen(group.id)"
+        >
+          <ChevronDown
+            class="size-5 shrink-0 text-muted-foreground transition-transform"
+            :class="{ '-rotate-90': !open.has(group.id) }"
+            aria-hidden="true"
+          />
+          <span class="min-w-0 flex-1">
+            <span class="font-medium">{{ drafts[group.id]?.name ?? group.name }}</span>
+            <Badge variant="secondary" class="ml-2">an {{ dishes(group.dishCount) }}</Badge>
+            <span v-if="!open.has(group.id)" class="mt-1 block truncate text-sm text-muted-foreground">
+              {{ group.products.length ? group.products.map((p) => p.name).join(", ") : "Noch keine Extras" }}
+            </span>
+          </span>
+        </button>
+        <SaveStatus v-if="!open.has(group.id)" :state="saves.state(group.id)" />
+        <template v-if="open.has(group.id) && group.editable && drafts[group.id]">
           <form class="space-y-4" @submit.prevent="save(group)">
             <div class="flex flex-wrap items-end gap-2">
               <div class="grid min-w-48 flex-1 gap-2">
                 <Label :for="`name-${group.id}`">Name der Gruppe</Label>
                 <Input :id="`name-${group.id}`" v-model="drafts[group.id]!.name" required />
               </div>
-              <Badge variant="secondary">an {{ dishes(group.dishCount) }}</Badge>
             </div>
             <fieldset>
               <legend class="mb-2 text-sm font-medium">
@@ -145,14 +157,11 @@ const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
                 Gruppe löschen
               </Button>
               <span v-if="changed(group)" class="text-sm text-muted-foreground">Nicht gespeichert</span>
+              <SaveStatus :state="saves.state(group.id)" />
             </div>
           </form>
         </template>
-        <template v-else>
-          <div class="flex flex-wrap items-center gap-2">
-            <p class="font-medium">{{ group.name }}</p>
-            <Badge variant="secondary">an {{ dishes(group.dishCount) }}</Badge>
-          </div>
+        <template v-else-if="open.has(group.id)">
           <p class="text-sm text-muted-foreground">
             Diese Gruppe wählt ihre Extras nach eigenen Regeln aus. Ändern geht nur in der Shopware Administration
             (Kataloge › Dynamische Produktgruppen).
@@ -170,6 +179,7 @@ const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
             <Input id="neu" v-model="newName" required placeholder="z. B. Nudel Extras" />
           </div>
           <Button type="submit" :disabled="busy === 'neu'">Anlegen</Button>
+          <SaveStatus class="basis-full" :state="saves.state('neu')" />
         </form>
       </CardContent>
     </Card>
