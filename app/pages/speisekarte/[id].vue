@@ -193,7 +193,7 @@ const diet = computed({
                 :model-value="form.sectionIds.includes(s.id)"
                 @update:model-value="toggle(form.sectionIds, s.id, $event === true)"
               />
-              <Label :for="`abschnitt-${s.id}`" class="font-normal">{{ s.name }}</Label>
+              <Label :for="`abschnitt-${s.id}`" class="flex-1 self-stretch font-normal">{{ s.name }}</Label>
             </div>
             <div
               v-for="child in s.children"
@@ -205,7 +205,7 @@ const diet = computed({
                 :model-value="form.sectionIds.includes(child.id)"
                 @update:model-value="toggle(form.sectionIds, child.id, $event === true)"
               />
-              <Label :for="`abschnitt-${child.id}`" class="font-normal"
+              <Label :for="`abschnitt-${child.id}`" class="flex-1 self-stretch font-normal"
                 ><span class="sr-only">{{ s.name }}, </span>{{ child.name }}</Label
               >
             </div>
@@ -229,7 +229,7 @@ const diet = computed({
                 :model-value="form.allergens.includes(a.key)"
                 @update:model-value="toggle(form.allergens, a.key, $event === true)"
               />
-              <Label :for="`allergen-${a.key}`" class="font-normal">
+              <Label :for="`allergen-${a.key}`" class="flex-1 self-stretch font-normal">
                 <span class="w-5 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
                 >{{ a.name }}
               </Label>
@@ -247,7 +247,7 @@ const diet = computed({
               :model-value="form.additives.includes(a.key)"
               @update:model-value="toggle(form.additives, a.key, $event === true)"
             />
-            <Label :for="`zusatz-${a.key}`" class="font-normal">
+            <Label :for="`zusatz-${a.key}`" class="flex-1 self-stretch font-normal">
               <span class="w-6 text-muted-foreground tabular-nums" aria-hidden="true">{{ a.code }}</span
               >{{ a.name }}
             </Label>
@@ -282,11 +282,11 @@ const diet = computed({
         </div>
         <div v-for="(option, o) in group.options" :key="o" class="flex flex-wrap items-end gap-2">
           <div class="grid min-w-40 flex-1 gap-2">
-            <Label :for="`opt-${g}-${o}`" class="font-normal">Auswahl</Label>
+            <Label :for="`opt-${g}-${o}`" class="flex-1 self-stretch font-normal">Auswahl</Label>
             <Input :id="`opt-${g}-${o}`" v-model="option.name" placeholder="z. B. Groß 40 cm" />
           </div>
           <div class="grid w-32 gap-2">
-            <Label :for="`auf-${g}-${o}`" class="font-normal">Aufpreis €</Label>
+            <Label :for="`auf-${g}-${o}`" class="flex-1 self-stretch font-normal">Aufpreis €</Label>
             <Input :id="`auf-${g}-${o}`" v-model="surcharges[g]![o]" inputmode="decimal" />
           </div>
           <Button variant="ghost" size="icon" @click="removeVariantOption(g, o)">
@@ -316,13 +316,13 @@ const diet = computed({
         <RadioGroup v-model="diet" class="flex flex-wrap gap-x-6">
           <div v-for="d in diets" :key="d.value" class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem :id="`diet-${d.value}`" :value="d.value" />
-            <Label :for="`diet-${d.value}`" class="font-normal">{{ d.label }}</Label>
+            <Label :for="`diet-${d.value}`" class="flex-1 self-stretch font-normal">{{ d.label }}</Label>
           </div>
         </RadioGroup>
       </fieldset>
       <div v-for="(prop, p) in form.properties" :key="p" class="flex flex-wrap items-end gap-2">
         <div class="grid w-48 gap-2">
-          <Label :for="`eig-${p}`" class="font-normal">Eigenschaft</Label>
+          <Label :for="`eig-${p}`" class="flex-1 self-stretch font-normal">Eigenschaft</Label>
           <Input :id="`eig-${p}`" v-model="prop.group" list="gruppen" placeholder="z. B. Küche" />
         </div>
         <div class="min-w-48 flex-1">
@@ -394,7 +394,7 @@ const diet = computed({
                 :model-value="extra.productIds.includes(c.id)"
                 @update:model-value="toggle(extra.productIds, c.id, $event === true)"
               />
-              <Label :for="`extra-${e}-${c.id}`" class="font-normal">{{ c.name }}</Label>
+              <Label :for="`extra-${e}-${c.id}`" class="flex-1 self-stretch font-normal">{{ c.name }}</Label>
             </div>
           </div>
         </fieldset>
@@ -407,18 +407,18 @@ const diet = computed({
     <FormSection title="Bestellung und Bon">
       <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
         <Checkbox id="upsell" v-model="form.upsell" />
-        <Label for="upsell" class="font-normal">Vor dem Bestellen als Ergänzung vorschlagen</Label>
+        <Label for="upsell" class="flex-1 self-stretch font-normal">Vor dem Bestellen als Ergänzung vorschlagen</Label>
       </div>
       <fieldset>
         <legend class="mb-2 text-sm font-medium">Auf dem Bon</legend>
         <RadioGroup v-model="form.printType" class="flex flex-wrap gap-x-6">
           <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem id="print-number" value="number" />
-            <Label for="print-number" class="font-normal">Nummer</Label>
+            <Label for="print-number" class="flex-1 self-stretch font-normal">Nummer</Label>
           </div>
           <div class="flex min-h-8 pointer-coarse:min-h-11 items-center gap-2">
             <RadioGroupItem id="print-label" value="label" />
-            <Label for="print-label" class="font-normal">Name</Label>
+            <Label for="print-label" class="flex-1 self-stretch font-normal">Name</Label>
           </div>
         </RadioGroup>
       </fieldset>
@@ -498,7 +498,7 @@ const diet = computed({
     </FormSection>
 
     <div
-      class="fixed inset-x-0 bottom-0 border-t bg-card/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:left-64"
+      class="fixed inset-x-0 bottom-[var(--nav-bottom)] border-t bg-card/95 px-4 py-3 backdrop-blur md:left-64 md:pb-[max(0.75rem,env(safe-area-inset-bottom))]"
     >
       <div class="mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 md:px-4">
         <Button type="submit" size="lg" class="w-full sm:w-auto" :disabled="saving">Speichern</Button>

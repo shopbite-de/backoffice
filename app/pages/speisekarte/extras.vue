@@ -129,7 +129,7 @@ const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
                     :model-value="drafts[group.id]!.productIds.includes(c.id)"
                     @update:model-value="toggle(drafts[group.id]!.productIds, c.id, $event === true)"
                   />
-                  <Label :for="`g-${group.id}-${c.id}`" class="font-normal">{{ c.name }}</Label>
+                  <Label :for="`g-${group.id}-${c.id}`" class="flex-1 self-stretch font-normal">{{ c.name }}</Label>
                 </div>
               </div>
             </fieldset>
