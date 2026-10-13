@@ -29,6 +29,7 @@ Im Backoffice steht das Logo klein über dem Namen des Restaurants: Das Restaura
 | `--border` / `--input` | `#e5e5e5` / `#8a8a8a` | Trennlinien / Rahmen von Eingabefeldern | Eingaben 3,45:1 (WCAG 1.4.11) |
 | `--warning` / `--warning-foreground` / `--warning-border` | `#fef9c3` / `#713f12` / `#ca8a04` | Hinweise (pausiert, Allergene fehlen), bewusst Gelb statt Orange | 8,1:1 |
 | `--destructive` | `#b91c1c` | Stornieren, Fehler | 6,5:1 |
+| `--success` | `#15803d` | "Gespeichert" direkt an der Änderung (`SaveStatus`) | 5,0:1 |
 
 Grautöne sind neutral (kein Blau- oder Braunstich), wie `neutral` in der Homepage.
 
@@ -45,6 +46,7 @@ Folgt der Einstellung des Geräts, umschaltbar (wie Gerät, Hell, Dunkel), gespe
 | `--input` | `#737373` | 3,5:1 |
 | `--warning` / `--warning-foreground` / `--warning-border` | `#3b2f07` / `#fde68a` / `#a16207` | 10,6:1 |
 | `--destructive` | `#f87171` | 6,0:1 |
+| `--success` | `#4ade80` | 9,6:1 |
 
 Logo im Dunkeln: `shopbite-logo-white.svg`.
 

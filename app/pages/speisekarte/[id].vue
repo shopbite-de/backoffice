@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ArrowLeft, Plus, X } from "@lucide/vue";
+import { useEventListener } from "@vueuse/core";
 import type { FoodLabel } from "#shared/utils/labels";
 import type { DishDetail, DishFormOptions, DishInput } from "#shared/types/backoffice";
 
@@ -7,8 +8,7 @@ definePageMeta({ capability: "menu" });
 const route = useRoute();
 const api = useBackofficeApi();
 const id = route.params.id as string;
-const error = ref<string | null>(null);
-const saved = ref<string | null>(null);
+const saves = useSaveState();
 const saving = ref(false);
 
 const [{ data: dish }, { data: options }] = await Promise.all([
@@ -24,32 +24,64 @@ const measures = ref({ width: "", height: "", length: "", weight: "" });
 const surcharges = ref<string[][]>([]);
 
 const toText = (n: number | null) => (n === null ? "" : String(n).replace(".", ","));
+// money always with cents, like in the menu list (10,50)
+const toMoney = (n: number | null) => (n === null ? "" : n.toFixed(2).replace(".", ","));
 const toNumber = (s: string) => {
   const n = Number(s.trim().replace(",", "."));
   return s.trim() === "" || !Number.isFinite(n) ? null : n;
 };
 
+// what was loaded, to tell unsaved changes apart (built from plain copies, so it tracks only the dish)
+const loaded = ref("");
+const editState = (f: unknown, price: string, m: unknown, sur: unknown) => JSON.stringify([f, price, m, sur]);
+
 watchEffect(() => {
   if (!dish.value) return;
   const { id: _id, number: _number, taxRate: _tax, ...input } = structuredClone(toRaw(dish.value));
-  form.value = input;
-  priceText.value = toText(input.price);
-  measures.value = {
+  const price = toMoney(input.price);
+  const m = {
     width: toText(input.dimensions.width),
     height: toText(input.dimensions.height),
     length: toText(input.dimensions.length),
     weight: toText(input.dimensions.weight),
   };
-  surcharges.value = input.variants.map((g) => g.options.map((o) => toText(o.surcharge)));
+  const sur = input.variants.map((g) => g.options.map((o) => toMoney(o.surcharge)));
+  loaded.value = editState(input, price, m, sur);
+  form.value = input;
+  priceText.value = price;
+  measures.value = m;
+  surcharges.value = sur;
 });
+const dirty = computed(
+  () => !!form.value && editState(form.value, priceText.value, measures.value, surcharges.value) !== loaded.value,
+);
+
+// unsaved changes are never lost silently: ask before leaving the page or closing the tab
+const leaveTo = ref<string | null>(null);
+let leaving = false;
+onBeforeRouteLeave((to) => {
+  if (!dirty.value || leaving) return true;
+  leaveTo.value = to.fullPath;
+  return false;
+});
+useEventListener(window, "beforeunload", (event) => {
+  if (dirty.value) event.preventDefault();
+});
+async function leave(saveFirst: boolean) {
+  const to = leaveTo.value;
+  leaveTo.value = null;
+  if (!to || (saveFirst && !(await save()))) return;
+  leaving = true;
+  await navigateTo(to);
+}
 
 function addVariantGroup() {
   form.value!.variants.push({ group: "Größe", options: [{ name: "", surcharge: 0 }] });
-  surcharges.value.push(["0"]);
+  surcharges.value.push(["0,00"]);
 }
 function addVariantOption(g: number) {
   form.value!.variants[g]!.options.push({ name: "", surcharge: 0 });
-  surcharges.value[g]!.push("0");
+  surcharges.value[g]!.push("0,00");
 }
 function removeVariantOption(g: number, o: number) {
   form.value!.variants[g]!.options.splice(o, 1);
@@ -66,14 +98,13 @@ function toggle(list: string[], value: string, on: boolean) {
   if (!on && i >= 0) list.splice(i, 1);
 }
 
-async function save() {
-  if (!form.value) return;
-  error.value = null;
-  saved.value = null;
+/** true when saved; the result shows in the save bar */
+async function save(): Promise<boolean> {
+  if (!form.value) return false;
   const price = toNumber(priceText.value);
   if (!price || price <= 0) {
-    error.value = "Bitte einen Preis wie 8,50 eingeben.";
-    return;
+    saves.set("dish", { kind: "error", message: "Bitte einen Preis wie 8,50 eingeben." });
+    return false;
   }
   const body: DishInput = {
     ...form.value,
@@ -96,14 +127,11 @@ async function save() {
     extras: form.value.extras.filter((e) => e.name.trim()),
   };
   saving.value = true;
-  try {
+  const ok = await saves.run("dish", async () => {
     dish.value = await api<DishDetail>(`/api/dishes/${id}`, { method: "PUT", body });
-    saved.value = `${dish.value.name} gespeichert.`;
-  } catch (e) {
-    error.value = errorMessage(e);
-  } finally {
-    saving.value = false;
-  }
+  });
+  saving.value = false;
+  return ok;
 }
 
 const variantCount = computed(
@@ -468,12 +496,32 @@ const diet = computed({
       </div>
     </FormSection>
 
-    <div class="fixed inset-x-0 bottom-0 border-t bg-card/95 px-4 py-3 backdrop-blur md:left-64">
-      <div class="mx-auto flex max-w-4xl flex-wrap items-center gap-3 md:px-4">
-        <Button type="submit" :disabled="saving">Speichern</Button>
-        <p v-if="saved" role="status" class="text-primary">{{ saved }}</p>
-        <ErrorAlert class="flex-1" :message="error" />
+    <div
+      class="fixed inset-x-0 bottom-0 border-t bg-card/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:left-64"
+    >
+      <div class="mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 md:px-4">
+        <Button type="submit" size="lg" class="w-full sm:w-auto" :disabled="saving">Speichern</Button>
+        <p v-if="dirty && saves.state('dish')?.kind !== 'saving'" class="text-sm font-medium pointer-coarse:text-base">
+          Ungespeicherte Änderungen
+        </p>
+        <SaveStatus :state="saves.state('dish')" />
       </div>
     </div>
+
+    <AlertDialog :open="!!leaveTo" @update:open="!$event && (leaveTo = null)">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Änderungen speichern?</AlertDialogTitle>
+          <AlertDialogDescription>
+            An {{ dish.name }} wurde etwas geändert und noch nicht gespeichert.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Weiter bearbeiten</AlertDialogCancel>
+          <AlertDialogAction variant="outline" @click="leave(false)">Nicht speichern</AlertDialogAction>
+          <AlertDialogAction @click="leave(true)">Speichern</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </form>
 </template>

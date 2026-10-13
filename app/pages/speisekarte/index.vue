@@ -5,27 +5,26 @@ import type { MenuDish, MenuSection } from "#shared/types/backoffice";
 definePageMeta({ capability: "menu" });
 useHead({ title: "Speisekarte" });
 const api = useBackofficeApi();
-const error = ref<string | null>(null);
-const saved = ref<string | null>(null);
 const { data: menu, refresh } = await useAsyncData("menu", () => api<MenuSection[]>("/api/menu"));
+// feedback per dish, below its row (the list is long, a message at the top would be out of sight)
+const saves = useSaveState();
 
 async function update(dish: MenuDish, change: { onMenu?: boolean; price?: number }) {
-  error.value = null;
-  saved.value = null;
-  try {
-    await api(`/api/products/${dish.id}`, { method: "PATCH", body: change });
-    saved.value = `${dish.name} gespeichert.`;
-  } catch (e) {
-    error.value = `${dish.name}: ${errorMessage(e)}`;
-  }
+  const done =
+    change.onMenu === undefined
+      ? `Preis ${euro(change.price!)} gespeichert`
+      : change.onMenu
+        ? "Steht wieder auf der Karte"
+        : "Von der Karte genommen";
+  await saves.run(dish.id, () => api(`/api/products/${dish.id}`, { method: "PATCH", body: change }), done);
   await refresh();
 }
 
 function savePrice(dish: MenuDish, event: Event) {
   const input = event.target as HTMLInputElement;
-  const price = Number(input.value.replace(",", "."));
+  const price = Number(input.value.trim().replace(",", "."));
   if (!Number.isFinite(price) || price <= 0) {
-    error.value = `${dish.name}: Bitte einen Preis wie 9,50 eingeben.`;
+    saves.set(dish.id, { kind: "error", message: "Bitte einen Preis wie 9,50 eingeben." });
     return;
   }
   if (price !== dish.price) update(dish, { price });
@@ -98,9 +97,6 @@ const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.alle
       </div>
     </div>
 
-    <ErrorAlert :message="error" />
-    <p role="status" class="sr-only">{{ saved }}</p>
-
     <section v-for="section in filtered" :key="section.id" :aria-labelledby="`s-${section.id}`" class="space-y-2">
       <h2 :id="`s-${section.id}`" class="font-semibold">{{ section.name }}</h2>
       <Card v-if="section.dishes.length" class="py-0">
@@ -109,6 +105,7 @@ const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.alle
             v-for="dish in section.dishes"
             :key="dish.id"
             :dish="dish"
+            :status="saves.state(dish.id)"
             @price="savePrice(dish, $event)"
             @on-menu="update(dish, { onMenu: $event })"
           />
@@ -122,6 +119,7 @@ const missing = computed(() => allDishes.value.filter((d) => d.onMenu && !d.alle
               v-for="dish in sub.dishes"
               :key="dish.id"
               :dish="dish"
+              :status="saves.state(dish.id)"
               @price="savePrice(dish, $event)"
               @on-menu="update(dish, { onMenu: $event })"
             />

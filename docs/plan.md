@@ -99,6 +99,23 @@ Sammel-Issue: [shopbite-de/backoffice#10](https://github.com/shopbite-de/backoff
 | `/admin` und Admin API von außen nur für ShopBite | shopware#13 |
 | Rollout Pizzeria La Fattoria (Zugänge, Allergene der Karte erfassen, vier Wochen ohne Shopware-Admin) | shopware#14 |
 
+### UX-Runde Handy und Tablet (2026-10-13)
+
+Nach dem Rollout bei La Fattoria: Analyse aller Seiten bei 390, 820 und 1180 px mit echter Karte. Zielgruppe sind Gastronomen ohne Technikbezug. Leitlinien: Rückmeldung immer dort, wo getippt wurde; nichts geht aus Versehen kaputt (Rückfrage, Warnung bei ungespeicherten Änderungen); nur zeigen, was jeden Tag gebraucht wird; Touch mindestens 44 px und 16 px Schrift; Alltagssprache.
+
+| Paket | Issue |
+|---|---|
+| P1 Sicherheit und sichtbare Rückmeldung (Stornieren mit Rückfrage, "Gespeichert" an der Zeile, Warnung bei ungespeicherten Änderungen) | backoffice#27 |
+| P2 Heute als Arbeitsplatz (Pause-Banner, Ton bei neuer Bestellung, Zahlung/Telefon/Navigation, zwei Spalten auf dem Tablet), zieht Teile aus Phase 3 vor | backoffice#28 |
+| P3 Grundgerüst Handy (untere Navigation, Touch-Größen) | backoffice#29 |
+| P4 Speisekarte (Sprungleiste, einklappbar, Filter "Allergene fehlen") | backoffice#30 |
+| P5 Gericht bearbeiten entschlacken (Allergen-Kacheln, "Weitere Einstellungen") | backoffice#31 |
+| P6 Öffnungszeiten (Ruhetag, Zeiten übernehmen, Feiertage aus Phase 3) | backoffice#32 |
+| P7 Abschnitte und Extras aufräumen | backoffice#33 |
+| P8 Alltagssprache | backoffice#34 |
+
+Entscheidungen: Ton nur auf dem Gerät mit offener "Heute"-Seite, abschaltbar. Untere Navigationsleiste auf dem Handy.
+
 ### Phase 2: Katalog komplett (M), Ziel: La Fattoria pflegt die Karte selbst
 1. Gericht anlegen, duplizieren, löschen; Fotos hochladen und sortieren.
 2. Heute ausverkauft: Custom Field `shopbite_sold_out_until` (Datum, damit kein nächtlicher Job nötig ist), Plugin lehnt es im Warenkorb ab, Storefront graut die Karte aus. Schalter direkt in der Speisekarten-Liste.
@@ -107,8 +124,8 @@ Sammel-Issue: [shopbite-de/backoffice#10](https://github.com/shopbite-de/backoff
 5. Weitere Rollen nach Bedarf (z. B. Fahrer, Filialleitung mit Karte nur für die eigene Filiale).
 
 ### Phase 3: Alltag (S–M)
-- Bestelldetail (Bon-Ansicht, Telefon, Zahlungsart und -status), Ton und Push-Benachrichtigung bei neuer Bestellung (PWA), "bis heute Abend pausieren".
-- Feiertage/Betriebsferien, Restaurant-Kontaktdaten.
+- Bon-Ansicht, Push-Benachrichtigung bei neuer Bestellung (PWA). Telefon, Zahlung, Ton und "bis heute Abend pausieren" kommen mit backoffice#28.
+- Restaurant-Kontaktdaten. Feiertage/Betriebsferien kommen mit backoffice#32.
 
 ### Phase 4: Lieferung (M–L)
 - Liefergebiete als PLZ-Liste mit Mindestbestellwert und Gebühr pro Zone; das Plugin übersetzt in Versandart-Preise/Regeln oder prüft selbst im Checkout. Ersetzt den Rule Builder und behebt das "Valide Lieferung"-Problem von La Fattoria.

@@ -38,6 +38,8 @@
   --warning: #fef9c3;
   --warning-foreground: #713f12;
   --warning-border: #ca8a04;
+  /* "Gespeichert" next to a change */
+  --success: #15803d;
 }
 
 /*
@@ -66,6 +68,7 @@
   --warning: #3b2f07;
   --warning-foreground: #fde68a;
   --warning-border: #a16207;
+  --success: #4ade80;
   color-scheme: dark;
 }
 
@@ -75,6 +78,7 @@
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-border: var(--warning-border);
+  --color-success: var(--success);
   --font-heading: var(--font-sans);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
