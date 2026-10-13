@@ -94,7 +94,9 @@ const dishes = (n: number) => (n === 1 ? "1 Gericht" : `${n} Gerichten`);
         das sind, legen Sie im Gericht unter Extras fest.
       </p>
     </div>
-    <p v-if="!data?.groups.length" class="text-muted-foreground">Noch keine Extras-Gruppen.</p>
+    <p v-if="!data?.groups.length" class="text-muted-foreground">
+      Noch keine Extras-Gruppen. Legen Sie unten die erste an, z. B. „Pizza Extras“, und haken Sie die Extras an.
+    </p>
 
     <Card v-for="group in data?.groups" :key="group.id">
       <CardContent class="space-y-4">
