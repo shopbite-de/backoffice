@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 
-/** Response header that tells the app a storefront still shows the old menu. */
+/** Response header that tells the app a storefront still shows old data. */
 export const STALE_HEADER = "x-storefront-stale";
 
 export type PurgeTarget = { products?: string[]; categories?: string[]; layout?: boolean };
