@@ -37,6 +37,12 @@ describe("purgeStorefronts", () => {
     expect(headers).toEqual({});
   });
 
+  it("passes a layout-only target through", async () => {
+    config = { storefrontUrls: "https://a.de", cachePurgeSecret: "s3cret" };
+    await purgeStorefronts(event, { layout: true });
+    expect(calls[0]!.options.body).toEqual({ layout: true });
+  });
+
   it("marks the response when a storefront does not answer", async () => {
     config = { storefrontUrls: "https://a.de,https://down.de", cachePurgeSecret: "s3cret" };
     await expect(purgeStorefronts(event)).resolves.toBeUndefined();

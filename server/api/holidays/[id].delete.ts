@@ -10,5 +10,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: "Schließtag nicht gefunden" });
   }
   await adminApi(event, `/shopbite-holiday/${id}`, { method: "DELETE" });
+  await purgeStorefronts(event, { layout: true });
   return { ok: true };
 });

@@ -17,5 +17,6 @@ export default defineEventHandler(async (event) => {
     `/_action/shopbite/settings/${channel.id}`,
     { method: "PATCH", body },
   );
+  await purgeStorefronts(event, { layout: true });
   return { orderingOpen, deliveryMinutes } satisfies ShopSettings;
 });
