@@ -49,5 +49,6 @@ export default defineEventHandler(async (event) => {
     });
   }
   await adminApi(event, "/_action/sync", { method: "POST", body: operations });
+  await purgeStorefronts(event, { layout: true });
   return { ok: true };
 });

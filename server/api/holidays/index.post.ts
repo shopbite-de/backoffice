@@ -15,5 +15,6 @@ export default defineEventHandler(async (event): Promise<Holiday> => {
     method: "POST",
     body: { id, salesChannelId: channel.id, start: toStored(start), end: toStored(end) },
   });
+  await purgeStorefronts(event, { layout: true });
   return { id, start, end };
 });
