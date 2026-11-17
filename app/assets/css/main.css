@@ -9,7 +9,7 @@
 @custom-variant data-unchecked (&[data-state="unchecked"]);
 
 /*
- * ShopBite CI (docs/ci.md, source: homepage). Brand orange #ff5b00 is only
+ * ShopBite CI (docs/ci.md, source: shopbite.de). Brand orange #ff5b00 is only
  * 3.1:1 on white, so text and filled controls use #cc4800 (4.67:1 with white
  * text) and text on the orange tint #a33a00 (5.96:1). Ink is the logo grey.
  */

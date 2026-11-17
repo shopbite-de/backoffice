@@ -2,7 +2,7 @@
 
 Stand 2026-10-11. Gilt für die Oberflächen von ShopBite selbst: Homepage, Doku, Backoffice. **Nicht** für die Shops der Restaurants: Die Storefront trägt die Marke des Restaurants (Presets Trattoria, Grill, Asia).
 
-Quelle ist die Homepage (`homepage/app/assets/css/main.css`, `app/app.config.ts`, Logos in `homepage/public/images/`). Ändert sich dort etwas, wird diese Datei angepasst.
+Quelle ist die Website shopbite.de (Farben, Schrift, Logos). Ändert sich dort etwas, wird diese Datei angepasst.
 
 ## Logo
 

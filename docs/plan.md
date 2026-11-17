@@ -131,7 +131,7 @@ Entscheidungen: Ton nur auf dem Gerät mit offener "Heute"-Seite, abschaltbar. U
 - Liefergebiete als PLZ-Liste mit Mindestbestellwert und Gebühr pro Zone; das Plugin übersetzt in Versandart-Preise/Regeln oder prüft selbst im Checkout. Ersetzt den Rule Builder und behebt das "Valide Lieferung"-Problem von La Fattoria.
 
 ### Phase 5: Wachstum
-- Gutscheine, Auswertungen (Umsatz, Top-Gerichte), Lead-Demos mit Demo-Zugang.
+- Gutscheine, Auswertungen (Umsatz, Top-Gerichte), Demo-Shops mit Demo-Zugang für interessierte Restaurants.
 
 ## Risiken und Antworten
 
