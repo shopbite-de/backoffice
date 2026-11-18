@@ -40,11 +40,13 @@ export default defineNuxtConfig({
     registerType: "autoUpdate",
     manifest: false,
     client: { installPrompt: true },
-    workbox: {
+    generateSW: {
       navigateFallback: "/",
       navigateFallbackDenylist: [/^\/api\//],
       globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
       runtimeCaching: [],
+      // was the default of the 1.x module; drops precaches of older Workbox versions
+      cleanupOutdatedCaches: true,
     },
   },
   // the SPA shell as a file, so the service worker can serve it offline
