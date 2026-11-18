@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Fingerprint, Smartphone, Trash2 } from "@lucide/vue";
 import { browserSupportsWebAuthn, startRegistration } from "@simplewebauthn/browser";
+import { FetchError } from "ofetch";
 import type { PasskeyList } from "#shared/types/backoffice";
 
 useHead({ title: "Mein Zugang" });
@@ -26,14 +27,32 @@ onMounted(() => {
   installed.value = window.matchMedia("(display-mode: standalone)").matches;
 });
 
+// adding a device needs the password once more (the plugin asks for a fresh password check);
 // the device is named from the browser (iPhone, Android, Windows): nobody has to type a name
+const askPassword = ref(false);
+const password = ref("");
+async function startSetUp() {
+  saves.set("geraet", null);
+  askPassword.value = true;
+  await nextTick();
+  document.getElementById("passkey-password")?.focus();
+}
+function cancelSetUp() {
+  askPassword.value = false;
+  password.value = "";
+  saves.set("geraet", null);
+}
+
 async function setUp() {
   pending.value = true;
   saves.set("geraet", { kind: "saving", message: "Bitte am Gerät bestätigen…" });
   try {
     const optionsJSON = await api<Parameters<typeof startRegistration>[0]["optionsJSON"]>("/api/passkeys/options", {
       method: "POST",
+      body: { password: password.value },
     });
+    password.value = "";
+    askPassword.value = false;
     const credential = await startRegistration({ optionsJSON });
     await api("/api/passkeys", { method: "POST", body: { name: deviceName.value, credential } });
     saves.set("geraet", {
@@ -42,6 +61,11 @@ async function setUp() {
     });
     await refresh();
   } catch (e) {
+    // wrong or expired password confirmation: ask again
+    if (e instanceof FetchError && (e.statusCode === 400 || e.data?.data?.passwordRequired)) {
+      password.value = "";
+      askPassword.value = true;
+    }
     // null: the person cancelled at the device, nothing to report
     const message = passkeyErrorMessage(e);
     saves.set("geraet", message ? { kind: "error", message } : null);
@@ -84,13 +108,33 @@ const date = (value: string | null) =>
       <p v-else-if="!supported" class="text-muted-foreground">
         Dieser Browser kann das nicht. Auf dem Handy oder Tablet geht es mit Safari oder Chrome.
       </p>
-      <form v-else class="flex flex-wrap items-center gap-3" @submit.prevent="setUp">
-        <Button type="submit" size="lg" class="w-full sm:w-auto" :disabled="pending">
+      <form v-else-if="askPassword" class="space-y-3" @submit.prevent="setUp">
+        <!-- lets password managers fill the right account -->
+        <input type="text" name="username" autocomplete="username" :value="auth?.username" hidden />
+        <div class="max-w-sm space-y-2">
+          <Label for="passkey-password">Zur Sicherheit: Ihr Passwort</Label>
+          <Input id="passkey-password" v-model="password" type="password" autocomplete="current-password" required />
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <Button type="submit" size="lg" class="w-full sm:w-auto" :disabled="pending">
+            <Fingerprint aria-hidden="true" />Weiter
+          </Button>
+          <Button variant="ghost" size="lg" class="w-full sm:w-auto" :disabled="pending" @click="cancelSetUp">
+            Abbrechen
+          </Button>
+        </div>
+        <p class="text-sm text-muted-foreground">
+          Wird gespeichert als „{{ deviceName }}“. Nach einer Änderung des Passworts das Gerät bitte neu einrichten.
+        </p>
+        <SaveStatus :state="saves.state('geraet')" />
+      </form>
+      <div v-else class="flex flex-wrap items-center gap-3">
+        <Button size="lg" class="w-full sm:w-auto" :disabled="pending" @click="startSetUp">
           <Fingerprint aria-hidden="true" />Dieses Gerät einrichten
         </Button>
         <p class="text-sm text-muted-foreground">Wird gespeichert als „{{ deviceName }}“.</p>
         <SaveStatus class="basis-full" :state="saves.state('geraet')" />
-      </form>
+      </div>
 
       <ul v-if="data?.passkeys.length" class="divide-y rounded-lg border">
         <li v-for="passkey in data.passkeys" :key="passkey.id" class="flex flex-wrap items-center gap-3 px-3 py-2">

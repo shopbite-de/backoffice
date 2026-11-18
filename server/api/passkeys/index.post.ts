@@ -8,8 +8,5 @@ const Body = z.object({
 
 export default defineEventHandler(async (event) => {
   const { name, credential } = await readValidBody(event, Body);
-  return adminApi<{ id: string }>(event, "/_action/shopbite/passkey/register", {
-    method: "POST",
-    body: { name, credential },
-  });
+  return finishPasskeyRegistration(event, { name, credential });
 });

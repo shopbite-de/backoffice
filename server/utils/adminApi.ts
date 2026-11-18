@@ -90,21 +90,62 @@ export async function adminApi<T>(
   path: string,
   options: Parameters<typeof $fetch>[1] = {},
 ): Promise<T> {
-  const call = async (token: string) =>
-    $fetch<T>(`${baseUrl()}/api${path}`, {
-      ...options,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        ...(options.headers as Record<string, string> | undefined),
-      },
-    } as Parameters<typeof $fetch>[1]) as Promise<T>;
-
+  const call = (token: string) => callShopware<T>(token, path, options);
   try {
     return await call(await accessToken(event));
   } catch (error) {
     if (error instanceof FetchError && error.statusCode === 401) {
       return call(await accessToken(event, true));
+    }
+    throw toH3Error(error);
+  }
+}
+
+function callShopware<T>(token: string, path: string, options: Parameters<typeof $fetch>[1] = {}) {
+  return $fetch<T>(`${baseUrl()}/api${path}`, {
+    ...options,
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      ...(options.headers as Record<string, string> | undefined),
+    },
+  } as Parameters<typeof $fetch>[1]) as Promise<T>;
+}
+
+/**
+ * A password login with the scope "user-verified", which Shopware (and the ShopBite plugin for
+ * passkey registration) asks for before changes to the own user. Only its access token is used,
+ * for one action; it never replaces the session's tokens, and a refresh would drop the scope.
+ */
+export function requestVerifiedToken(username: string, password: string) {
+  return requestToken({ grant_type: "password", scope: "write user-verified", username, password });
+}
+
+/** The person has to confirm the password (again) before this action. */
+export const passwordRequired = () =>
+  createError({
+    statusCode: 403,
+    statusMessage: "Bitte zur Sicherheit Ihr Passwort eingeben",
+    data: { passwordRequired: true },
+  });
+
+/**
+ * Like adminApi(), but with an explicit token (a verified one) and without the refresh retry:
+ * an expired or unverified token means asking for the password again.
+ */
+export async function adminApiWithToken<T>(
+  token: string,
+  path: string,
+  options: Parameters<typeof $fetch>[1] = {},
+): Promise<T> {
+  try {
+    return await callShopware<T>(token, path, options);
+  } catch (error) {
+    if (error instanceof FetchError) {
+      const code = (error.data as { errors?: { code?: string }[] } | undefined)?.errors?.[0]?.code;
+      if (error.statusCode === 401 || (error.statusCode === 403 && code === "FRAMEWORK__INVALID_SCOPE_ACCESS_TOKEN")) {
+        throw passwordRequired();
+      }
     }
     throw toH3Error(error);
   }

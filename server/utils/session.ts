@@ -17,6 +17,9 @@ export interface BackofficeSession {
   refreshToken?: string;
   expiresAt?: number;
   channelId?: string;
+  /** Access token of a password confirmation (scope user-verified), for one passkey registration */
+  verifiedToken?: string;
+  verifiedUntil?: number;
 }
 
 export function useShopwareSession(event: H3Event) {
