@@ -44,5 +44,8 @@
   "trustedDependencies": [
     "@parcel/watcher",
     "esbuild"
-  ]
+  ],
+  "overrides": {
+    "rollup": "4.68.5"
+  }
 }
