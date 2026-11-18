@@ -13,10 +13,15 @@ const AREAS: [prefix: string, capability: Capability][] = [
   ["/api/holidays", "hours"],
 ];
 
-/** Every /api route except login and session needs a logged-in user with the right role. */
+/**
+ * Every write to /api must come from this app (requestGuard.ts), login included. Every /api
+ * route except login and session needs a logged-in user with the right role.
+ */
 export default defineEventHandler(async (event) => {
   const path = getRequestURL(event).pathname;
-  if (!path.startsWith("/api/") || path.startsWith("/api/auth/")) return;
+  if (!path.startsWith("/api/")) return;
+  assertSameOriginWrite(event);
+  if (path.startsWith("/api/auth/")) return;
   const session = await useShopwareSession(event);
   if (!session.data.refreshToken) {
     throw createError({ statusCode: 401, statusMessage: "Nicht angemeldet" });

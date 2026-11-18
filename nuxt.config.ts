@@ -49,6 +49,18 @@ export default defineNuxtConfig({
       cleanupOutdatedCaches: true,
     },
   },
+  // on every response, the app shell and /api alike
+  routeRules: {
+    "/**": {
+      headers: {
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "frame-ancestors 'none'",
+        "Referrer-Policy": "same-origin",
+      },
+    },
+  },
   // the SPA shell as a file, so the service worker can serve it offline
   nitro: { prerender: { routes: ["/"] } },
   runtimeConfig: {
@@ -60,6 +72,11 @@ export default defineNuxtConfig({
     // storefronts whose cache is emptied after a menu change (storefront#484)
     storefrontUrls: "", // NUXT_STOREFRONT_URLS, "https://shop-a.de,https://shop-b.de"
     cachePurgeSecret: "", // NUXT_CACHE_PURGE_SECRET, same value as in the storefronts
+    // public address(es) of this backoffice, comma separated; writes from any other origin are refused.
+    // Empty = the request's Host header (the reverse proxy passes it through unchanged).
+    origin: "", // NUXT_ORIGIN, "https://backoffice.mein-restaurant.de"
+    // reverse proxies in front of the container that append to X-Forwarded-For (login rate limit)
+    trustedProxies: 1, // NUXT_TRUSTED_PROXIES, 0 = reachable directly
     session: {
       password: "", // NUXT_SESSION_PASSWORD, at least 32 characters
       // NUXT_SESSION_SECURE=false only for plain http outside localhost-aware browsers (quickstart)

@@ -29,7 +29,7 @@ Installation Pizzeria La Fattoria (ein Dokploy-Stack)
 ├── Shopware          Commerce-Kern, Admin nur noch für ShopBite
 ├── Storefront(s)     eine pro Filiale, je ein Sales Channel
 ├── Order Printer     Bon-Drucker
-└── Backoffice        z. B. backoffice.pizzeria-lafattoria.de, für das Personal
+└── Backoffice        z. B. backoffice.mein-restaurant.de, für das Personal
 ```
 
 Die Shopware Administration bleibt bestehen, aber nur für das ShopBite-Team (Einrichtung, Zahlungsarten, Steuern, Mail-Vorlagen, Notfälle).

@@ -110,17 +110,19 @@ export async function adminApi<T>(
   }
 }
 
-function toH3Error(error: unknown) {
+/** Shopware's error text stays in the server log; the browser gets a plain German message. */
+export function toH3Error(error: unknown) {
   if (error instanceof FetchError) {
     const detail = (error.data as { errors?: { detail?: string }[] } | undefined)?.errors?.[0]?.detail;
-    // the missing privilege is only for the server log, not for the restaurant
-    if (error.statusCode === 403) console.warn("[shopware 403]", detail);
+    console.warn(`[shopware ${error.statusCode ?? "unreachable"}]`, detail ?? error.message);
     return createError({
       statusCode: error.statusCode ?? 502,
       statusMessage:
         error.statusCode === 403
           ? "Dafür fehlt dieser Anmeldung die Berechtigung"
-          : (detail ?? "Shopware hat die Anfrage abgelehnt"),
+          : !error.statusCode || error.statusCode >= 500
+            ? "Shopware ist gerade nicht erreichbar"
+            : "Shopware hat die Anfrage abgelehnt",
     });
   }
   return error;

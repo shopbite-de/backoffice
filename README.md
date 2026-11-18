@@ -11,7 +11,7 @@ cd ../shopbite && docker compose up -d                       # Shopware :8000, S
 cd ../backoffice
 python3 -I scripts/add-poc-channel.py http://localhost:8000   # zweite Filiale "ShopBite Abholung"
 python3 -I scripts/create-poc-users.py http://localhost:8000  # Rollen Management + Personal, drei Benutzer
-cp .env.example .env                                          # NUXT_SESSION_PASSWORD setzen (>= 32 Zeichen), NUXT_SALES_CHANNELS optional
+cp .env.example .env                                          # NUXT_SESSION_PASSWORD setzen (openssl rand -hex 32), NUXT_SALES_CHANNELS optional
 bun install
 bun run dev                                                   # http://localhost:3010
 ```
@@ -70,7 +70,9 @@ Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigene
 | `NUXT_SALES_CHANNELS` | optional `channelId,…`, Auswahl und Reihenfolge der Filialen; leer = alle aktiven Sales Channels. Die Speisekarte jeder Filiale kommt aus der Plugin-Konfiguration („Kategorie der Speisekarte“, sonst die Navigationskategorie); `channelId:menuCategoryId` überschreibt sie |
 | `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://mein-restaurant.de`); nach jeder Änderung an Karte, Bestellschalter, Lieferzeit, Öffnungszeiten oder Schließtagen leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst später (Karte und Navigation nach bis zu 24 Stunden, Bestellschalter und Lieferzeit nach bis zu 60 Sekunden, Öffnungszeiten und Schließtage nach bis zu 5 Minuten) |
 | `NUXT_CACHE_PURGE_SECRET` | derselbe Schlüssel wie `NUXT_CACHE_PURGE_SECRET` in den Storefronts (`openssl rand -hex 32`) |
-| `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 Zeichen |
+| `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 zufällige Zeichen (`openssl rand -hex 32`); Platzhalter und einfache Muster lassen den Server nicht starten |
+| `NUXT_ORIGIN` | öffentliche Adresse des Backoffice (z. B. `https://backoffice.mein-restaurant.de`, mehrere mit Komma); schreibende `/api`-Anfragen von anderen Seiten werden abgelehnt. Leer = Vergleich mit dem `Host`-Header |
+| `NUXT_TRUSTED_PROXIES` | Anzahl Reverse Proxies vor dem Container, die `X-Forwarded-For` ergänzen (Standard `1`, Traefik); das Login-Rate-Limit nimmt den Eintrag, den der äußerste davon angehängt hat. `0` = direkt erreichbar |
 | `NUXT_SESSION_SECURE` | `false` nur für einen lokalen Stack ohne HTTPS (Quickstart), sonst weglassen |
 
 ## Betrieb (Docker)
@@ -91,13 +93,17 @@ Ein zusätzlicher Dienst im Stack des Restaurants, neben Shopware, Storefront un
       NUXT_RESTAURANT_NAME: Mein Restaurant
       NUXT_SALES_CHANNELS: ""                       # leer = alle aktiven Filialen
       NUXT_SESSION_PASSWORD: ${BACKOFFICE_SESSION_PASSWORD}   # openssl rand -hex 32
+      NUXT_ORIGIN: https://backoffice.mein-restaurant.de      # öffentliche Adresse, Schreibzugriffe nur von hier
+      NUXT_TRUSTED_PROXIES: "1"                     # Reverse Proxies vor dem Container (Traefik)
       NUXT_STOREFRONT_URLS: https://mein-restaurant.de
       NUXT_CACHE_PURGE_SECRET: ${CACHE_PURGE_SECRET}          # derselbe Wert wie in der Storefront
 ```
 
 Wichtig:
 
-- Nur über HTTPS hinter dem Reverse Proxy (Traefik in Dokploy) erreichbar machen, z. B. `backoffice.mein-restaurant.de`. Das Session-Cookie ist `Secure`, die Passkey-Anmeldung braucht HTTPS, und das Login-Rate-Limit liest die IP aus `X-Forwarded-For`.
+- Nur über HTTPS hinter dem Reverse Proxy (Traefik in Dokploy) erreichbar machen, z. B. `backoffice.mein-restaurant.de`. Das Session-Cookie ist `Secure`, die Passkey-Anmeldung braucht HTTPS. Das Login-Rate-Limit nimmt die IP, die der eigene Reverse Proxy in `X-Forwarded-For` anhängt (der Eintrag ganz rechts, bei `NUXT_TRUSTED_PROXIES=2` der zweite von rechts); was der Browser selbst mitschickt, zählt nicht. Ohne Proxy davor `NUXT_TRUSTED_PROXIES=0`.
+- `NUXT_ORIGIN` auf die öffentliche Adresse setzen: Schreibende Anfragen an `/api` (auch der Login) werden nur angenommen, wenn der Browser sie als von dieser Adresse kommend ausweist (`Origin` oder `Sec-Fetch-Site: same-origin`). Leer vergleicht mit dem `Host`-Header, den Traefik unverändert weitergibt.
+- `NUXT_SESSION_PASSWORD` zufällig erzeugen (`openssl rand -hex 32`): Platzhalter wie der alte Wert aus `.env.example` oder einfache Muster lassen den Server nicht starten.
 - Für Passkeys in der Plugin-Konfiguration `passkeyRpId` (Host des Backoffice) und `passkeyOrigins` (`https://…`) setzen.
 - Benutzer legt das Plugin an (`bin/console shopbite:staff:create`), das Backoffice kann das nicht.
 - Shopware Administration und Admin API von außen sperren, sobald das Personal nur noch das Backoffice nutzt (shopware#13): Das Backoffice erzwingt die Filialbindung, Shopware nicht.

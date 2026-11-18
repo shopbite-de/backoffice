@@ -21,16 +21,14 @@ export interface BackofficeSession {
 
 export function useShopwareSession(event: H3Event) {
   const { session } = useRuntimeConfig(event);
-  if (session.password.length < 32) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "NUXT_SESSION_PASSWORD must have at least 32 characters",
-    });
-  }
+  const problem = sessionPasswordProblem(session.password);
+  if (problem) throw createError({ statusCode: 500, statusMessage: problem });
   return useSession<BackofficeSession>(event, {
     name: "sb-backoffice",
     password: session.password,
     maxAge: 60 * 60 * 24 * 7,
+    // only the cookie carries the session, never a request header
+    sessionHeader: false,
     cookie: { httpOnly: true, sameSite: "lax", secure: !import.meta.dev && session.secure !== false },
   });
 }
