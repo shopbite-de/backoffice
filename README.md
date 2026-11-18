@@ -48,7 +48,7 @@ Erneut ausführen aktualisiert die Daten. Funktioniert mit jedem ShopBite-Shop, 
 
 ## Anmeldung mit Fingerabdruck oder Face ID
 
-Unter „Mein Zugang“ richtet jede Person ihr Gerät einmal ein, danach meldet sie sich ohne Passwort an (Passkey, WebAuthn). Die Prüfung macht das ShopBite-Plugin (shopware-plugin#38), das Backoffice reicht nur durch. Voraussetzung in der Plugin-Konfiguration der Shopware: Host des Backoffice als Relying-Party-ID und seine URL als Origin, lokal:
+Unter „Mein Zugang“ richtet jede Person ihr Gerät einmal ein, danach meldet sie sich ohne Passwort an (Passkey, WebAuthn). Die Prüfung macht das ShopBite-Plugin (shopware-plugin#38), das Backoffice reicht nur durch. Vor dem Einrichten fragt das Backoffice noch einmal nach dem Passwort: das Plugin verlangt dafür eine frische Passwortprüfung (Token mit Scope `user-verified`), die nur für diese eine Einrichtung gilt. Ändert sich das Passwort oder wird der Zugang gesperrt, entfernt das Plugin alle Passkeys der Person. Voraussetzung in der Plugin-Konfiguration der Shopware: Host des Backoffice als Relying-Party-ID und seine URL als Origin, lokal:
 
 ```bash
 docker exec -w /var/www/html sb-lafattoria-shopware-1 php bin/console system:config:set ShopBitePlugin.config.passkeyRpId localhost
