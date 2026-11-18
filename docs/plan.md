@@ -28,7 +28,7 @@ Erlebniswelten, Themes, Steuern, Zahlungsarten einrichten, Mail-Vorlagen, Rule B
 ```
 Installation Pizzeria La Fattoria (ein Dokploy-Stack)
 ┌────────────────────────────────────────────────────────────────┐
-│  Browser (SPA) ── backoffice.pizzeria-lafattoria.de             │
+│  Browser (SPA) ── backoffice.mein-restaurant.de                 │
 │     │  Session-Cookie, nur /api/* des Backoffice                │
 │     ▼                                                          │
 │  backoffice (Nitro, BFF) ──internes Netz──► Shopware Admin API  │

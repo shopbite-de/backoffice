@@ -48,9 +48,25 @@ export class LoginLimiter {
 
 const limiter = new LoginLimiter();
 
-/** The keys of one login attempt. Behind the reverse proxy the client IP is in X-Forwarded-For. */
+/**
+ * The client address from X-Forwarded-For. Its left entries are whatever the client sent, so
+ * only the entry appended by our own reverse proxy counts: with `trustedProxies` proxies in front
+ * of the container (default 1, Traefik) that is the `trustedProxies`-th entry from the right.
+ * 0 = no proxy, the socket address is the client.
+ */
+export function clientIpFrom(forwardedFor: string | undefined, socketIp: string | undefined, trustedProxies: number) {
+  const hops = (forwardedFor ?? "")
+    .split(",")
+    .map((ip) => ip.trim())
+    .filter(Boolean);
+  if (trustedProxies <= 0 || !hops.length) return socketIp;
+  return hops[Math.max(0, hops.length - trustedProxies)];
+}
+
+/** The keys of one login attempt. */
 export function loginKeys(event: H3Event, username: string) {
-  const ip = getRequestIP(event, { xForwardedFor: true }) ?? "unknown";
+  const trustedProxies = Number(useRuntimeConfig(event).trustedProxies ?? 1);
+  const ip = clientIpFrom(getRequestHeader(event, "x-forwarded-for"), getRequestIP(event), trustedProxies) ?? "unknown";
   return [
     { key: `user:${username.trim().toLowerCase()}`, limit: LIMITS.user },
     { key: `ip:${ip}`, limit: LIMITS.ip },
