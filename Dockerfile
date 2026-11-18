@@ -4,7 +4,9 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 COPY . .
-RUN bun run build
+# Node runs the Nuxt build, as in CI and local development (@vite-pwa/nuxt needs
+# node:module findPackageJSON, which Bun does not provide); the runtime stays Bun only
+RUN apk add --no-cache nodejs && bun run build
 
 FROM oven/bun:1.4.4-alpine
 WORKDIR /app
