@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { ShopSettings } from "#shared/types/backoffice";
+import { SHARED_METHOD_HINT } from "#shared/utils/leadTimes";
 
 const Body = z
   .object({
@@ -23,6 +24,12 @@ export default defineEventHandler(async (event) => {
   const settings = await adminApi<ShopSettings>(event, `/_action/shopbite/settings/${channel.id}`, {
     method: "PATCH",
     body,
+  }).catch((error: unknown) => {
+    // the plugin's detail stays in the server log (toH3Error); a lead time is refused for a shared method only
+    if (body.leadTimes && (error as { statusCode?: number }).statusCode === 403) {
+      throw createError({ statusCode: 403, statusMessage: SHARED_METHOD_HINT });
+    }
+    throw error;
   });
   await purgeStorefronts(event, { layout: true });
   return toShopSettings(settings);

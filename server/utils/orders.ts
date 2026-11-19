@@ -31,7 +31,11 @@ export interface ShopwareOrder {
   lineItems: LineItem[];
   addresses: OrderAddress[];
   deliveries: {
-    shippingMethod: { customFields: Record<string, unknown> | null } | null;
+    shippingMethod: {
+      customFields: Record<string, unknown> | null;
+      // custom fields merged over the language fallback, as Shopware reads them
+      translated?: { customFields?: Record<string, unknown> | null };
+    } | null;
     shippingOrderAddress: OrderAddress | null;
   }[];
   transactions: {
@@ -73,7 +77,7 @@ export const ORDER_INCLUDES = {
   order_delivery: ["shippingMethod", "shippingOrderAddress"],
   order_transaction: ["createdAt", "paymentMethod", "stateMachineState"],
   payment_method: ["distinguishableName", "name"],
-  shipping_method: ["customFields"],
+  shipping_method: ["customFields", "translated"],
   order_address: ["id", "street", "zipcode", "city", "phoneNumber"],
 };
 
@@ -131,7 +135,8 @@ export function splitComment(comment: string | null): { wishedTime: string | nul
 
 /** Pickup or delivery is the shipping method's custom field `shopbite_fulfillment` (ShopBite plugin); without it, delivery. */
 export function isPickup(method: ShopwareOrder["deliveries"][number]["shippingMethod"]): boolean {
-  return method?.customFields?.shopbite_fulfillment === "pickup";
+  const fields = method?.translated?.customFields ?? method?.customFields;
+  return fields?.shopbite_fulfillment === "pickup";
 }
 
 export function toOrderSummary(order: ShopwareOrder, channelName: Map<string, string>): OrderSummary {
