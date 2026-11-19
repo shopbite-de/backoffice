@@ -110,8 +110,23 @@ describe("toOrderSummary", () => {
     expect(mode(null).mode).toBe("lieferung");
   });
 
+  it("reads the fulfillment from the translated custom fields, like Shopware merges them", () => {
+    const mode = (shippingMethod: ShopwareOrder["deliveries"][number]["shippingMethod"]) =>
+      toOrderSummary({ ...base, deliveries: [{ ...base.deliveries[0]!, shippingMethod }] }, channels).mode;
+    // set only in the default language: the raw field of another language is empty, translated has it
+    expect(mode({ customFields: null, translated: { customFields: { shopbite_fulfillment: "pickup" } } })).toBe(
+      "abholung",
+    );
+    expect(
+      mode({
+        customFields: { shopbite_fulfillment: "pickup" },
+        translated: { customFields: { shopbite_fulfillment: "delivery" } },
+      }),
+    ).toBe("lieferung");
+  });
+
   it("loads the shipping method's custom fields", () => {
-    expect(ORDER_INCLUDES.shipping_method).toContain("customFields");
+    expect(ORDER_INCLUDES.shipping_method).toEqual(expect.arrayContaining(["customFields", "translated"]));
   });
 
   it("has no payment without a transaction", () => {

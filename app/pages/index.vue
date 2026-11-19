@@ -31,8 +31,10 @@ async function saveSettings(change: SettingsChange, message: string) {
 const orderingOpen = computed(() => settings.value?.orderingOpen ?? true);
 // one time per shipping method of this branch, the usual steps as big buttons
 const shippingMethods = computed(() => settings.value?.shippingMethods ?? []);
+const anyEditable = computed(() => shippingMethods.value.some((m) => m.editable));
 function saveLeadTime(method: ShippingMethodLeadTime, minutes: number) {
-  if (minutes === method.leadTimeMinutes) return;
+  // an unset method may take its default explicitly
+  if (isChosen(method, minutes)) return;
   saveSettings(
     { leadTimes: { [method.id]: minutes } },
     `${leadTimeLabel(method.fulfillment)} ${method.name}: ${minutes} Minuten.`,
@@ -177,22 +179,38 @@ const mapsUrl = (address: string) => `https://www.google.com/maps/search/?api=1&
               <Clock class="size-4" aria-hidden="true" />{{ leadTimeLabel(method.fulfillment) }}
               <span class="font-normal text-muted-foreground">{{ method.name }}</span>
             </p>
-            <div class="flex flex-wrap gap-2">
-              <Button
-                v-for="m in leadTimeOptions(method.fulfillment, method.leadTimeMinutes)"
-                :key="m"
-                size="lg"
-                :variant="m === method.leadTimeMinutes ? 'default' : 'outline'"
-                :aria-pressed="m === method.leadTimeMinutes"
-                :disabled="savingSettings"
-                class="min-w-20 tabular-nums"
-                @click="saveLeadTime(method, m)"
+            <template v-if="method.editable">
+              <div class="flex flex-wrap gap-2">
+                <Button
+                  v-for="m in leadTimeOptions(method.fulfillment, method.leadTimeMinutes)"
+                  :key="m"
+                  size="lg"
+                  :variant="isChosen(method, m) ? 'default' : 'outline'"
+                  :aria-pressed="isChosen(method, m)"
+                  :disabled="savingSettings"
+                  class="min-w-20 tabular-nums"
+                  @click="saveLeadTime(method, m)"
+                >
+                  {{ m }} Min.
+                </Button>
+              </div>
+              <p
+                v-if="!method.leadTimeMinutesSet"
+                class="text-sm text-muted-foreground tabular-nums pointer-coarse:text-base"
               >
-                {{ m }} Min.
-              </Button>
-            </div>
+                Noch nicht festgelegt, Gäste sehen den Standard ({{ method.leadTimeMinutes }} Min.).
+              </p>
+            </template>
+            <template v-else>
+              <p class="tabular-nums">
+                {{ method.leadTimeMinutes }} Min.<span v-if="!method.leadTimeMinutesSet" class="text-muted-foreground">
+                  (Standard)</span
+                >
+              </p>
+              <p class="text-sm text-muted-foreground pointer-coarse:text-base">{{ SHARED_METHOD_HINT }}</p>
+            </template>
           </div>
-          <p v-if="shippingMethods.length" class="text-sm text-muted-foreground pointer-coarse:text-base">
+          <p v-if="anyEditable" class="text-sm text-muted-foreground pointer-coarse:text-base">
             Die Zeit gehört zur Versandart und gilt in jeder Filiale, die sie anbietet.
           </p>
           <SaveStatus :state="saves.state('settings')" />
