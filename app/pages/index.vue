@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BellRing, Bike, Clock, MapPin, Phone, Printer, ShoppingBag, Volume2 } from "@lucide/vue";
-import type { OrderStatus, OrderSummary, ShopSettings } from "#shared/types/backoffice";
+import type { OrderStatus, OrderSummary, ShippingMethodLeadTime, ShopSettings } from "#shared/types/backoffice";
 
 definePageMeta({ capability: "orders" });
 const api = useBackofficeApi();
@@ -20,7 +20,8 @@ onMounted(() => (timer = setInterval(refreshOrders, 20_000)));
 onBeforeUnmount(() => clearInterval(timer));
 
 const savingSettings = ref(false);
-async function saveSettings(change: Partial<ShopSettings>, message: string) {
+type SettingsChange = { orderingOpen?: boolean; leadTimes?: Record<string, number> };
+async function saveSettings(change: SettingsChange, message: string) {
   savingSettings.value = true;
   await saves.run("settings", () => api("/api/settings", { method: "PATCH", body: change }), message);
   await refreshSettings();
@@ -28,9 +29,15 @@ async function saveSettings(change: Partial<ShopSettings>, message: string) {
 }
 
 const orderingOpen = computed(() => settings.value?.orderingOpen ?? true);
-const deliveryMinutes = computed(() => settings.value?.deliveryMinutes ?? 45);
-// the usual steps as big buttons; an unusual stored value stays selectable
-const deliveryOptions = computed(() => [...new Set([20, 30, 45, 60, 90, deliveryMinutes.value])].sort((a, b) => a - b));
+// one time per shipping method of this branch, the usual steps as big buttons
+const shippingMethods = computed(() => settings.value?.shippingMethods ?? []);
+function saveLeadTime(method: ShippingMethodLeadTime, minutes: number) {
+  if (minutes === method.leadTimeMinutes) return;
+  saveSettings(
+    { leadTimes: { [method.id]: minutes } },
+    `${leadTimeLabel(method.fulfillment)} ${method.name}: ${minutes} Minuten.`,
+  );
+}
 
 const newOrders = computed(() => (orders.value ?? []).filter((o) => o.status === "neu").length);
 // chime, vibration and the count on the app icon when a new order comes in
@@ -159,25 +166,35 @@ const mapsUrl = (address: string) => `https://www.google.com/maps/search/?api=1&
             </Button>
           </div>
 
-          <div role="group" aria-labelledby="lieferzeit" class="space-y-2">
-            <p id="lieferzeit" class="flex items-center gap-2 font-medium">
-              <Clock class="size-4" aria-hidden="true" />Lieferzeit, die Gäste sehen
+          <div
+            v-for="method in shippingMethods"
+            :key="method.id"
+            role="group"
+            :aria-labelledby="`zeit-${method.id}`"
+            class="space-y-2"
+          >
+            <p :id="`zeit-${method.id}`" class="flex flex-wrap items-center gap-x-2 font-medium">
+              <Clock class="size-4" aria-hidden="true" />{{ leadTimeLabel(method.fulfillment) }}
+              <span class="font-normal text-muted-foreground">{{ method.name }}</span>
             </p>
             <div class="flex flex-wrap gap-2">
               <Button
-                v-for="m in deliveryOptions"
+                v-for="m in leadTimeOptions(method.fulfillment, method.leadTimeMinutes)"
                 :key="m"
                 size="lg"
-                :variant="m === deliveryMinutes ? 'default' : 'outline'"
-                :aria-pressed="m === deliveryMinutes"
+                :variant="m === method.leadTimeMinutes ? 'default' : 'outline'"
+                :aria-pressed="m === method.leadTimeMinutes"
                 :disabled="savingSettings"
                 class="min-w-20 tabular-nums"
-                @click="m !== deliveryMinutes && saveSettings({ deliveryMinutes: m }, `Lieferzeit ${m} Minuten.`)"
+                @click="saveLeadTime(method, m)"
               >
                 {{ m }} Min.
               </Button>
             </div>
           </div>
+          <p v-if="shippingMethods.length" class="text-sm text-muted-foreground pointer-coarse:text-base">
+            Die Zeit gehört zur Versandart und gilt in jeder Filiale, die sie anbietet.
+          </p>
           <SaveStatus :state="saves.state('settings')" />
         </CardContent>
       </Card>

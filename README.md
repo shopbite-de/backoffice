@@ -19,7 +19,7 @@ bun run dev                                                   # http://localhost
 | Benutzername | Passwort | Rolle | Filiale | sieht |
 |---|---|---|---|---|
 | `chef` | `chef-poc-1234` | Management (65 Rechte) | alle | Heute, Speisekarte, Öffnungszeiten |
-| `theke` | `theke-poc-1234` | Personal (17 Rechte) | ShopBite | Heute (Bestellungen, Bestellannahme, Lieferzeit) |
+| `theke` | `theke-poc-1234` | Personal (17 Rechte) | ShopBite | Heute (Bestellungen, Bestellannahme, Liefer- und Abholzeit) |
 | `abholung` | `abholung-poc-1234` | Personal | ShopBite Abholung | Heute |
 | `admin` | `shopbite` | Shopware-Admin | alle | alles (nur zum Vergleich) |
 
@@ -68,7 +68,7 @@ Das Backoffice lässt sich auf Handy, Tablet und PC als App installieren (eigene
 | `NUXT_SHOPWARE_URL` | Shopware dieses Restaurants, im Stack die interne Adresse |
 | `NUXT_RESTAURANT_NAME` | Name im Kopf der Seite |
 | `NUXT_SALES_CHANNELS` | optional `channelId,…`, Auswahl und Reihenfolge der Filialen; leer = alle aktiven Sales Channels. Die Speisekarte jeder Filiale kommt aus der Plugin-Konfiguration („Kategorie der Speisekarte“, sonst die Navigationskategorie); `channelId:menuCategoryId` überschreibt sie |
-| `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://mein-restaurant.de`); nach jeder Änderung an Karte, Bestellschalter, Lieferzeit, Öffnungszeiten oder Schließtagen leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst später (Karte und Navigation nach bis zu 24 Stunden, Bestellschalter und Lieferzeit nach bis zu 60 Sekunden, Öffnungszeiten und Schließtage nach bis zu 5 Minuten) |
+| `NUXT_STOREFRONT_URLS` | optional, die Storefronts der Installation mit Komma getrennt (z. B. `https://mein-restaurant.de`); nach jeder Änderung an Karte, Bestellschalter, Liefer- oder Abholzeit, Öffnungszeiten oder Schließtagen leert das Backoffice ihren Cache, sonst sehen Gäste die Änderung erst später (Karte und Navigation nach bis zu 24 Stunden, Bestellschalter, Liefer- und Abholzeit nach bis zu 60 Sekunden, Öffnungszeiten und Schließtage nach bis zu 5 Minuten) |
 | `NUXT_CACHE_PURGE_SECRET` | derselbe Schlüssel wie `NUXT_CACHE_PURGE_SECRET` in den Storefronts (`openssl rand -hex 32`) |
 | `NUXT_SESSION_PASSWORD` | Schlüssel für das Session-Cookie, mindestens 32 zufällige Zeichen (`openssl rand -hex 32`); Platzhalter und einfache Muster lassen den Server nicht starten |
 | `NUXT_ORIGIN` | öffentliche Adresse des Backoffice (z. B. `https://backoffice.mein-restaurant.de`, mehrere mit Komma); schreibende `/api`-Anfragen von anderen Seiten werden abgelehnt. Leer = Vergleich mit dem `Host`-Header |
@@ -114,6 +114,7 @@ Lokal ausprobieren: `docker build -t backoffice .` und `docker run --network hos
 
 - `server/utils/profile.ts`: Rolle, Bereiche und Filialen aus `/api/_info/me`; `server/middleware/auth.ts` ordnet jedem API-Bereich die nötige Rolle zu.
 - `shared/utils/labels.ts`: fester Katalog der Allergene und Zusatzstoffe mit Kürzeln.
+- `shared/utils/leadTimes.ts`: Liefer- und Abholzeit pro Versandart (Custom Fields `shopbite_fulfillment`, `shopbite_lead_time_minutes` des ShopBite-Plugins); die Zeit gilt in jeder Filiale mit dieser Versandart.
 - `server/utils/adminApi.ts`: Login bei Shopware (Password Grant, Client `administration`), Token-Refresh, Aufrufe als angemeldeter Benutzer. Tokens nur im versiegelten httpOnly-Cookie (`server/utils/session.ts`).
 - `server/utils/salesChannel.ts`: Filialen (Sales Channels) und die gewählte Filiale.
 - `server/utils/dishes.ts`, `server/utils/sections.ts`: Übersetzung Gericht/Abschnitt ↔ Shopware (Produkt, Eigenschaften, Varianten, Cross-Selling, Custom Fields, Tags, SEO-URLs), Speichern als ein Sync-Request.

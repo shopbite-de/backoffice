@@ -31,7 +31,7 @@ export interface ShopwareOrder {
   lineItems: LineItem[];
   addresses: OrderAddress[];
   deliveries: {
-    shippingMethod: { technicalName: string | null; name: string | null } | null;
+    shippingMethod: { customFields: Record<string, unknown> | null } | null;
     shippingOrderAddress: OrderAddress | null;
   }[];
   transactions: {
@@ -73,7 +73,7 @@ export const ORDER_INCLUDES = {
   order_delivery: ["shippingMethod", "shippingOrderAddress"],
   order_transaction: ["createdAt", "paymentMethod", "stateMachineState"],
   payment_method: ["distinguishableName", "name"],
-  shipping_method: ["technicalName", "name"],
+  shipping_method: ["customFields"],
   order_address: ["id", "street", "zipcode", "city", "phoneNumber"],
 };
 
@@ -117,19 +117,26 @@ function textField(fields: Record<string, unknown> | null, key: string): string 
   return typeof value === "string" && value ? value : null;
 }
 
-/** The storefront checkout writes the chosen time into the comment ("Wunschzeit: 19:30", older orders "Wunschlieferzeit: …"). */
+/**
+ * The storefront checkout writes the chosen time into the comment: "Wunschlieferzeit: 19:30" or
+ * "Wunschabholzeit: 19:30", some orders "Wunschzeit: …".
+ */
 export function splitComment(comment: string | null): { wishedTime: string | null; comment: string | null } {
   const text = comment?.trim() ?? "";
-  const match = text.match(/^Wunsch(?:liefer)?zeit:\s*([^\n]+)\n?/i);
+  const match = text.match(/^Wunsch(?:liefer|abhol)?zeit:\s*([^\n]+)\n?/i);
   if (!match) return { wishedTime: null, comment: text || null };
   const rest = text.slice(match[0].length).trim();
   return { wishedTime: match[1]!.trim(), comment: rest || null };
 }
 
+/** Pickup or delivery is the shipping method's custom field `shopbite_fulfillment` (ShopBite plugin); without it, delivery. */
+export function isPickup(method: ShopwareOrder["deliveries"][number]["shippingMethod"]): boolean {
+  return method?.customFields?.shopbite_fulfillment === "pickup";
+}
+
 export function toOrderSummary(order: ShopwareOrder, channelName: Map<string, string>): OrderSummary {
   const delivery = order.deliveries[0];
-  const method = `${delivery?.shippingMethod?.technicalName ?? ""} ${delivery?.shippingMethod?.name ?? ""}`;
-  const isPickup = /abhol|pickup|selbst/i.test(method);
+  const pickup = isPickup(delivery?.shippingMethod ?? null);
   const address = delivery?.shippingOrderAddress;
   const billing = order.addresses.find((a) => a.id === order.billingAddressId);
   // the newest transaction counts (a failed online payment may be followed by a new one)
@@ -142,9 +149,9 @@ export function toOrderSummary(order: ShopwareOrder, channelName: Map<string, st
     createdAt: order.orderDateTime,
     status: STATUS[order.stateMachineState.technicalName] ?? "neu",
     total: order.amountTotal,
-    mode: isPickup ? "abholung" : "lieferung",
+    mode: pickup ? "abholung" : "lieferung",
     customer: order.orderCustomer ? `${order.orderCustomer.firstName} ${order.orderCustomer.lastName}` : "Gast",
-    address: !isPickup && address ? `${address.street}, ${address.zipcode} ${address.city}` : null,
+    address: !pickup && address ? `${address.street}, ${address.zipcode} ${address.city}` : null,
     phone: address?.phoneNumber || billing?.phoneNumber || null,
     ...splitComment(order.customerComment),
     payment: paymentName

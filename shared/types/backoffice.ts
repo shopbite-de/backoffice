@@ -62,9 +62,20 @@ export interface Holiday {
   end: string;
 }
 
+export type Fulfillment = "delivery" | "pickup";
+
+/** A shipping method of the branch with the time guests see for it (custom fields of the ShopBite plugin). */
+export interface ShippingMethodLeadTime {
+  id: string;
+  name: string;
+  fulfillment: Fulfillment; // shopbite_fulfillment
+  leadTimeMinutes: number; // shopbite_lead_time_minutes, or the default the storefront uses when unset
+  leadTimeMinutesSet: boolean;
+}
+
 export interface ShopSettings {
   orderingOpen: boolean;
-  deliveryMinutes: number | null;
+  shippingMethods: ShippingMethodLeadTime[];
 }
 
 /** A dish with everything the restaurant edits; mapped onto Shopware in server/utils/dishes.ts. */

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /*
- * Ordering switch, delivery time, business hours and holidays are part of the storefront's
+ * Ordering switch, lead times, business hours and holidays are part of the storefront's
  * cached layout data: every successful write empties it, a failed write leaves the cache alone.
  */
 const channel = { id: "c".repeat(32) };
@@ -16,13 +16,14 @@ vi.stubGlobal("readValidBody", async (_event: unknown, schema: { parse: (v: unkn
 );
 vi.stubGlobal("getRouterParam", () => holiday.id);
 vi.stubGlobal("createError", (input: { statusMessage?: string }) => new Error(input.statusMessage));
+vi.stubGlobal("toShopSettings", (await import("../server/utils/settings")).toShopSettings);
 vi.stubGlobal("currentSalesChannel", async () => channel);
 vi.stubGlobal("loadBusinessHours", async () => ({ channel, hours: [] }));
 vi.stubGlobal("loadHolidays", async () => ({ channel, holidays: [holiday] }));
 vi.stubGlobal("toStored", (day: string) => `${day}T12:00:00.000Z`);
 vi.stubGlobal("adminApi", async () => {
   if (failWrite) throw new Error("Shopware 500");
-  return { orderingOpen: false, deliveryMinutes: 45 };
+  return { orderingOpen: false, shippingMethods: [] };
 });
 vi.stubGlobal("purgeStorefronts", async (_event: unknown, target: unknown) => {
   purges.push(target);
