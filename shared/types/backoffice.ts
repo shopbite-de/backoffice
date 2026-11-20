@@ -69,7 +69,7 @@ export interface ShippingMethodLeadTime {
   id: string;
   name: string;
   fulfillment: Fulfillment; // shopbite_fulfillment
-  leadTimeMinutes: number; // shopbite_lead_time_minutes, or the default the storefront uses when unset
+  leadTimeMinutes: number; // max of the shipping method's delivery time in minutes, or the default when unset
   leadTimeMinutesSet: boolean; // false: the storefront shows the default `leadTimeMinutes`
   editable: boolean; // false when the method is also used by branches this person is not bound to
 }

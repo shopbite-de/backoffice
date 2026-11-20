@@ -114,7 +114,7 @@ Lokal ausprobieren: `docker build -t backoffice .` und `docker run --network hos
 
 - `server/utils/profile.ts`: Rolle, Bereiche und Filialen aus `/api/_info/me`; `server/middleware/auth.ts` ordnet jedem API-Bereich die nötige Rolle zu.
 - `shared/utils/labels.ts`: fester Katalog der Allergene und Zusatzstoffe mit Kürzeln.
-- `shared/utils/leadTimes.ts`: Liefer- und Abholzeit pro Versandart (Custom Fields `shopbite_fulfillment`, `shopbite_lead_time_minutes` des ShopBite-Plugins); die Zeit gilt in jeder Filiale mit dieser Versandart.
+- `shared/utils/leadTimes.ts`: Liefer- und Abholzeit pro Versandart (Custom Field `shopbite_fulfillment` und Shopware-Lieferzeit der Versandart, gesetzt über das ShopBite-Plugin); die Zeit gilt in jeder Filiale mit dieser Versandart.
 - `server/utils/adminApi.ts`: Login bei Shopware (Password Grant, Client `administration`), Token-Refresh, Aufrufe als angemeldeter Benutzer. Tokens nur im versiegelten httpOnly-Cookie (`server/utils/session.ts`).
 - `server/utils/salesChannel.ts`: Filialen (Sales Channels) und die gewählte Filiale.
 - `server/utils/dishes.ts`, `server/utils/sections.ts`: Übersetzung Gericht/Abschnitt ↔ Shopware (Produkt, Eigenschaften, Varianten, Cross-Selling, Custom Fields, Tags, SEO-URLs), Speichern als ein Sync-Request.
